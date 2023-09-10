@@ -12,5 +12,10 @@ namespace AttendanceTrackerInfrastructure.Models
 
         [DataType(DataType.Time)]
         public DateTime CheckOut { get; set; }
+
+        [Key]
+        public string StaffName { get; set; } // Foreign Key to Staff.Name
+
+        public Staff Staff { get; set; } // Navigation Property to Staff
     }
 }

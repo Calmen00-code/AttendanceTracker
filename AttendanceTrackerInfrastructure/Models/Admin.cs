@@ -1,9 +1,10 @@
-﻿namespace AttendanceTrackerInfrastructure.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AttendanceTrackerInfrastructure.Models
 {
     public class Admin
     {
-        public int Id { get; set; }
-
+        [Key]
         public required string Name { get; set; }
 
         public required string Password { get; set; }

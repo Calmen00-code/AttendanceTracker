@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "4rxuZSpZpwJBA2b3KQvpgp3XMJS0M/NvbCzxOfSONrc=",
+  "Hash": "rOkIi9UWwtO4UI05hjT4QsWzsIuTXwnO8JQ9AleSY48=",
   "Source": "AttendanceTrackerPresentation",
   "BasePath": "_content/AttendanceTrackerPresentation",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\AttendanceTrackerInfrastructure.csproj",
+      "Version": 2,
+      "Source": "AttendanceTrackerInfrastructure",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [
     {
       "Name": "AttendanceTrackerPresentation\\wwwroot",
