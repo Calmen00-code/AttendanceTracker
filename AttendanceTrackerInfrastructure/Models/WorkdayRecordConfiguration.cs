@@ -7,7 +7,7 @@ namespace AttendanceTrackerInfrastructure.Models
     {
         public void Configure(EntityTypeBuilder<WorkdayRecord> builder) 
         {
-            builder.ToTable("WorkdayRecord");
+            builder.ToTable("WorkdayRecords");
 
             builder.HasKey(w => w.StaffName); // Workday has no Primary Key
 

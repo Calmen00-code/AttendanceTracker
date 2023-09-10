@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AttendanceTrackerInfrastructure.Migrations
 {
-    [DbContext(typeof(AdminStaffDbContext))]
+    [DbContext(typeof(AttendanceTrackerDbContext))]
     partial class AdminStaffDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace AttendanceTrackerInfrastructure.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Admin", (string)null);
+                    b.ToTable("Admins", (string)null);
                 });
 
             modelBuilder.Entity("AttendanceTrackerInfrastructure.Models.Staff", b =>
@@ -53,7 +53,7 @@ namespace AttendanceTrackerInfrastructure.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Staff", (string)null);
+                    b.ToTable("Staffs", (string)null);
                 });
 
             modelBuilder.Entity("AttendanceTrackerInfrastructure.Models.WorkdayRecord", b =>
@@ -72,7 +72,7 @@ namespace AttendanceTrackerInfrastructure.Migrations
 
                     b.HasKey("StaffName");
 
-                    b.ToTable("WorkdayRecord", (string)null);
+                    b.ToTable("WorkdayRecords", (string)null);
                 });
 
             modelBuilder.Entity("AttendanceTrackerInfrastructure.Models.WorkdayRecord", b =>

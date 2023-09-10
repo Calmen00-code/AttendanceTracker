@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AttendanceTrackerInfrastructure.Migrations
 {
-    [DbContext(typeof(AdminStaffDbContext))]
+    [DbContext(typeof(AttendanceTrackerDbContext))]
     [Migration("20230910062441_InitialCreate")]
     partial class InitialCreate
     {

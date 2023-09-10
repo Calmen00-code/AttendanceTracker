@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AdminStaffDbContext>(opt => 
+builder.Services.AddDbContext<AttendanceTrackerDbContext>(opt => 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("AttendanceTracker")));
 
 var app = builder.Build();

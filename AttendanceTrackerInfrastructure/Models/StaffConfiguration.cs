@@ -8,7 +8,7 @@ namespace AttendanceTrackerInfrastructure.Models
         public void Configure(EntityTypeBuilder<Staff> builder) 
         {
             // Table Name
-            builder.ToTable("Staff");
+            builder.ToTable("Staffs");
 
             // Primary Key
             builder.HasKey(x => x.Name);
