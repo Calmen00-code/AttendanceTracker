@@ -11,6 +11,6 @@ namespace AttendanceTrackerInfrastructure.Models
 
         public string? Department { get; set; }
 
-        public ICollection<WorkdayRecord>? Workdays { get; set; }
+        public ICollection<WorkdayRecordAPI>? Workdays { get; set; }
     }
 }
