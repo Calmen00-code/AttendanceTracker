@@ -1,0 +1,12 @@
+{
+  "date": "2023-09-11",
+  "checkIn": "2023-09-11T10:05:12",
+  "checkOut": "2023-09-11T23:01:22",
+  "staffName": "Alex",
+  "staff": {
+    "name": "Alex",
+    "password": "Alex222",
+    "department": "IT",
+    "workdays": []
+  }
+}
