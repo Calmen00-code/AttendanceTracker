@@ -109,15 +109,16 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 .GetConnectionString("AttendanceTracker")
                 .ToString());
 
-            // building sql query
-            string sqlScript = "INSERT INTO Admins (Name, Password) VALUES (@Name, @Password);";
-            SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
-            sqlCommand.Parameters.AddWithValue("@Name", admin.Name);
-            sqlCommand.Parameters.AddWithValue("@Password", admin.Password);
-
             try
             {
                 conn.Open();
+
+                // building sql query
+                string sqlScript = "INSERT INTO Admins (Name, Password) VALUES (@Name, @Password);";
+                SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
+                sqlCommand.Parameters.AddWithValue("@Name", admin.Name);
+                sqlCommand.Parameters.AddWithValue("@Password", admin.Password);
+
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 if (rowsAffected > 0)
                 {
@@ -131,7 +132,94 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (SqlException e)
             {
                 System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
-                return StatusCode(500, "Internal server error");
+                return StatusCode(500, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        [HttpPost]
+        [Route("add-staff")]
+        public IActionResult AddStaff([FromBody] StaffAPI staff)
+        {
+            SqlConnection conn = new SqlConnection(_configuration
+                .GetConnectionString("AttendanceTracker")
+                .ToString());
+
+            try
+            {
+                conn.Open();
+
+                // building sql query
+                string sqlScript = "INSERT INTO Staffs(Name, Password, Department) VALUES " +
+                    "(@Name, @Password, @Department);";
+
+                SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
+                sqlCommand.Parameters.AddWithValue("@Name", staff.Name);
+                sqlCommand.Parameters.AddWithValue("@Password", staff.Password);
+                sqlCommand.Parameters.AddWithValue("@Department", staff.Department);
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    return StatusCode(200, "Staff has been registered");
+                }
+                else
+                {
+                    return StatusCode(400, "Internal server error");
+                }
+            }
+            catch (SqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
+                return StatusCode(500, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        [HttpPost]
+        [Route("add-workday-record")]
+        public IActionResult AddWorkdayRecord([FromBody] WorkdayRecordAPI workdayRecordAPI)
+        {
+            SqlConnection conn = new SqlConnection(_configuration
+                .GetConnectionString("AttendanceTracker")
+                .ToString());
+
+            try
+            {
+                conn.Open();
+
+                // building sql query
+                string sqlScript = "INSERT INTO WorkdayRecords(StaffName, Date, CheckIn, CheckOut) " +
+                    " VALUES (@StaffName, @Date, @CheckIn, @CheckOut);";
+
+                SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
+                sqlCommand.Parameters.AddWithValue("@StaffName", workdayRecordAPI.StaffName);
+                sqlCommand.Parameters.AddWithValue("@Date", workdayRecordAPI.Date);
+                sqlCommand.Parameters.AddWithValue("@CheckIn", workdayRecordAPI.CheckIn);
+                sqlCommand.Parameters.AddWithValue("@CheckOut", workdayRecordAPI.CheckOut);
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    string message = "Workday record for " + workdayRecordAPI.StaffName + " has been updated.";
+                    return StatusCode(200, message);
+                }
+                else
+                {
+                    return StatusCode(400, "Internal server error");
+                }
+            }
+            catch (SqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
+                return StatusCode(500, "Failed to connect to database");
             }
             finally
             {
