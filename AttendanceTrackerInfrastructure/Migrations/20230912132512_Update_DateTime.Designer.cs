@@ -4,6 +4,7 @@ using AttendanceTrackerInfrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceTrackerInfrastructure.Migrations
 {
     [DbContext(typeof(AttendanceTrackerDbContext))]
-    partial class AdminStaffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230912132512_Update_DateTime")]
+    partial class Update_DateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,9 +61,8 @@ namespace AttendanceTrackerInfrastructure.Migrations
 
             modelBuilder.Entity("AttendanceTrackerInfrastructure.Models.WorkdayRecord", b =>
                 {
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2")
-                        .HasColumnOrder(0);
+                    b.Property<string>("StaffName")
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CheckIn")
                         .HasColumnType("datetime2");
@@ -68,14 +70,10 @@ namespace AttendanceTrackerInfrastructure.Migrations
                     b.Property<DateTime>("CheckOut")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StaffName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnOrder(1);
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
-                    b.HasKey("Date");
-
-                    b.HasIndex("StaffName");
+                    b.HasKey("StaffName");
 
                     b.ToTable("WorkdayRecords", (string)null);
                 });

@@ -4,6 +4,7 @@ using AttendanceTrackerInfrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceTrackerInfrastructure.Migrations
 {
     [DbContext(typeof(AttendanceTrackerDbContext))]
-    partial class AdminStaffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230912140243_Update_ForeignKey_In_WorkdayRecord_6")]
+    partial class Update_ForeignKey_In_WorkdayRecord_6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

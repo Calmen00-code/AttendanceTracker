@@ -9,7 +9,10 @@ namespace AttendanceTrackerInfrastructure.Models
         {
             builder.ToTable("WorkdayRecords");
 
-            builder.HasKey(w => w.StaffName); // Workday has no Primary Key
+            builder.HasKey(w => w.Date); // Primary Key for Workday is Date
+            // if this was implemented, then we can allow for multiple staff having the same day
+            // but does not allow a staff to have more than one day record
+            // builder.HasKey(w => w.StaffName); // Primary Key for Workday is Date
 
             builder.Property(w => w.Date)
                 .IsRequired();
