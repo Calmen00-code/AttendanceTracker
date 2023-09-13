@@ -4,6 +4,7 @@ using AttendanceTrackerInfrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceTrackerInfrastructure.Migrations
 {
     [DbContext(typeof(AttendanceTrackerDbContext))]
-    partial class AdminStaffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230913115758_Update_ForeignKey_In_WorkdayRecord_7")]
+    partial class Update_ForeignKey_In_WorkdayRecord_7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,17 +65,18 @@ namespace AttendanceTrackerInfrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(0);
 
-                    b.Property<string>("StaffName")
-                        .HasColumnType("nvarchar(100)")
-                        .HasColumnOrder(1);
-
                     b.Property<DateTime>("CheckIn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CheckOut")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Date", "StaffName");
+                    b.Property<string>("StaffName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Date");
 
                     b.HasIndex("StaffName");
 

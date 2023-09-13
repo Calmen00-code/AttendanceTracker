@@ -1,12 +1,25 @@
 {
-  "date": "2023-09-12",
-  "checkIn": "2023-09-12T11:05:12",
-  "checkOut": "2023-09-11T23:01:22",
+  "date": "2023-09-13",
+  "checkIn": "2023-09-13T11:05:12",
+  "checkOut": "2023-09-13T23:01:22",
   "staffName": "Alex",
   "staff": {
     "name": "Alex",
     "password": "Alex222",
     "department": "IT",
+    "workdays": []
+  }
+}
+
+{
+  "date": "2023-09-13",
+  "checkIn": "2023-09-13T11:05:12",
+  "checkOut": "2023-09-13T23:01:22",
+  "staffName": "Amir",
+  "staff": {
+    "name": "Amir",
+    "password": "amir1234",
+    "department": "HR",
     "workdays": []
   }
 }

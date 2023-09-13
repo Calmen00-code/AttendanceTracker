@@ -30,6 +30,13 @@ namespace AttendanceTrackerInfrastructure.Models
         [ForeignKey("Staff")]
         public string StaffName { get; set; } // Foreign Key to Staff.Name
 
+        // Composite Primary Key
+        /*
+        [Key]
+        [Column(Order = 2)]
+        public int Id { get; set; }
+        */
+
         [DataType(DataType.Time)]
         public DateTime CheckIn { get; set; }
 
