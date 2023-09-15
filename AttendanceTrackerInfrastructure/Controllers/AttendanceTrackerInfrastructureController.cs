@@ -47,7 +47,7 @@ namespace AttendanceTrackerInfrastructure.Controllers
             }
             catch (Exception) 
             {
-                return StatusCode(500, "Failed to connect to database");
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
             }
 
 
@@ -71,12 +71,51 @@ namespace AttendanceTrackerInfrastructure.Controllers
             }
             else
             {
-                return StatusCode(404, "No data has been found");
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
             }
         }
 
+        /***
+         * TODO TEMPORARY: using non-LINQ method to query (pure string)
+         */
         /*
+        [HttpGet]
+        [Route("get-staffs")]
+        public IActionResult GetStaffs()
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
 
+                // building sql query
+                adapter = new SqlDataAdapter("SELECT * FROM Staffs", conn);
+
+                List<Staff> staffsDb = (from staff in _dbContext.staffs
+                                        select staff).ToList();
+
+                // we are returning List<StaffAPI> here
+                // that is why we need a static cast the List<Staff> staffsDb from the database
+                staffs = staffsDb.Cast<StaffAPI>().ToList();
+
+                return Ok(staffs);
+            }
+            catch (Exception) 
+            {
+                return StatusCode(500, "Unable to connect to the database");
+            }
+        }
+        */
+
+        /***
+         * TODO : using LINQ method to query INSTEAD OF (pure string)
+         */
+         /* 
         [HttpGet]
         [Route("get-staffs")]
         public IActionResult GetStaffs()
@@ -122,17 +161,18 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 if (rowsAffected > 0)
                 {
-                    return StatusCode(200, "Admin successfully registered");
+                    return StatusCode(HttpResponseStatus.CREATED, "Admin successfully registered");
                 }
                 else
                 {
-                    return StatusCode(400, "Internal server error");
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                        "Internal server error, no rows affected");
                 }
             }
             catch (SqlException e)
             {
                 System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
-                return StatusCode(500, "Failed to connect to database");
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
             }
             finally
             {
@@ -164,17 +204,19 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
                 if (rowsAffected > 0)
                 {
-                    return StatusCode(200, "Staff has been registered");
+                    return StatusCode(HttpResponseStatus.CREATED, "Staff has been registered");
                 }
                 else
                 {
-                    return StatusCode(400, "Internal server error");
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                        "Internal server error, no rows affected");
                 }
             }
             catch (SqlException e)
             {
                 System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
-                return StatusCode(500, "Failed to connect to database");
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                    "Failed to connect to database");
             }
             finally
             {
@@ -209,17 +251,18 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 if (rowsAffected > 0)
                 {
                     string message = "Workday record for " + workdayRecordAPI.StaffName + " has been updated.";
-                    return StatusCode(200, message);
+                    return StatusCode(HttpResponseStatus.ACCEPTED, message);
                 }
                 else
                 {
-                    return StatusCode(400, "Internal server error");
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                        "Internal server error, no rows affected");
                 }
             }
             catch (SqlException e)
             {
                 System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
-                return StatusCode(500, "Failed to connect to database");
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
             }
             finally
             {
