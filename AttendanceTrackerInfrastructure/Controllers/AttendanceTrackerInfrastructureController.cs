@@ -75,6 +75,58 @@ namespace AttendanceTrackerInfrastructure.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("get-admin/{adminName}")]
+        public IActionResult GetAdmin(string adminName) 
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                string sqlQuery = "SELECT * FROM Admins WHERE Name = \'" + adminName + "\';";
+                adapter = new SqlDataAdapter(sqlQuery, conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+
+            List<AdminAPI> admins = new List<AdminAPI>();
+
+            // check if db has any data
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    AdminAPI admin = new AdminAPI();
+                    admin.Name = dt.Rows[i]["Name"].ToString();
+                    admin.Password = dt.Rows[i]["Password"].ToString();
+                    admins.Add(admin);
+                }
+            }
+
+            if (admins.Count > 0)
+            {
+                return Ok(admins);
+            }
+            else
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+        }
+
         /***
          * TODO TEMPORARY: using non-LINQ method to query (pure string)
          */

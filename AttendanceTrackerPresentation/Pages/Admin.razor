@@ -1,19 +1,46 @@
 ﻿@page "/admin"
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
 
 <h3>Admin Login Page</h3>
 
 <form method="post">
     <div>
-        <input type="text" id="username" name="username" placeholder="Username" required />
+        <input type="text" id="username" name="username" placeholder="Username" required @bind="username"/>
     </div>
     <div>
-        <input type="password" id="password" name="password" placeholder="Password" required />
+        <input type="password" id="password" name="password" placeholder="Password" required @bind="password"/>
     </div>
     <div>
-        <button type="submit">Login</button>
+        <button type="submit" @onclick="@(() => AdminLogin())">Login</button>
     </div>
 </form>
 
 @code {
+    private static readonly string URL = "https://localhost:7178/api/AttendanceTrackerApplication/get-admins";
 
+    private string? username;
+    private string? password;
+
+    private void AdminLogin()
+    {
+        if (username == null || password == null)
+        {
+            ShowAlert("Admin and password field cannot be blank");
+        }
+
+    }
+
+    /*
+     * 
+    private async bool UsernameExist(string username)
+    {
+        await HttpClient.GetFromJsonAsync()
+    }
+     */
+
+    private void ShowAlert(string message)
+    {
+        jsRuntime.InvokeVoidAsync("alert", message);
+    }
 }

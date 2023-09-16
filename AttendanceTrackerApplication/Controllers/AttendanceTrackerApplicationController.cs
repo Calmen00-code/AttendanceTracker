@@ -40,6 +40,25 @@ namespace AttendanceTrackerApplication.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("get-admin/{adminName}")]
+        public async Task<IActionResult> GetAdmin(string adminName)
+        {
+            string route = _apiurl + "get-admin/" + adminName;
+            var response = await _httpClient.GetAsync(route);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.OK) 
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.OK, responseContent);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
         [HttpPost]
         [Route("add-admin")]
         public async Task<IActionResult> AddAdmin([FromBody] AdminAPI admin) 
