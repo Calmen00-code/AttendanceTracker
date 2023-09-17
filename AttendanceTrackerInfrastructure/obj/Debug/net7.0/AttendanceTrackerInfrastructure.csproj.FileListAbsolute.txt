@@ -62,6 +62,7 @@ C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\NuGet.Pack
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\NuGet.ProjectModel.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\NuGet.Protocol.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\NuGet.Versioning.dll
+C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\RestSharp.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -231,6 +232,8 @@ C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\runtimes\w
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\APIClasses.dll
+C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\APIClasses.pdb
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\AttendanceTrackerInfrastructure.csproj.AssemblyReference.cache
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\AttendanceTrackerInfrastructure.GeneratedMSBuildEditorConfig.editorconfig
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\AttendanceTrackerInfrastructure.AssemblyInfoInputs.cache
@@ -252,6 +255,4 @@ C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\refint\Att
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\AttendanceTrackerInfrastructure.pdb
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\AttendanceTrackerInfrastructure.genruntimeconfig.cache
 C:\AttendanceTracker\AttendanceTrackerInfrastructure\obj\Debug\net7.0\ref\AttendanceTrackerInfrastructure.dll
-C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\RestSharp.dll
-C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\APIClasses.dll
-C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\APIClasses.pdb
+C:\AttendanceTracker\AttendanceTrackerInfrastructure\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.InMemory.dll

@@ -7,6 +7,7 @@ C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\AttendanceTra
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\AttendanceTrackerApplication.pdb
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\RestSharp.dll
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
@@ -34,3 +35,6 @@ C:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\refint\Attend
 C:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\AttendanceTrackerApplication.pdb
 C:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\AttendanceTrackerApplication.genruntimeconfig.cache
 C:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\ref\AttendanceTrackerApplication.dll
+C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.InMemory.dll

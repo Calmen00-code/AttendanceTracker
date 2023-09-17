@@ -95,36 +95,24 @@ namespace AttendanceTrackerInfrastructure.Controllers
 
                 dt = new DataTable();
                 adapter.Fill(dt);
-                conn.Close();
+                // conn.Close();
             }
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
             }
 
-
-            List<AdminAPI> admins = new List<AdminAPI>();
-
             // check if db has any data
-            if (dt.Rows.Count > 0)
-            {
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    AdminAPI admin = new AdminAPI();
-                    admin.Name = dt.Rows[i]["Name"].ToString();
-                    admin.Password = dt.Rows[i]["Password"].ToString();
-                    admins.Add(admin);
-                }
-            }
-
-            if (admins.Count > 0)
-            {
-                return Ok(admins);
-            }
-            else
+            if (dt.Rows.Count == 0)
             {
                 return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
             }
+
+            AdminAPI admin = new AdminAPI();
+            admin.Name = dt.Rows[0]["Name"].ToString();
+            admin.Password = dt.Rows[0]["Password"].ToString();
+
+            return Ok(admin);
         }
 
         /***
