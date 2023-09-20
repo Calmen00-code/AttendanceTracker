@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\APIClasses\APIClasses.csproj" />
     <ProjectReference Include="..\AttendanceTrackerApplication\AttendanceTrackerApplication.csproj" />
   </ItemGroup>

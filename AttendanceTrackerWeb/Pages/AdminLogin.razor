@@ -1,7 +1,5 @@
-﻿@page "/admin"
+﻿@page "/admin-login"
 
-@* @inject HttpClient PresentationLayerClient *@
-@* @inject IHttpClientFactory ClientFactory *@
 @inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
 
@@ -11,7 +9,7 @@
 
 <h3>Admin Login Page</h3>
 
-<form @onsubmit="AdminLogin">
+<form @onsubmit="Login">
     <div>
         <input type="text" id="username" name="username" placeholder="Username" required @bind="username" />
     </div>
@@ -29,7 +27,7 @@
     private string? username;
     private string? password;
 
-    public async void AdminLogin()
+    public async void Login()
     {
         if (username == null || password == null)
         {

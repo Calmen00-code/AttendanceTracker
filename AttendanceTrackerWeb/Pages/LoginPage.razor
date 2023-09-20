@@ -1,0 +1,87 @@
+﻿@page "/login-page"
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+
+@using APIClasses
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+
+<!--
+
+<button class="btn btn-primary">
+    <span class="oi oi-person" aria-hidden="true"></span> 
+    Staff
+</button>
+
+<button class="btn btn-primary">
+    <span class="oi oi-wrench" aria-hidden="true"></span> 
+    Admin
+</button>
+-->
+
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-4">
+            <h1 class="display-4 text-center mb-4">Attendance Tracker</h1>
+            <form @onsubmit="Login">
+                <div class="form-group mb-3">
+                    <input class="form-control" type="text" placeholder="Username" @bind="Username" required/>
+                </div>
+                <div class="form-group mb-3">
+                    <input class="form-control" type="password" placeholder="Password" @bind="Password" required/>
+                </div>
+                <div class="form-group mb-3">
+                    <select class="custom-select" @bind="Role">
+                        <option value="@STAFF">
+                            Staff
+                        </option>
+                        <option value="@ADMIN">
+                            Admin
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+            </form>
+            <!--
+            <div class="text-center">
+                <button class="btn btn-primary btn-lg btn-block" @onclick="StaffLogin">
+                    <span class="oi oi-person" aria-hidden="true"></span> Staff
+                </button>
+
+                <button class="btn btn-primary btn-lg btn-block" @onclick="AdminLogin">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Admin
+                </button>
+            </div>
+            -->
+        </div>
+    </div>
+</div>
+
+@code {
+    private static readonly string ADMIN = "Admin";
+    private static readonly string STAFF = "Staff";
+
+    private string? Username { get; set; }
+    private string? Password { get; set; }
+    private string Role { get; set; } = "Staff"; // By default, role will be selected as Staff
+
+    void Login()
+    {
+        if (Role.Equals(ADMIN))
+        {
+            ShowAlert("Hi Admin");
+        }
+        else
+        {
+            ShowAlert("Hi Staff");
+        }
+    }
+
+    private void ShowAlert(string message)
+    {
+        jsRuntime.InvokeVoidAsync("alert", message);
+    }
+
+}
