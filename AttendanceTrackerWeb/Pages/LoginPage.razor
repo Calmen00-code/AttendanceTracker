@@ -62,16 +62,34 @@
 @code {
     private static readonly string ADMIN = "Admin";
     private static readonly string STAFF = "Staff";
+    private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
 
     private string? Username { get; set; }
     private string? Password { get; set; }
     private string Role { get; set; } = "Staff"; // By default, role will be selected as Staff
 
-    void Login()
+    public async void Login()
     {
         if (Role.Equals(ADMIN))
         {
-            ShowAlert("Hi Admin");
+            string route = API_URL + "get-admin/" + Username;
+            var response = await HttpClient.GetAsync(route);
+
+            if ((int)response.StatusCode != HttpResponseStatus.OK)
+            {
+                ShowAlert("User does not exist!");
+                return;
+            }
+
+            AdminAPI? admin = await response.Content.ReadFromJsonAsync<AdminAPI>();
+
+            if (!admin.Password.Equals(Password))
+            {
+                ShowAlert("Password for " + admin.Name + " is incorrect!");
+                return;
+            }
+
+            ShowAlert("Login Successful!");
         }
         else
         {
