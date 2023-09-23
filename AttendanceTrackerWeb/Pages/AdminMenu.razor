@@ -1,4 +1,13 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inherits LayoutComponentBase
+@page "/admin-menu"
+
+<h3>Admin</h3>
+<div class="sidebar">
+    <NavMenu />
+</div>
+<!--
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">AttendanceTrackerWeb</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -6,21 +15,7 @@
         </button>
     </div>
 </div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="staff-login">
-                <span class="oi oi-person" aria-hidden="true"></span> Staff
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin-login">
-                <span class="oi oi-wrench" aria-hidden="true"></span> Admin
-            </NavLink>
-        </div>
-    </nav>
-</div>
+-->
 
 @code {
     private bool collapseNavMenu = true;

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIClasses", "APIClasses\AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttendanceTrackerApplication", "AttendanceTrackerApplication\AttendanceTrackerApplication.csproj", "{4FB17C45-E32F-4829-8979-F1FC67E19AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceTrackerWeb", "AttendanceTrackerWeb\AttendanceTrackerWeb.csproj", "{BE28BD99-5683-417F-B17F-B904C3C10B65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AttendanceTrackerWeb", "AttendanceTrackerWeb\AttendanceTrackerWeb.csproj", "{BE28BD99-5683-417F-B17F-B904C3C10B65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

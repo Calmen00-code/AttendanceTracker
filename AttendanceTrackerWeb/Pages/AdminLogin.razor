@@ -2,6 +2,7 @@
 
 @inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
+@inject NavigationManager Navigation
 
 @using APIClasses
 @using System.Text.Json;
@@ -52,7 +53,6 @@
             return;
         }
 
-        ShowAlert("Login Successful!");
     }
 
     private void ShowAlert(string message)

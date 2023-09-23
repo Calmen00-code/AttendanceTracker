@@ -1,23 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>AttendanceTrackerWeb</PageTitle>
-<AttendanceTrackerWeb.Pages.LoginPage />
-
-    <!--
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
+        <!-- need to specify the login page as '/' so that it gets rendered -->
+        <!-- otherwise, we will fail loading the other page eg: '/admin-menu' -->
         <article class="content px-4">
             @Body
         </article>
     </main>
-
 </div>
-    -->
