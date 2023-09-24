@@ -1,4 +1,5 @@
 ﻿
+@*
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
@@ -14,6 +15,29 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="admin-login">
                 <span class="oi oi-wrench" aria-hidden="true"></span> Admin
+            </NavLink>
+        </div>
+    </nav>
+</div>
+*@
+
+<div class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Centre Booking</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="admin-menu">
+                <span class="oi oi-wrench" aria-hidden="true"></span>Admin
+            </NavLink>
+            <NavLink class="nav-link" href="staff">
+                <span class="oi oi-person" aria-hidden="true"></span>User
             </NavLink>
         </div>
     </nav>

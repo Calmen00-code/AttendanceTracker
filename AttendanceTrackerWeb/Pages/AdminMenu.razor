@@ -1,10 +1,7 @@
-﻿@inherits LayoutComponentBase
+﻿@using AttendanceTrackerWeb.Shared
 @page "/admin-menu"
 
-<h3>Admin</h3>
-<div class="sidebar">
-    <NavMenu />
-</div>
+<Sidebar />
 <!--
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -16,14 +13,3 @@
     </div>
 </div>
 -->
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

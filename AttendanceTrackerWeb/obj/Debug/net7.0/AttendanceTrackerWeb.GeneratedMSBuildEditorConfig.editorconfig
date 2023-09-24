@@ -56,6 +56,10 @@ build_metadata.AdditionalFiles.CssScope = b-eimcz1jm1p
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = b-vriodh9b9s
 
+[C:/AttendanceTracker/AttendanceTrackerWeb/Shared/Sidebar.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFNpZGViYXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-28ansd5mju
+
 [C:/AttendanceTracker/AttendanceTrackerWeb/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

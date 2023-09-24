@@ -49,3 +49,5 @@ C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\refint\AttendanceTrac
 C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\AttendanceTrackerWeb.pdb
 C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\AttendanceTrackerWeb.genruntimeconfig.cache
 C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\ref\AttendanceTrackerWeb.dll
+C:\AttendanceTracker\AttendanceTrackerWeb\bin\Debug\net7.0\libman.json
+C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\scopedcss\Shared\Sidebar.razor.rz.scp.css
