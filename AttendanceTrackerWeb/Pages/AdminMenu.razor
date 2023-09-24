@@ -1,15 +1,15 @@
-﻿@using AttendanceTrackerWeb.Shared
+﻿@using AttendanceTrackerWeb.Data
+@using AttendanceTrackerWeb.Shared
 @page "/admin-menu"
 
-<Sidebar />
-<!--
+<Sidebar SidebarItems="AdminMenus"/>
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">AttendanceTrackerWeb</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
--->
+@code {
+    public List<NavigationItem> AdminMenus { get; set; } = new List<NavigationItem>
+    {
+        new NavigationItem { Url = "report", IconText = "clipboard", Label = "Report"},
+        new NavigationItem { Url = "register-new-user", IconText = "person", Label = "Register"},
+        new NavigationItem { Url = "qr-code", IconText ="clock", Label = "QR"},
+        new NavigationItem { Url = "add-department", IconText ="plus", Label = "Add Department"}
+    };
+}

@@ -1,11 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@* @inherits LayoutComponentBase *@
+@using AttendanceTrackerWeb.Data
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu NavigationItems="SidebarItems"/>
     </div>
 </div>
 
 @code {
-
+    [Parameter]
+    public List<NavigationItem> SidebarItems { get; set; }
 }

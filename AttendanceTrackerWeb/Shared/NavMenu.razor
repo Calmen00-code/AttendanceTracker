@@ -1,29 +1,8 @@
-﻿
-@*
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="staff-login">
-                <span class="oi oi-person" aria-hidden="true"></span> Staff
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin-login">
-                <span class="oi oi-wrench" aria-hidden="true"></span> Admin
-            </NavLink>
-        </div>
-    </nav>
-</div>
-*@
+﻿@using AttendanceTrackerWeb.Data
 
 <div class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Centre Booking</a>
+        <a class="navbar-brand" href="">Attendance Tracker</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -32,18 +11,21 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="admin-menu">
-                <span class="oi oi-wrench" aria-hidden="true"></span>Admin
-            </NavLink>
-            <NavLink class="nav-link" href="staff">
-                <span class="oi oi-person" aria-hidden="true"></span>User
-            </NavLink>
-        </div>
+        @foreach (var item in NavigationItems)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="@item.Url">
+                    <span class="oi oi-@item.IconText" aria-hidden="true"></span>@item.Label
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
 @code {
+    [Parameter]
+    public List<NavigationItem> NavigationItems { get; set; }
+
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
