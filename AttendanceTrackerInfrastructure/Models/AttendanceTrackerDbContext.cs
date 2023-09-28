@@ -21,6 +21,7 @@ namespace AttendanceTrackerInfrastructure.Models
             modelBuilder.ApplyConfiguration(new StaffConfiguration());
             modelBuilder.ApplyConfiguration(new AdminConfiguration());
             modelBuilder.ApplyConfiguration(new WorkdayRecordConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
         }
     }
 }

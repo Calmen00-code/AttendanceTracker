@@ -1,5 +1,4 @@
 ﻿using APIClasses;
-using AttendanceTrackerInfrastructure.Migrations;
 using AttendanceTrackerInfrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -114,6 +113,96 @@ namespace AttendanceTrackerInfrastructure.Controllers
 
             return Ok(admin);
         }
+
+        [HttpGet]
+        [Route("get-departments")]
+        public IActionResult GetDepartments() 
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                adapter = new SqlDataAdapter("SELECT * FROM Departments", conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+
+            List<DepartmentAPI> departments = new List<DepartmentAPI>();
+
+            // check if db has any data
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DepartmentAPI department = new DepartmentAPI();
+                    department.Name = dt.Rows[i]["Name"].ToString();
+                    departments.Add(department);
+                }
+            }
+
+            if (departments.Count > 0)
+            {
+                return Ok(departments);
+            }
+            else
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+        }
+
+        [HttpGet]
+        [Route("get-department/{departmentName}")]
+        public IActionResult GetDepartment(string departmentName) 
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                string sqlQuery = "SELECT * FROM Departments WHERE Name = \'" + departmentName + "\';";
+                adapter = new SqlDataAdapter(sqlQuery, conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                // conn.Close();
+            }
+            catch (Exception e) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database, " + e.Message);
+            }
+
+            // check if db has any data
+            if (dt.Rows.Count == 0)
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+
+            DepartmentAPI department = new DepartmentAPI();
+            department.Name = dt.Rows[0]["Name"].ToString();
+
+            return Ok(department);
+        }
+
 
         /***
          * TODO TEMPORARY: using non-LINQ method to query (pure string)
@@ -296,6 +385,47 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 else
                 {
                     return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                        "Internal server error, no rows affected");
+                }
+            }
+            catch (SqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        [HttpPost]
+        [Route("add-department")]
+        public IActionResult AddDepartment([FromBody] DepartmentAPI departmentAPI)
+        {
+            SqlConnection conn = new SqlConnection(_configuration
+                .GetConnectionString("AttendanceTracker")
+                .ToString());
+
+            try
+            {
+                conn.Open();
+
+                string sqlScript = "INSERT INTO Departments(Name) " + " VALUES(@Name);";
+
+                SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
+                sqlCommand.Parameters.AddWithValue("@Name", departmentAPI.Name);
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    string message = "Department " + departmentAPI.Name + " has been added";
+                    return StatusCode(HttpResponseStatus.CREATED, message);
+                }
+                else
+                {
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                         "Internal server error, no rows affected");
                 }
             }
