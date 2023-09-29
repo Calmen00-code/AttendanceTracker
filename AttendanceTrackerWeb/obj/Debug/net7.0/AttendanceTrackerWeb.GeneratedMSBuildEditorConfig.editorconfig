@@ -20,12 +20,20 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminLogin.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5Mb2dpbi5yYXpvcg==
+[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminAddDepartment.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5BZGREZXBhcnRtZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5NZW51LnJhem9y
+[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminQR.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5RUi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminRegisterNewUser.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5SZWdpc3Rlck5ld1VzZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminReport.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5SZXBvcnQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/AttendanceTracker/AttendanceTrackerWeb/Pages/Counter.razor]
@@ -40,10 +48,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/RegisterNewUser.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVnaXN0ZXJOZXdVc2VyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/AttendanceTracker/AttendanceTrackerWeb/Shared/SurveyPrompt.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -51,6 +55,10 @@ build_metadata.AdditionalFiles.CssScope =
 [C:/AttendanceTracker/AttendanceTrackerWeb/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
+
+[C:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5NZW51LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-wnzqvo83c2
 
 [C:/AttendanceTracker/AttendanceTrackerWeb/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=

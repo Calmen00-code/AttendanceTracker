@@ -328,6 +328,7 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
                 sqlCommand.Parameters.AddWithValue("@Name", staff.Name);
                 sqlCommand.Parameters.AddWithValue("@Password", staff.Password);
+                System.Diagnostics.Debug.WriteLine("Department in DB: " + staff.Department);
                 sqlCommand.Parameters.AddWithValue("@Department", staff.Department);
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();

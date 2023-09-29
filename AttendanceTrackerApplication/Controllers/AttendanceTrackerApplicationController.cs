@@ -60,6 +60,26 @@ namespace AttendanceTrackerApplication.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("get-departments")]
+        public async Task<IActionResult> GetDepartments()
+        {
+            string route = _apiurl + "get-departments";
+            var response = await _httpClient.GetAsync(route);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.OK)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.OK, responseContent);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+
+        }
+
         [HttpPost]
         [Route("add-admin")]
         public async Task<IActionResult> AddAdmin([FromBody] AdminAPI admin) 
@@ -93,6 +113,7 @@ namespace AttendanceTrackerApplication.Controllers
         public async Task<IActionResult> AddStaff([FromBody] StaffAPI staff)
         {
             var staffJson = JsonContent.Create(staff);
+            System.Diagnostics.Debug.WriteLine("Department in Applcaitioon:" + staff.Department);
 
             string route = _apiurl + "add-staff";
             var response = await _httpClient.PostAsync(route, staffJson);
@@ -121,6 +142,32 @@ namespace AttendanceTrackerApplication.Controllers
 
             string route = _apiurl + "add-workday-record";
             var response = await _httpClient.PostAsync(route, workdayRecordJson);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
+            {
+                /*
+                var workdayContent = await response.Content.ReadAsStreamAsync();
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = await JsonSerializer.DeserializeAsync<WorkdayRecordAPI>(workdayContent, options);
+                */
+
+                return StatusCode(HttpResponseStatus.ACCEPTED);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
+        [HttpPost]
+        [Route("add-department")]
+        public async Task<IActionResult> AddDepartment([FromBody] DepartmentAPI departmentAPI)
+        {
+            var departmentJson = JsonContent.Create(departmentAPI);
+
+            string route = _apiurl + "add-department";
+            var response = await _httpClient.PostAsync(route, departmentJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
             {

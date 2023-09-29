@@ -51,3 +51,4 @@ C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\AttendanceTrackerWeb.
 C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\ref\AttendanceTrackerWeb.dll
 C:\AttendanceTracker\AttendanceTrackerWeb\bin\Debug\net7.0\libman.json
 C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\scopedcss\Shared\Sidebar.razor.rz.scp.css
+C:\AttendanceTracker\AttendanceTrackerWeb\obj\Debug\net7.0\scopedcss\Pages\AdminMenu.razor.rz.scp.css

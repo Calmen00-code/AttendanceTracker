@@ -1,8 +1,21 @@
-﻿@using AttendanceTrackerWeb.Data
+﻿@inherits LayoutComponentBase
+@using AttendanceTrackerWeb.Data
 @using AttendanceTrackerWeb.Shared
+
+@inject NavigationManager Navigation
+
 @page "/admin-menu"
 
-<Sidebar SidebarItems="AdminMenus"/>
+<div class="page">
+    <div class="sidebar">
+        <Sidebar SidebarItems="AdminMenus"/>
+    </div>
+    <main>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
 
 @code {
     public List<NavigationItem> AdminMenus { get; set; } = new List<NavigationItem>
@@ -12,4 +25,9 @@
         new NavigationItem { Url = "qr-code", IconText ="clock", Label = "QR"},
         new NavigationItem { Url = "add-department", IconText ="plus", Label = "Add Department"}
     };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.NavigateTo("report");
+    }
 }
