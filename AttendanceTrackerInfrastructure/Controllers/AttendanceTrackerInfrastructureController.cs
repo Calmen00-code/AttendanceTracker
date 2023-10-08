@@ -115,6 +115,58 @@ namespace AttendanceTrackerInfrastructure.Controllers
         }
 
         [HttpGet]
+        [Route("get-staffs")]
+        public IActionResult GetStaffs() 
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                adapter = new SqlDataAdapter("SELECT * FROM Staffs", conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+
+            List<StaffAPI> staffs = new List<StaffAPI>();
+
+            // check if db has any data
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    StaffAPI staff = new StaffAPI();
+                    staff.Name = dt.Rows[i]["Name"].ToString();
+                    staff.Password = dt.Rows[i]["Password"].ToString();
+                    staff.Department = dt.Rows[i]["Department"].ToString();
+                    staffs.Add(staff);
+                }
+            }
+
+            if (staffs.Count > 0)
+            {
+                return Ok(staffs);
+            }
+            else
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+        }
+
+        [HttpGet]
         [Route("get-departments")]
         public IActionResult GetDepartments() 
         {

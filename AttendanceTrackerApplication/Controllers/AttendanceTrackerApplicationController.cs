@@ -42,6 +42,25 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpGet]
+        [Route("get-staffs")]
+        public async Task<IActionResult> GetStaffs()
+        {
+            string route = _apiurl + "get-staffs";
+            var response = await _httpClient.GetAsync(route);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.OK)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.OK, responseContent);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
+        [HttpGet]
         [Route("get-admin/{adminName}")]
         public async Task<IActionResult> GetAdmin(string adminName)
         {
@@ -169,7 +188,7 @@ namespace AttendanceTrackerApplication.Controllers
             string route = _apiurl + "add-department";
             var response = await _httpClient.PostAsync(route, departmentJson);
 
-            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
+            if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
             {
                 /*
                 var workdayContent = await response.Content.ReadAsStreamAsync();
@@ -177,7 +196,7 @@ namespace AttendanceTrackerApplication.Controllers
                 var result = await JsonSerializer.DeserializeAsync<WorkdayRecordAPI>(workdayContent, options);
                 */
 
-                return StatusCode(HttpResponseStatus.ACCEPTED);
+                return StatusCode(HttpResponseStatus.CREATED);
             }
             else
             {

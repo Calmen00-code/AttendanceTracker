@@ -53,6 +53,10 @@
             departments = await response.Content.ReadFromJsonAsync<List<DepartmentAPI>>();
             Department = departments[0].Name;
         }
+        else
+        {
+            ShowAlert("Failed to load departments");
+        }
     }
 
     public async void Register()

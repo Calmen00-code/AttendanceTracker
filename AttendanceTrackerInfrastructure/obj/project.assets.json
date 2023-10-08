@@ -11920,19 +11920,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\calme\\.nuget\\packages\\": {}
+    "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\AttendanceTrackerInfrastructure.csproj",
+      "projectUniqueName": "D:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\AttendanceTrackerInfrastructure.csproj",
       "projectName": "AttendanceTrackerInfrastructure",
-      "projectPath": "C:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\AttendanceTrackerInfrastructure.csproj",
-      "packagesPath": "C:\\Users\\calme\\.nuget\\packages\\",
-      "outputPath": "C:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\obj\\",
+      "projectPath": "D:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\AttendanceTrackerInfrastructure.csproj",
+      "packagesPath": "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\",
+      "outputPath": "D:\\AttendanceTracker\\AttendanceTrackerInfrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\calme\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\B760M DS3H AX DDR4\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -11940,15 +11940,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\AttendanceTracker\\APIClasses\\APIClasses.csproj": {
-              "projectPath": "C:\\AttendanceTracker\\APIClasses\\APIClasses.csproj"
+            "D:\\AttendanceTracker\\APIClasses\\APIClasses.csproj": {
+              "projectPath": "D:\\AttendanceTracker\\APIClasses\\APIClasses.csproj"
             }
           }
         }
@@ -12033,7 +12032,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -10,3 +10,14 @@ C:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.dll
 C:\AttendanceTracker\APIClasses\obj\Debug\net7.0\refint\APIClasses.dll
 C:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.pdb
 C:\AttendanceTracker\APIClasses\obj\Debug\net7.0\ref\APIClasses.dll
+D:\AttendanceTracker\APIClasses\bin\Debug\net7.0\APIClasses.deps.json
+D:\AttendanceTracker\APIClasses\bin\Debug\net7.0\APIClasses.dll
+D:\AttendanceTracker\APIClasses\bin\Debug\net7.0\APIClasses.pdb
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.GeneratedMSBuildEditorConfig.editorconfig
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.AssemblyInfoInputs.cache
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.AssemblyInfo.cs
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.csproj.CoreCompileInputs.cache
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.dll
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\refint\APIClasses.dll
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\APIClasses.pdb
+D:\AttendanceTracker\APIClasses\obj\Debug\net7.0\ref\APIClasses.dll
