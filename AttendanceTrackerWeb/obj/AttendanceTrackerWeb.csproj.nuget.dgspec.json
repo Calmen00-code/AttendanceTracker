@@ -194,6 +194,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "QRCoderNetCore": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "bootstrap": {
               "target": "Package",
               "version": "[5.3.2, )"

@@ -1,0 +1,13 @@
+﻿@inherits LayoutComponentBase
+@using AttendanceTrackerWeb.Data
+@using AttendanceTrackerWeb.Shared
+
+@page "/user-menu/{Username}"
+
+<h3>@Username Menu</h3>
+
+
+@code {
+    [Parameter]
+    public string Username { get; set; } = "";
+}

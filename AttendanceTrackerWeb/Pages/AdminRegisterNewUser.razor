@@ -1,11 +1,13 @@
 ﻿@page "/register-new-user"
+
+@using APIClasses
+
 @layout AdminMenu // we use the same sidebar menu across all the admin menus page
 
 @inject IJSRuntime jsRuntime
 @inject HttpClient HttpClient
 @inject NavigationManager Navigation
 
-@using APIClasses
 
 <div class="container-fluid h-100">
     <div class="row justify-content-center align-items-center h-100">
@@ -68,7 +70,6 @@
 
         string route = API_URL + "add-staff";
         var response = await HttpClient.PostAsJsonAsync(route, staff);
-        System.Diagnostics.Debug.WriteLine("Department in Web: " + staff.Department);
 
         if (response.IsSuccessStatusCode)
         {

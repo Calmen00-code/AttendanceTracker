@@ -1,8 +1,49 @@
 ﻿@page "/add-department"
+
+@using APIClasses;
+
+@inject IJSRuntime jsRuntime
+@inject HttpClient HttpClient
+@inject NavigationManager Navigation
+
 @layout AdminMenu // we use the same sidebar menu across all the admin menus page
 
 <h3>Admin Add Department</h3>
+<form @onsubmit="Add">
+    <div class="form-group mb-3">
+        <input class="form-control" type="text" placeholder="Department" @bind="DepartmentName" required />
+    </div>
+    <div class="form-group text-center">
+        <button class="btn btn-primary" type="submit">Add</button>
+    </div>
+</form>
 
 @code {
+    private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
 
+    private string DepartmentName { get; set; }
+
+    public async void Add()
+    {
+        string route = API_URL + "add-department";
+        DepartmentAPI department = new DepartmentAPI();
+        department.Name = DepartmentName;
+
+        var response = await HttpClient.PostAsJsonAsync(route, department);
+
+        if (response.IsSuccessStatusCode)
+        {
+            ShowAlert("Department added");
+            Navigation.NavigateTo("/admin-menu");
+        }
+        else
+        {
+            ShowAlert("Unable to add new department");
+        }
+    }
+
+    private void ShowAlert(string msg)
+    {
+        jsRuntime.InvokeVoidAsync("alert", msg);
+    }
 }
