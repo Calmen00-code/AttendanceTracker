@@ -71,9 +71,9 @@
             Navigation.NavigateTo("admin-menu");
             // NavigationManager.NavigateTo("admin-menu");
         }
-        else
+        else if (Role.Equals(STAFF))
         {
-            Navigation.NavigateTo($"user-menu/{Username}");
+            Navigation.NavigateTo($"staff-menu");
         }
     }
 

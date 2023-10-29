@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+@using AttendanceTrackerWeb.Data
+@using AttendanceTrackerWeb.Shared
+
+@page "/staff-menu"
+
+<div class="page">
+    <div class="sidebar">
+        <Sidebar SidebarItems="StaffMenus"/>
+    </div>
+
+    <main>
+        <article class="context px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+
+@code {
+    public List<NavigationItem> StaffMenus { get; set; } = new List<NavigationItem>
+    {
+        new NavigationItem { Url = $"staff-qr", IconText = "camera-slr", Label = "Attendance QR"},
+    };
+}

@@ -44,12 +44,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/AttendanceTracker/AttendanceTrackerWeb/Pages/UserMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlck1lbnUucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/AttendanceTracker/AttendanceTrackerWeb/Pages/UserQR.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlclFSLnJhem9y
+[D:/AttendanceTracker/AttendanceTrackerWeb/Pages/StaffQR.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZRUi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/AttendanceTracker/AttendanceTrackerWeb/Shared/SurveyPrompt.razor]
@@ -63,6 +59,10 @@ build_metadata.AdditionalFiles.CssScope =
 [D:/AttendanceTracker/AttendanceTrackerWeb/Pages/AdminMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5NZW51LnJhem9y
 build_metadata.AdditionalFiles.CssScope = b-wnzqvo83c2
+
+[D:/AttendanceTracker/AttendanceTrackerWeb/Pages/StaffMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZNZW51LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-5pqauuflet
 
 [D:/AttendanceTracker/AttendanceTrackerWeb/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=

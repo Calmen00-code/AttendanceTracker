@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\StaffMenu.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\StaffMenu.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="5.3.2" />
     <PackageReference Include="QRCoderNetCore" Version="1.0.0" />
   </ItemGroup>
