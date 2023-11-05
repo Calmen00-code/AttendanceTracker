@@ -1,8 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @using AttendanceTrackerWeb.Data
 @using AttendanceTrackerWeb.Shared
+@inject NavigationManager Navigation
 
-@page "/staff-menu"
+@page "/staff-menu/{Username}"
 
 <div class="page">
     <div class="sidebar">
@@ -18,8 +19,17 @@
 
 
 @code {
-    public List<NavigationItem> StaffMenus { get; set; } = new List<NavigationItem>
+    [Parameter]
+    public string Username { get; set; } = "";
+
+    public List<NavigationItem> StaffMenus { get; set; }
+
+    protected override void OnInitialized()
     {
-        new NavigationItem { Url = $"staff-qr", IconText = "camera-slr", Label = "Attendance QR"},
-    };
+        base.OnInitialized();
+        StaffMenus = new List<NavigationItem>
+        {
+            new NavigationItem { Url = "staff-qr/" + Username, IconText = "camera-slr", Label = "Attendance QR"},
+        };
+    }
 }

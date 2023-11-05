@@ -3,11 +3,11 @@
 @using QRCoder
 @using System.Drawing.Imaging
 
-@layout AdminMenu // we use the same sidebar menu across all the staff menus page
+@layout StaffMenu // we use the same sidebar menu across all the staff menus page
 
 @page "/staff-qr/{Username}"
 
-<h3>@Username Menu</h3>
+<h3>@Username QR</h3>
 
 @code {
     protected override async Task OnInitializedAsync()
