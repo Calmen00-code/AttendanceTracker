@@ -78,3 +78,9 @@ D:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\refint\Attend
 D:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\AttendanceTrackerApplication.pdb
 D:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\AttendanceTrackerApplication.genruntimeconfig.cache
 D:\AttendanceTracker\AttendanceTrackerApplication\obj\Debug\net7.0\ref\AttendanceTrackerApplication.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\QRCoder.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\System.Drawing.Common.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\AttendanceTracker\AttendanceTrackerApplication\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
