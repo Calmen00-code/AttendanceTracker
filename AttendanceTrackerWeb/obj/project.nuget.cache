@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "U1JLNpAfq23DG6JlR4z2A0asLirrnr925krfTp4K6Kw63DE8ZKudhXVp+tYXCVm1s4VIWb1LZIf30yg8+105RA==",
+  "dgSpecHash": "5BemNPGJZxP5mW2KTZGzfJYH4f+AOxcrB9kfGcAEeCZapFiTf0nLoQQN3QsIARuoDwjIAMlhKlsq7D0fWRhGBQ==",
   "success": true,
   "projectFilePath": "D:\\AttendanceTracker\\AttendanceTrackerWeb\\AttendanceTrackerWeb.csproj",
   "expectedPackageFiles": [
@@ -19,6 +19,7 @@
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.net.compilers.toolset\\4.8.0\\microsoft.net.compilers.toolset.4.8.0.nupkg.sha512",
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
     "C:\\Users\\B760M DS3H AX DDR4\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",

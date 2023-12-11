@@ -1,0 +1,11 @@
+Attendance Tracker Web
+=======================
+https://attendancetrackerweb.azurewebsites.net
+
+Attendance Tracker Application
+==============================
+https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/get-admins
+
+Attendance Tracker Infrastructure
+=================================
+https://attendancetrackerinfrastructure.azurewebsites.net/api/AttendanceTrackerInfrastructure/get-admins

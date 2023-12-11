@@ -9,7 +9,11 @@ using System.Data;
 
 namespace AttendanceTrackerInfrastructure.Controllers
 {
+    // for development
     [Route("api/[controller]")]
+
+    // for deployment
+    //[Route("/")]
     [ApiController]
     public class AttendanceTrackerInfrastructureController : ControllerBase
     {

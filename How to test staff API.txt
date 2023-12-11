@@ -1,0 +1,7 @@
+{
+  "name": "Amber",
+  "password": "Amber123",
+  "department": "Marketing",
+  "workdays": [
+  ]
+}

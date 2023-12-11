@@ -16,6 +16,7 @@ namespace AttendanceTrackerApplication.Controllers
     {
         private readonly HttpClient _httpClient;
         private static readonly string _apiurl = "https://localhost:7102/api/AttendanceTrackerInfrastructure/";
+        private static readonly string _deploymentapiurl = "https://attendancetrackerinfrastructure.azurewebsites.net/api/AttendanceTrackerInfrastructure/";
 
         public AttendanceTrackerApplicationController(HttpClient httpClient)
         {
@@ -26,7 +27,8 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-admins")]
         public async Task<IActionResult> GetAdmins()
         {
-            string route = _apiurl + "get-admins";
+            // string route = _apiurl + "get-admins";
+            string route = _deploymentapiurl + "get-admins";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -45,7 +47,8 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-staffs")]
         public async Task<IActionResult> GetStaffs()
         {
-            string route = _apiurl + "get-staffs";
+            // string route = _apiurl + "get-staffs";
+            string route = _deploymentapiurl + "get-staffs";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -64,7 +67,8 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-admin/{adminName}")]
         public async Task<IActionResult> GetAdmin(string adminName)
         {
-            string route = _apiurl + "get-admin/" + adminName;
+            // string route = _apiurl + "get-admin/" + adminName;
+            string route = _deploymentapiurl + "get-admin" + adminName;
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK) 
@@ -83,7 +87,8 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-departments")]
         public async Task<IActionResult> GetDepartments()
         {
-            string route = _apiurl + "get-departments";
+            // string route = _apiurl + "get-departments";
+            string route = _deploymentapiurl + "get-departments";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -107,7 +112,8 @@ namespace AttendanceTrackerApplication.Controllers
             // a json object representation for it
             var adminJson = JsonContent.Create(admin);
 
-            string route = _apiurl + "add-admin";
+            // string route = _apiurl + "add-admin";
+            string route = _deploymentapiurl + "add-admin";
             var response = await _httpClient.PostAsync(route, adminJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -134,7 +140,8 @@ namespace AttendanceTrackerApplication.Controllers
             var staffJson = JsonContent.Create(staff);
             System.Diagnostics.Debug.WriteLine("Department in Applcaitioon:" + staff.Department);
 
-            string route = _apiurl + "add-staff";
+            // string route = _apiurl + "add-staff";
+            string route = _deploymentapiurl + "add-staff";
             var response = await _httpClient.PostAsync(route, staffJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -159,7 +166,8 @@ namespace AttendanceTrackerApplication.Controllers
         {
             var workdayRecordJson = JsonContent.Create(workdayRecord);
 
-            string route = _apiurl + "add-workday-record";
+            // string route = _apiurl + "add-workday-record";
+            string route = _deploymentapiurl + "add-workday-record";
             var response = await _httpClient.PostAsync(route, workdayRecordJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
@@ -185,7 +193,8 @@ namespace AttendanceTrackerApplication.Controllers
         {
             var departmentJson = JsonContent.Create(departmentAPI);
 
-            string route = _apiurl + "add-department";
+            // string route = _apiurl + "add-department";
+            string route = _deploymentapiurl + "add-department";
             var response = await _httpClient.PostAsync(route, departmentJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)

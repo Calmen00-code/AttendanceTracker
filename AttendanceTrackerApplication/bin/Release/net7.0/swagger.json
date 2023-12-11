@@ -1,0 +1,237 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "AttendanceTrackerApplication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/AttendanceTrackerApplication/get-admins": {
+      "get": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/get-staffs": {
+      "get": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/get-admin/{adminName}": {
+      "get": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "adminName",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/get-departments": {
+      "get": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/add-admin": {
+      "post": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AdminAPI"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/add-staff": {
+      "post": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/StaffAPI"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/add-workday-record": {
+      "post": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/WorkdayRecordAPI"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/AttendanceTrackerApplication/add-department": {
+      "post": {
+        "tags": [
+          "AttendanceTrackerApplication"
+        ],
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/DepartmentAPI"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AdminAPI": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DepartmentAPI": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "StaffAPI": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "department": {
+          "type": "string"
+        },
+        "workdays": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkdayRecordAPI"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "WorkdayRecordAPI": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "format": "date",
+          "type": "string"
+        },
+        "checkIn": {
+          "format": "time",
+          "type": "string"
+        },
+        "checkOut": {
+          "format": "time",
+          "type": "string"
+        },
+        "staffName": {
+          "type": "string"
+        },
+        "staff": {
+          "$ref": "#/definitions/StaffAPI"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

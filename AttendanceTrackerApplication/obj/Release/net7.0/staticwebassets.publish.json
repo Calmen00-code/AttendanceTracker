@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "BNTRDMvCtmJboL5Af53co37vzkkQq+9+H7nfRja+PNE=",
+  "Source": "AttendanceTrackerApplication",
+  "BasePath": "_content/AttendanceTrackerApplication",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
