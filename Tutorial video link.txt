@@ -1,0 +1,7 @@
+How to deploy with Azure SQL Database
+=====================================
+https://www.youtube.com/watch?v=jT8eA9A7qXE&list=PLSuU05WnKzTycp-gsOOcConWDHqbyfqDs&index=5&t=1583s
+
+How to create Foreign Key using SQL Server
+==========================================
+https://www.youtube.com/watch?v=xsReeg7WqRc&list=PLSuU05WnKzTycp-gsOOcConWDHqbyfqDs&index=2

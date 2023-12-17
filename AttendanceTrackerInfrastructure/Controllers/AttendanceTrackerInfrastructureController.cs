@@ -144,7 +144,6 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
             }
 
-
             List<StaffAPI> staffs = new List<StaffAPI>();
 
             // check if db has any data
@@ -167,6 +166,56 @@ namespace AttendanceTrackerInfrastructure.Controllers
             else
             {
                 return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+        }
+
+        [HttpGet]
+        [Route("is-staff-exist/{name}")]
+        public IActionResult IsStaffExist(string name)
+        {
+
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                adapter = new SqlDataAdapter("SELECT * FROM Staffs", conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+            List<string> staffs = new List<string>();
+
+            // check if db has any data
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    string staff = "";
+                    staff = dt.Rows[i]["Name"].ToString();
+                    staffs.Add(staff);
+                }
+            }
+
+            if (staffs.Contains(name))
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "Name does not exist");
             }
         }
 

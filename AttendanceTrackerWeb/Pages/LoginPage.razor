@@ -41,7 +41,8 @@
 @code {
     private static readonly string ADMIN = "Admin";
     private static readonly string STAFF = "Staff";
-    private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
+    // private static readonly string API_URL_DEVELOPMENT = "https://localhost:7178/api/AttendanceTrackerApplication/";
+    private static readonly string API_URL_DEPLOYMENT = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
 
     private string? Username { get; set; }
     private string? Password { get; set; }
@@ -51,7 +52,7 @@
     {
         if (Role.Equals(ADMIN))
         {
-            string route = API_URL + "get-admin/" + Username;
+            string route = API_URL_DEPLOYMENT + "get-admin/" + Username;
             var response = await HttpClient.GetAsync(route);
 
             if ((int)response.StatusCode != HttpResponseStatus.OK)

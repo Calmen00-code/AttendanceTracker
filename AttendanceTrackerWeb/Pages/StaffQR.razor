@@ -21,6 +21,7 @@
 <img src="@String.Format("data:imag/png;base64,{0}", Convert.ToBase64String(qrCodeBytes))">
 
 @code {
+    private static string APPLICATION_API = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
     private Byte[] qrCodeBytes;
 
     [Parameter]

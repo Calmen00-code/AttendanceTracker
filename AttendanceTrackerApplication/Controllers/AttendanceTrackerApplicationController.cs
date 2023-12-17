@@ -64,11 +64,30 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpGet]
+        [Route("is-staff-exist/{name}")]
+        public async Task<IActionResult> IsStaffExist(string name)
+        {
+            string route = _deploymentapiurl + "is-staff-exist/" + name;
+            var response = await _httpClient.GetAsync(route);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.OK)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.OK, responseContent);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
+        [HttpGet]
         [Route("get-admin/{adminName}")]
         public async Task<IActionResult> GetAdmin(string adminName)
         {
             // string route = _apiurl + "get-admin/" + adminName;
-            string route = _deploymentapiurl + "get-admin" + adminName;
+            string route = _deploymentapiurl + "get-admin/" + adminName;
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK) 
@@ -101,7 +120,6 @@ namespace AttendanceTrackerApplication.Controllers
                 string errorContent = await response.Content.ReadAsStringAsync();
                 return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
             }
-
         }
 
         [HttpPost]

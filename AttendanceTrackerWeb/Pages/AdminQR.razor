@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore
+@using System
+@using System.Collections.Generic
+@using System.Drawing
+@using System.IO
+@using QRCoder
+
+@layout StaffMenu // we use the same sidebar menu across all the staff menus page
+
+@page "/admin-qr"
+
+<div class="input-group">
+    <div class="col-sm-6">
+        <label class="mb-3">@Username QR</label>
+    </div>
+</div>
+
+<!--
+<img alt="" src"@QRByte" width="300" class="mb-5" />
+-->
+<img src="@String.Format("data:imag/png;base64,{0}", Convert.ToBase64String(qrCodeBytes))">
+
+@code {
+    private static string APPLICATION_API = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private Byte[] qrCodeBytes;
+
+    [Parameter]
+    public string Username { get; set; } = "";
+
+    public string QRCodeText { get; set; }
+    public string QRByte = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qRCodeGenerator.CreateQrCode("www.google.com", QRCodeGenerator.ECCLevel.Q);
+        QRCode qrCode = new QRCode(qrCodeData);
+        Bitmap qrCodeImage = qrCode.GetGraphic(20);
+        qrCodeBytes = BitmapToBytes(qrCodeImage);
+        
+        /*
+        * 
+        qrBitMap.Save(ms, ImageFormat.Png);
+        string base64 = Convert.ToBase64String(ms.ToArray());
+        QRByte = string.Format("data:image/png;base64,{0}", base64);
+    */
+    }
+
+    private static Byte[] BitmapToBytes(Bitmap img)
+    {
+        using (MemoryStream stream = new MemoryStream())
+        {
+            img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+            return stream.ToArray();
+        }
+    }
+}
+
