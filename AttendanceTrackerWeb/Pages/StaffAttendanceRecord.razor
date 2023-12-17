@@ -1,9 +1,11 @@
-﻿@using Microsoft.AspNetCore
-@using System
-@using System.Collections.Generic
-@using System.Drawing
-@using System.IO
-@using QRCoder
+﻿@page "/staff-attendance-record"
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager Navigation
+
+@using APIClasses
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
 
 
 <PageTitle>AttendanceTrackerWeb</PageTitle>
@@ -31,6 +33,29 @@
 
     public async void Submit()
     {
-        string route = API_URL_DEPLOYMENT + "get-staff"        
+        string route = API_URL_DEPLOYMENT + "is-staff-exist/" + Username;        
+        var response = await HttpClient.GetAsync(route);
+
+        // DELETE this, this is for testing only
+        if ((int) response.StatusCode == HttpResponseStatus.OK)
+        {
+            ShowAlert("User exist");
+            return;
+        }
+
+        if ((int)response.StatusCode != HttpResponseStatus.OK)
+        {
+            ShowAlert("User does not exist!");
+            return;
+        }
+
+
+        // Navigation.NavigateTo("admin-menu");
+        // NavigationManager.NavigateTo("admin-menu");
+    }
+
+    private void ShowAlert(string message)
+    {
+        jsRuntime.InvokeVoidAsync("alert", message);
     }
 }

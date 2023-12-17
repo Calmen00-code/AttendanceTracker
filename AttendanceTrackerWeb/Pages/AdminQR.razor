@@ -1,4 +1,6 @@
-﻿@using Microsoft.AspNetCore
+﻿@page "/admin-qr"
+
+@using Microsoft.AspNetCore
 @using System
 @using System.Collections.Generic
 @using System.Drawing
@@ -6,8 +8,6 @@
 @using QRCoder
 
 @layout StaffMenu // we use the same sidebar menu across all the staff menus page
-
-@page "/admin-qr"
 
 <div class="input-group">
     <div class="col-sm-6">
@@ -21,7 +21,9 @@
 <img src="@String.Format("data:imag/png;base64,{0}", Convert.ToBase64String(qrCodeBytes))">
 
 @code {
-    private static string APPLICATION_API = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static string APPLICATION_API_URL = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static string WEB_URL = "https://attendancetrackerweb.azurewebsites.net/";
+
     private Byte[] qrCodeBytes;
 
     [Parameter]
@@ -32,10 +34,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        string attendanceRecordPage = WEB_URL + "staff-attendance-record";
+
         QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
-        QRCodeData qrCodeData = qRCodeGenerator.CreateQrCode("www.google.com", QRCodeGenerator.ECCLevel.Q);
+        QRCodeData qrCodeData = qRCodeGenerator.CreateQrCode(attendanceRecordPage, QRCodeGenerator.ECCLevel.Q);
         QRCode qrCode = new QRCode(qrCodeData);
-        Bitmap qrCodeImage = qrCode.GetGraphic(20);
+        Bitmap qrCodeImage = qrCode.GetGraphic(10);
         qrCodeBytes = BitmapToBytes(qrCodeImage);
         
         /*
