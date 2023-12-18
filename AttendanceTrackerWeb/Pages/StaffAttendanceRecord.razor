@@ -14,6 +14,7 @@
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-md-4">
             <h1 class="display-4 text-center mb-4">Attendance Tracker</h1>
+            <textarea>Time: @CurrentTime</textarea>
             <form @onsubmit="Submit">
                 <div class="form-group mb-3">
                     <input class="form-control" type="text" placeholder="Username" @bind="Username" required/>
@@ -27,28 +28,26 @@
 </div>
 
 @code {
-    private static readonly string API_URL_DEPLOYMENT = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string APPLICATION_API_URL_DEPLOYMENT = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
 
     public string? Username { get; set; }
+    public string? CurrentTime { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentTime = DateTime.Now.ToString();
+    }
 
     public async void Submit()
     {
-        string route = API_URL_DEPLOYMENT + "is-staff-exist/" + Username;        
+        string route = APPLICATION_API_URL_DEPLOYMENT + "is-staff-exist/" + Username;        
         var response = await HttpClient.GetAsync(route);
-
-        // DELETE this, this is for testing only
-        if ((int) response.StatusCode == HttpResponseStatus.OK)
-        {
-            ShowAlert("User exist");
-            return;
-        }
 
         if ((int)response.StatusCode != HttpResponseStatus.OK)
         {
             ShowAlert("User does not exist!");
             return;
         }
-
 
         // Navigation.NavigateTo("admin-menu");
         // NavigationManager.NavigateTo("admin-menu");
