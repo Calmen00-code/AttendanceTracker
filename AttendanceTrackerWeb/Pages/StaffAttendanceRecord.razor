@@ -4,6 +4,7 @@
 @inject NavigationManager Navigation
 
 @using APIClasses
+@using System.Text;
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
 
@@ -15,20 +16,40 @@
         <div class="col-md-4">
             <h1 class="display-4 text-center mb-4">Attendance Tracker</h1>
             <textarea>Time: @CurrentTime</textarea>
-            <form @onsubmit="Submit">
+            <!--
+            <form @onsubmit="CheckInSubmit">
                 <div class="form-group mb-3">
-                    <input class="form-control" type="text" placeholder="Username" @bind="Username" required/>
+                    <input class="form-control" type="text" placeholder="Username" @bind="Username" required />
                 </div>
                 <div class="form-group text-center">
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-primary" type="submit">Check In</button>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary" type="submit">Check Out</button>
                 </div>
             </form>
+            -->
+            <form>
+                <div class="form-group mb-3">
+                    <input class="form-control" type="text" placeholder="Username" @bind="Username" required />
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary" type="submit" value="Check In" @onclick="CheckInSubmit">Check In</button>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-primary" type="submit" value="Check Out" @onclick="CheckOutSubmit">Check Out</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
 
 @code {
     private static readonly string APPLICATION_API_URL_DEPLOYMENT = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string IS_STAFF_EXIST = "is-staff-exist/";
+    private static readonly string GET_STAFF = "get-staff/";
+    private static readonly string ADD_WORKDAY_RECORD = "add-workday-record/";
 
     public string? Username { get; set; }
     public string? CurrentTime { get; set; }
@@ -38,12 +59,93 @@
         CurrentTime = DateTime.Now.ToString();
     }
 
-    public async void Submit()
+    public async void CheckInSubmit()
     {
-        string route = APPLICATION_API_URL_DEPLOYMENT + "is-staff-exist/" + Username;        
-        var response = await HttpClient.GetAsync(route);
+        string route_staff_exist = APPLICATION_API_URL_DEPLOYMENT + IS_STAFF_EXIST + Username;        
+        var response = await HttpClient.GetAsync(route_staff_exist);
 
-        if ((int)response.StatusCode != HttpResponseStatus.OK)
+        if ((int)response.StatusCode == HttpResponseStatus.OK)
+        {
+            // Constructing staff object for workday
+            string route_staff = APPLICATION_API_URL_DEPLOYMENT + GET_STAFF + Username;        
+            var response_staff = await HttpClient.GetAsync(route_staff);
+
+            if ((int)response_staff.StatusCode == HttpResponseStatus.OK)
+            {
+                string route_submit_workday = APPLICATION_API_URL_DEPLOYMENT + ADD_WORKDAY_RECORD;
+
+                string alignedDateFormat = AlignDateFormat(CurrentTime);
+                StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
+
+                    // Constructing workdays object
+                    /*
+                    var request = new HttpRequestMessage
+                    {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri(route_submit_workday),
+            Content = new StringContent(JsonSerializer.Serialize(new
+        {
+        date = alignedDateFormat,
+            checkIn = alignedDateFormat,
+            checkOut = alignedDateFormat,
+            staffName = Username,
+            staff = new
+            {
+            name = staff.Name,
+            password = staff.Password,
+                department = staff.Department,
+                workdays = new List<WorkdayRecordAPI>()
+                }
+                }), Encoding.UTF8, "application/json")
+                };
+                */
+
+
+                /*
+                string dummyCheckIn = "2023-12-22T23:01:22";
+                DateTime dummyDateCheckIn = DateTime.Parse(dummyCheckIn);
+                staffWorkday.CheckIn = dummyDateCheckIn;
+
+                // default CheckOut time will be the same as CheckIn,
+                // then only updated later by user
+                string dummyCheckOut = "2023-12-22T23:01:22";
+                DateTime dummyDateCheckOut = DateTime.Parse(dummyCheckOut);
+                staffWorkday.CheckOut = dummyDateCheckOut;
+                 */
+
+                WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
+                DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(CurrentTime));
+                staffWorkday.Date = alignedDateTime;
+
+                staffWorkday.CheckIn = alignedDateTime;
+                staffWorkday.CheckOut = alignedDateTime;
+                staffWorkday.StaffName = Username;
+
+                staffWorkday.Staff = staff;
+
+                var response_workday = await HttpClient.PostAsJsonAsync(route_submit_workday, staffWorkday);
+
+                // var response_workday = await HttpClient.SendAsync(request);
+                if ((int)response_workday.StatusCode == HttpResponseStatus.CREATED)
+                {
+                    ShowAlert("Check in submitted");
+                    // TODO: report to tell user check in completed
+                    //       stating current check in time
+                    return; // this should be removed when TODO done
+                }
+                else
+                {
+                    ShowAlert("Error occured");
+                    return;
+                }
+            }
+            else
+            {
+                ShowAlert("Could not load staff");
+                return;
+            }
+        }
+        else
         {
             ShowAlert("User does not exist!");
             return;
@@ -51,6 +153,83 @@
 
         // Navigation.NavigateTo("admin-menu");
         // NavigationManager.NavigateTo("admin-menu");
+    }
+
+    public async void CheckOutSubmit()
+    {
+        StaffAPI staff = await GetStaff();
+        if (staff == null)
+        {
+            return;
+        }
+
+        // Constructing workday object for staff, ONLY if staff is VALID
+        string route_submit_workday = APPLICATION_API_URL_DEPLOYMENT + ADD_WORKDAY_RECORD;
+
+        string alignedDateFormat = AlignDateFormat(CurrentTime);
+
+        WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
+        DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(CurrentTime));
+        staffWorkday.Date = alignedDateTime;
+
+        staffWorkday.CheckIn = alignedDateTime;
+        staffWorkday.CheckOut = alignedDateTime;
+        staffWorkday.StaffName = Username;
+
+        staffWorkday.Staff = staff;
+
+        // TODO: use PUT here
+        var response_workday = await HttpClient.PostAsJsonAsync(route_submit_workday, staffWorkday);
+
+        // var response_workday = await HttpClient.SendAsync(request);
+        if ((int)response_workday.StatusCode == HttpResponseStatus.CREATED)
+        {
+            ShowAlert("Check in submitted");
+            // TODO: report to tell user check in completed
+            //       stating current check in time
+            return; // this should be removed when TODO done
+        }
+        else
+        {
+            ShowAlert("Error occured");
+            return;
+        }
+
+        // Navigation.NavigateTo("admin-menu");
+        // NavigationManager.NavigateTo("admin-menu");
+    }
+
+    private async Task<StaffAPI> GetStaff()
+    {
+        string route_staff_exist = APPLICATION_API_URL_DEPLOYMENT + IS_STAFF_EXIST + Username;        
+        var response = await HttpClient.GetAsync(route_staff_exist);
+
+        if ((int)response.StatusCode == HttpResponseStatus.OK)
+        {
+            string route_staff = APPLICATION_API_URL_DEPLOYMENT + GET_STAFF + Username;        
+            var response_staff = await HttpClient.GetAsync(route_staff);
+            if ((int)response_staff.StatusCode == HttpResponseStatus.OK)
+            {
+                StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
+                return staff;
+            }
+            else
+            {
+                ShowAlert("Could not load staff");
+                return null;
+            }
+        }
+        else
+        {
+            ShowAlert("User does not exist!");
+            return null;
+        }
+    }
+
+    // function used to align the dateTime to compatible with Database format
+    private string AlignDateFormat(string dateTime)
+    {
+        return DateTime.Parse(dateTime).ToString("yyyy-MM-ddTHH:mm:ss");
     }
 
     private void ShowAlert(string message)

@@ -12,8 +12,6 @@ namespace AttendanceTrackerInfrastructure.Controllers
     // for development
     [Route("api/[controller]")]
 
-    // for deployment
-    //[Route("/")]
     [ApiController]
     public class AttendanceTrackerInfrastructureController : ControllerBase
     {
@@ -76,6 +74,47 @@ namespace AttendanceTrackerInfrastructure.Controllers
             {
                 return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
             }
+        }
+
+        [HttpGet]
+        [Route("get-staff/{name}")]
+        public IActionResult GetStaff(string name) 
+        {
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                string sqlQuery = "SELECT * FROM Staffs WHERE Name = \'" + name + "\';";
+                adapter = new SqlDataAdapter(sqlQuery, conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                // conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+            // check if db has any data
+            if (dt.Rows.Count == 0)
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+
+            StaffAPI staff = new StaffAPI();
+            staff.Name = dt.Rows[0]["Name"].ToString();
+            staff.Password = dt.Rows[0]["Password"].ToString();
+            staff.Department = dt.Rows[0]["Department"].ToString();
+
+            return Ok(staff);
         }
 
         [HttpGet]
@@ -486,7 +525,7 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 if (rowsAffected > 0)
                 {
                     string message = "Workday record for " + workdayRecordAPI.StaffName + " has been updated.";
-                    return StatusCode(HttpResponseStatus.ACCEPTED, message);
+                    return StatusCode(HttpResponseStatus.CREATED, message);
                 }
                 else
                 {
@@ -539,6 +578,48 @@ namespace AttendanceTrackerInfrastructure.Controllers
             {
                 System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        [HttpPut]
+        [Route("update-workday")]
+        public IActionResult UpdateWorkday([FromBody] WorkdayRecordAPI workdayRecordAPI)
+        {
+            SqlConnection conn = new SqlConnection(_configuration
+                .GetConnectionString("AttendanceTracker")
+                .ToString());
+
+            try
+            {
+                conn.Open();
+
+                string sqlScript = "UPDATE WorkdayRecords" +
+                    " SET CheckIn = \'" + workdayRecordAPI.CheckIn + "\', CheckOut = \'" + workdayRecordAPI.CheckOut + "\'" +
+                    " WHERE StaffName = \'" + workdayRecordAPI.StaffName + "\' AND Date = \'" + workdayRecordAPI.Date + "\';"; 
+
+                SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
+
+                int rowsAffected = sqlCommand.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    string message = "Workday record for " + workdayRecordAPI.StaffName + " has been updated.";
+                    return StatusCode(HttpResponseStatus.ACCEPTED, message);
+                }
+                else
+                {
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                        "Internal server error, no rows affected");
+                }
+            }
+            catch (SqlException e)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: " + e.Message);
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, e.Message);
             }
             finally
             {

@@ -64,6 +64,26 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpGet]
+        [Route("get-staff/{name}")]
+        public async Task<IActionResult> GetStaff(string name)
+        {
+            // string route = _apiurl + "get-staffs";
+            string route = _deploymentapiurl + "get-staff/" + name;
+            var response = await _httpClient.GetAsync(route);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.OK)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.OK, responseContent);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
+        [HttpGet]
         [Route("is-staff-exist/{name}")]
         public async Task<IActionResult> IsStaffExist(string name)
         {
@@ -182,13 +202,18 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("add-workday-record")]
         public async Task<IActionResult> AddWorkdayRecord([FromBody] WorkdayRecordAPI workdayRecord)
         {
+            // aligned the workday record with the format in the database
+            // TODO 
+            // WorkdayRecordAPI workdayRecordDbFormat = new WorkdayRecordAPI();
+            // DateTime CheckIn = DateTime.ParseExact()
+
             var workdayRecordJson = JsonContent.Create(workdayRecord);
 
             // string route = _apiurl + "add-workday-record";
             string route = _deploymentapiurl + "add-workday-record";
             var response = await _httpClient.PostAsync(route, workdayRecordJson);
 
-            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
+            if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
             {
                 /*
                 var workdayContent = await response.Content.ReadAsStreamAsync();
@@ -196,7 +221,7 @@ namespace AttendanceTrackerApplication.Controllers
                 var result = await JsonSerializer.DeserializeAsync<WorkdayRecordAPI>(workdayContent, options);
                 */
 
-                return StatusCode(HttpResponseStatus.ACCEPTED);
+                return StatusCode(HttpResponseStatus.CREATED);
             }
             else
             {
@@ -229,6 +254,33 @@ namespace AttendanceTrackerApplication.Controllers
             {
                 string errorContent = await response.Content.ReadAsStringAsync();
                 return StatusCode(HttpResponseStatus.NOT_FOUND, errorContent);
+            }
+        }
+
+        [HttpPut]
+        [Route("update-workday")]
+        public async Task<IActionResult> UpdateWorkday([FromBody] WorkdayRecordAPI workdayRecordAPI)
+        {
+            var departmentJson = JsonContent.Create(workdayRecordAPI);
+
+            // string route = _apiurl + "add-department";
+            string route = _deploymentapiurl + "update-workday";
+
+            // System.Console.WriteLine("StaffName: " + workdayRecordAPI.StaffName);
+            // System.Console.WriteLine("CheckIn: " + workdayRecordAPI.CheckIn);
+            // System.Console.WriteLine("CheckOut: " + workdayRecordAPI.CheckOut);
+            // System.Console.WriteLine("Date: " + workdayRecordAPI.Date);
+
+            var response = await _httpClient.PutAsync(route, departmentJson);
+
+            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
+            {
+                return StatusCode(HttpResponseStatus.ACCEPTED);
+            }
+            else
+            {
+                string errorContent = await response.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
             }
         }
     }
