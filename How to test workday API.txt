@@ -23,3 +23,17 @@
     "workdays": []
   }
 }
+
+{
+  "date": "2023-12-18",
+  "checkIn": "2023-12-18T10:20:30",
+  "checkOut": "2023-12-18T23:25:50",
+  "totalWorkingHours": 15.23,
+  "staffName": "Amber",
+  "staff": {
+    "name": "Amber",
+    "password": "Amber123",
+    "department": "Marketing",
+    "workdays": []
+  }
+}

@@ -62,6 +62,8 @@
     {
         string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin/" + Username + "/" + CurrentTime;
         var content = new StringContent(string.Empty);
+        // ERROR: no response after clicking checkin or checkout
+        // FIXME: try posting a real object instead of string like this
         var response = await HttpClient.PostAsync(route_timesheet_checkin, content);
 
         if ((int) response.StatusCode == HttpResponseStatus.CREATED || 
@@ -75,12 +77,15 @@
             var errorMessage = $"Error: {errorContent}";
             ShowAlert(errorMessage);
         }
+        return;
     }
 
     public async void CheckOutSubmit()
     {
         string route_timesheet_checkout = APPLICATION_API_URL_DEPLOYMENT + "checkout/" + Username + "/" + CurrentTime;
         var content = new StringContent(string.Empty);
+        // ERROR: no response after clicking checkin or checkout
+        // FIXME: try posting a real object instead of string like this
         var response = await HttpClient.PostAsync(route_timesheet_checkout, content);
 
         if ((int) response.StatusCode == HttpResponseStatus.ACCEPTED)
@@ -93,6 +98,7 @@
             var errorMessage = $"Error: {errorContent}";
             ShowAlert(errorMessage);
         }
+        return;
     }
 
         /*

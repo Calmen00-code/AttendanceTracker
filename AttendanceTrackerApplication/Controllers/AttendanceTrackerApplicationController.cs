@@ -258,16 +258,16 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpPost]
-        [Route("checkin/{Username}/{CurrentTime}")]
-        public async Task<IActionResult> TimesheetCheckIn(string Username, string CurrentTime)
+        [Route("checkin")]
+        public async Task<IActionResult> TimesheetCheckIn([FromBody] TimesheetAPI timesheet)
         {
-            var response = (HttpResponseMessage)(await IsStaffExist(Username));
+            var response = (HttpResponseMessage)(await IsStaffExist(timesheet.Username));
             
             // only proceed if staff is valid
             if ((int) response.StatusCode == HttpResponseStatus.OK)
             {
                 // Constructing staff object for workday
-                var response_staff = (HttpResponseMessage)(await GetStaff(Username));
+                var response_staff = (HttpResponseMessage)(await GetStaff(timesheet.Username));
                 if ((int) response_staff.StatusCode == HttpResponseStatus.OK)
                 {
                     StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
@@ -278,7 +278,8 @@ namespace AttendanceTrackerApplication.Controllers
                     }
                     else
                     {
-                        DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(CurrentTime));
+                        return StatusCode(HttpResponseStatus.OK, "server found staff + " +  staff.Name);
+                        DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
 
                         /**
                          * if alignedDateTime does not have today's date, it means the user just check in for the day. 
@@ -300,7 +301,7 @@ namespace AttendanceTrackerApplication.Controllers
                         WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
                         staffWorkday.Date = alignedDateTime;
                         staffWorkday.CheckIn = alignedDateTime;
-                        staffWorkday.StaffName = Username;
+                        staffWorkday.StaffName = timesheet.Username;
                         staffWorkday.Staff = staff;
 
                         var workdayJson = JsonContent.Create(staffWorkday);
