@@ -2,12 +2,11 @@
 
 @using APIClasses
 
-@layout AdminMenu // we use the same sidebar menu across all the admin menus page
-
 @inject IJSRuntime jsRuntime
 @inject HttpClient HttpClient
 @inject NavigationManager Navigation
 
+@layout AdminMenu // we use the same sidebar menu across all the admin menus page
 
 <div class="container-fluid h-100">
     <div class="row justify-content-center align-items-center h-100">
@@ -37,7 +36,8 @@
 </div>
 
 @code {
-    private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
+    // private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
+    private static readonly string APPLICATION_DEPLOYMENT_API_URL = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
 
     private List<DepartmentAPI> departments { get; set; } = new List<DepartmentAPI>();
     private string? Username { get; set; }
@@ -46,7 +46,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string route = API_URL + "get-departments";
+        // string route = API_URL + "get-departments";
+        string route = APPLICATION_DEPLOYMENT_API_URL + "get-departments";
 
         var response = await HttpClient.GetAsync(route);
 
@@ -68,7 +69,7 @@
         staff.Password = Password;
         staff.Department = Department;
 
-        string route = API_URL + "add-staff";
+        string route = APPLICATION_DEPLOYMENT_API_URL + "add-staff";
         var response = await HttpClient.PostAsJsonAsync(route, staff);
 
         if (response.IsSuccessStatusCode)
