@@ -59,3 +59,4 @@ D:\AttendanceTracker\AttendanceTrackerWeb\obj\Release\net7.0\refint\AttendanceTr
 D:\AttendanceTracker\AttendanceTrackerWeb\obj\Release\net7.0\AttendanceTrackerWeb.pdb
 D:\AttendanceTracker\AttendanceTrackerWeb\obj\Release\net7.0\AttendanceTrackerWeb.genruntimeconfig.cache
 D:\AttendanceTracker\AttendanceTrackerWeb\obj\Release\net7.0\ref\AttendanceTrackerWeb.dll
+D:\AttendanceTracker\AttendanceTrackerWeb\obj\Release\net7.0\scopedcss\Pages\StaffAttendanceRecord.razor.rz.scp.css
