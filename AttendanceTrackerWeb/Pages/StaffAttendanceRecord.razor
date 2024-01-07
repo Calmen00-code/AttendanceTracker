@@ -40,7 +40,6 @@
                     <button class="check-out" type="submit" value="Check Out" @onclick="CheckOutSubmit">Check Out</button>
                 </div>
             </form>
-
         </div>
     </div>
 </div>
@@ -61,6 +60,45 @@
 
     public async void CheckInSubmit()
     {
+        string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin/" + Username + "/" + CurrentTime;
+        var content = new StringContent(string.Empty);
+        var response = await HttpClient.PostAsync(route_timesheet_checkin, content);
+
+        if ((int) response.StatusCode == HttpResponseStatus.CREATED || 
+            (int) response.StatusCode == HttpResponseStatus.ACCEPTED)
+        {
+            ShowAlert("Check in submitted");
+        }
+        else
+        {
+            var errorContent = response.Content.ReadAsStringAsync();
+            var errorMessage = $"Error: {errorContent}";
+            ShowAlert(errorMessage);
+        }
+    }
+
+    public async void CheckOutSubmit()
+    {
+        string route_timesheet_checkout = APPLICATION_API_URL_DEPLOYMENT + "checkout/" + Username + "/" + CurrentTime;
+        var content = new StringContent(string.Empty);
+        var response = await HttpClient.PostAsync(route_timesheet_checkout, content);
+
+        if ((int) response.StatusCode == HttpResponseStatus.ACCEPTED)
+        {
+            ShowAlert("Check out submitted");
+        }
+        else
+        {
+            var errorContent = response.Content.ReadAsStringAsync();
+            var errorMessage = $"Error: {errorContent}";
+            ShowAlert(errorMessage);
+        }
+    }
+
+        /*
+    public async void CheckInSubmit()
+    {
+        string route_timesheet_submit = APPLICATION_API_URL_DEPLOYMENT + 
         string route_staff_exist = APPLICATION_API_URL_DEPLOYMENT + IS_STAFF_EXIST + Username;        
         var response = await HttpClient.GetAsync(route_staff_exist);
 
@@ -76,42 +114,6 @@
 
                 string alignedDateFormat = AlignDateFormat(CurrentTime);
                 StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
-
-                    // Constructing workdays object
-                    /*
-                    var request = new HttpRequestMessage
-                    {
-                    Method = HttpMethod.Post,
-                    RequestUri = new Uri(route_submit_workday),
-            Content = new StringContent(JsonSerializer.Serialize(new
-        {
-        date = alignedDateFormat,
-            checkIn = alignedDateFormat,
-            checkOut = alignedDateFormat,
-            staffName = Username,
-            staff = new
-            {
-            name = staff.Name,
-            password = staff.Password,
-                department = staff.Department,
-                workdays = new List<WorkdayRecordAPI>()
-                }
-                }), Encoding.UTF8, "application/json")
-                };
-                */
-
-
-                /*
-                string dummyCheckIn = "2023-12-22T23:01:22";
-                DateTime dummyDateCheckIn = DateTime.Parse(dummyCheckIn);
-                staffWorkday.CheckIn = dummyDateCheckIn;
-
-                // default CheckOut time will be the same as CheckIn,
-                // then only updated later by user
-                string dummyCheckOut = "2023-12-22T23:01:22";
-                DateTime dummyDateCheckOut = DateTime.Parse(dummyCheckOut);
-                staffWorkday.CheckOut = dummyDateCheckOut;
-                 */
 
                 WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
                 DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(CurrentTime));
@@ -150,7 +152,6 @@
             ShowAlert("User does not exist!");
             return;
         }
-
         // Navigation.NavigateTo("admin-menu");
         // NavigationManager.NavigateTo("admin-menu");
     }
@@ -198,6 +199,7 @@
         // Navigation.NavigateTo("admin-menu");
         // NavigationManager.NavigateTo("admin-menu");
     }
+    */
 
     private async Task<StaffAPI> GetStaff()
     {
@@ -226,11 +228,6 @@
         }
     }
 
-    // function used to align the dateTime to compatible with Database format
-    private string AlignDateFormat(string dateTime)
-    {
-        return DateTime.Parse(dateTime).ToString("yyyy-MM-ddTHH:mm:ss");
-    }
 
     private void ShowAlert(string message)
     {
