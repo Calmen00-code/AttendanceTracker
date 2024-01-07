@@ -1,0 +1,4 @@
+1. Open Package Manager (PM) Console
+2. Ensure the default project is set to AttendanceTrackerInfrastructure
+3. Run add-migration
+4. Run update-database

@@ -33,6 +33,8 @@ namespace AttendanceTrackerInfrastructure.Models
             builder.Property(w => w.CheckOut) 
                 .IsRequired();
 
+            builder.Property(w => w.TotalWorkingHours);
+
             // Defining the foreign key relationship with Staff
 
             builder.HasOne(w => w.Staff) // WorkdayRecord has one staff
