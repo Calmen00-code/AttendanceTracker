@@ -43,7 +43,7 @@ namespace AttendanceTrackerInfrastructure.Models
         [DataType(DataType.Time)]
         public DateTime CheckOut { get; set; }
 
-        public float TotalWorkingHours { get; set; }
+        public decimal TotalWorkingHours { get; set; }
 
         public Staff Staff { get; set; } // Navigation Property to Staff
 

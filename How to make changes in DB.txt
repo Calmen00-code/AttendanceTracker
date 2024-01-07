@@ -1,4 +1,20 @@
+Changes in script
+-----------------
 1. Open Package Manager (PM) Console
 2. Ensure the default project is set to AttendanceTrackerInfrastructure
 3. Run add-migration
 4. Run update-database
+
+Adding new column
+-----------------
+1. In SQL server studio, run following:
+
+ALTER TABLE my_table
+ADD my_col my_type;
+
+Example: 
+ALTER TABLE WorkdayRecords
+ADD TotalWorkingHours REAL;
+
+2. Run Changes in script steps above
+

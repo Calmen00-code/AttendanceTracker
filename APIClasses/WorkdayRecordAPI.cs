@@ -21,7 +21,7 @@ namespace APIClasses
 
         public string StaffName { get; set; } 
 
-        public float TotalWorkingHours { get; set; }
+        public decimal TotalWorkingHours { get; set; }
 
         public StaffAPI Staff { get; set; }
     }

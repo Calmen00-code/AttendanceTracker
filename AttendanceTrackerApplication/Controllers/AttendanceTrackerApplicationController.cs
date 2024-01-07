@@ -261,7 +261,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("update-workday")]
         public async Task<IActionResult> UpdateWorkday([FromBody] WorkdayRecordAPI workdayRecordAPI)
         {
-            var departmentJson = JsonContent.Create(workdayRecordAPI);
+            var workdayJson = JsonContent.Create(workdayRecordAPI);
 
             // string route = _apiurl + "add-department";
             string route = _deploymentapiurl + "update-workday";
@@ -271,7 +271,7 @@ namespace AttendanceTrackerApplication.Controllers
             // System.Console.WriteLine("CheckOut: " + workdayRecordAPI.CheckOut);
             // System.Console.WriteLine("Date: " + workdayRecordAPI.Date);
 
-            var response = await _httpClient.PutAsync(route, departmentJson);
+            var response = await _httpClient.PutAsync(route, workdayJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
             {

@@ -598,7 +598,8 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 conn.Open();
 
                 string sqlScript = "UPDATE WorkdayRecords" +
-                    " SET CheckIn = \'" + workdayRecordAPI.CheckIn + "\', CheckOut = \'" + workdayRecordAPI.CheckOut + "\'" +
+                    " SET CheckIn = \'" + workdayRecordAPI.CheckIn + "\', CheckOut = \'" + workdayRecordAPI.CheckOut + "\'," +
+                    " TotalWorkingHours = " + workdayRecordAPI.TotalWorkingHours + 
                     " WHERE StaffName = \'" + workdayRecordAPI.StaffName + "\' AND Date = \'" + workdayRecordAPI.Date + "\';"; 
 
                 SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);

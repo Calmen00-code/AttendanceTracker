@@ -83,8 +83,8 @@ namespace AttendanceTrackerInfrastructure.Migrations
                     b.Property<DateTime>("CheckOut")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("TotalWorkingHours")
-                        .HasColumnType("real");
+                    b.Property<decimal>("TotalWorkingHours")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Date", "StaffName");
 
