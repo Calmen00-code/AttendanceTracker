@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Newtonsoft.Json;
 using System;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
@@ -261,16 +262,17 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("checkin")]
         public async Task<IActionResult> TimesheetCheckIn([FromBody] TimesheetAPI timesheet)
         {
-            var response = (HttpResponseMessage)(await IsStaffExist(timesheet.Username));
-            
-            // only proceed if staff is valid
-            if ((int) response.StatusCode == HttpResponseStatus.OK)
+            var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
+
+            if ((int)response.StatusCode == HttpResponseStatus.OK)
             {
                 // Constructing staff object for workday
-                var response_staff = (HttpResponseMessage)(await GetStaff(timesheet.Username));
-                if ((int) response_staff.StatusCode == HttpResponseStatus.OK)
+                var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
+                if ((int)response_staff.StatusCode == HttpResponseStatus.OK)
                 {
-                    StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
+                    // Converting ObjectResult response_staff to StaffAPI because ObjectResult is upcast,
+                    // we cannot downcast from ObjectResult so we have to deserialize as such
+                    StaffAPI staff = JsonConvert.DeserializeObject<StaffAPI>((string)response_staff.Value);
 
                     if (staff == null)
                     {
@@ -278,7 +280,10 @@ namespace AttendanceTrackerApplication.Controllers
                     }
                     else
                     {
-                        return StatusCode(HttpResponseStatus.OK, "server found staff + " +  staff.Name);
+                        // TODO: remove this and enable the code below
+                        return StatusCode(HttpResponseStatus.OK, "server found staff + " + staff.Name);
+
+                        /*
                         DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
 
                         /**
@@ -288,6 +293,7 @@ namespace AttendanceTrackerApplication.Controllers
                          * if alignedDateTime already has an existed date, this mean the user was checking out and 
                          * checking in back, use PUT to update the date instead
                          */
+                        /*
                         bool shouldUsePost = true;
                         foreach (WorkdayRecordAPI workday in staff.Workdays)
                         {
@@ -335,6 +341,7 @@ namespace AttendanceTrackerApplication.Controllers
                                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
                             }
                         }
+                        */
                     }
                 }
                 else
@@ -346,6 +353,8 @@ namespace AttendanceTrackerApplication.Controllers
             {
                 return StatusCode(HttpResponseStatus.NOT_FOUND, "User does not exist!");
             }
+
+            // only proceed if staff is valid
         }
 
         [HttpPost]
