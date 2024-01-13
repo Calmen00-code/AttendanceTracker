@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Globalization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -347,6 +348,62 @@ namespace AttendanceTrackerInfrastructure.Controllers
             return Ok(department);
         }
 
+        [HttpGet]
+        [Route("get-workdays")]
+        public IActionResult GetWorkdays() 
+        { 
+            SqlConnection conn;
+            SqlDataAdapter adapter;
+            DataTable dt;
+            try
+            {
+                // connecting to db
+                conn = new SqlConnection(_configuration
+                    .GetConnectionString("AttendanceTracker")
+                    .ToString());
+
+                // building sql query
+                adapter = new SqlDataAdapter("SELECT * FROM WorkdayRecords", conn);
+
+                dt = new DataTable();
+                adapter.Fill(dt);
+                conn.Close();
+            }
+            catch (Exception) 
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+
+
+            List<WorkdayRecordAPI> workdayRecords = new List<WorkdayRecordAPI>();
+
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    // string content = (DateTime)((dt.Rows[i]["Date"]).ToString()) + " , " + dt.Rows[i]["StaffName"].ToString() + " , " + (DateTime)(dt.Rows[i]["CheckIn"]) + 
+                    //     " , " + (DateTime)(dt.Rows[i]["CheckOut"]) + " , " + (decimal)(dt.Rows[i]["TotalWorkingHours"]);
+                    // DateTime datetime = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    // return StatusCode(HttpResponseStatus.OK, datetime);
+                    WorkdayRecordAPI workdayRecord = new WorkdayRecordAPI();
+                    workdayRecord.Date = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.StaffName = dt.Rows[i]["StaffName"].ToString();
+                    workdayRecord.CheckIn = DateTime.ParseExact(dt.Rows[i]["CheckIn"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.CheckOut = DateTime.ParseExact(dt.Rows[i]["CheckOut"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.TotalWorkingHours = (decimal)(dt.Rows[i]["TotalWorkingHours"]);
+                    workdayRecords.Add(workdayRecord);
+                }
+            }
+
+            if (workdayRecords.Count > 0)
+            {
+                return Ok(workdayRecords);
+            }
+            else
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
+            }
+        }
 
         /***
          * TODO TEMPORARY: using non-LINQ method to query (pure string)

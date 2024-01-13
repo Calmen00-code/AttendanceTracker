@@ -280,10 +280,6 @@ namespace AttendanceTrackerApplication.Controllers
                     }
                     else
                     {
-                        // TODO: remove this and enable the code below
-                        return StatusCode(HttpResponseStatus.OK, "server found staff + " + staff.Name);
-
-                        /*
                         DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
 
                         /**
@@ -293,16 +289,18 @@ namespace AttendanceTrackerApplication.Controllers
                          * if alignedDateTime already has an existed date, this mean the user was checking out and 
                          * checking in back, use PUT to update the date instead
                          */
-                        /*
                         bool shouldUsePost = true;
                         foreach (WorkdayRecordAPI workday in staff.Workdays)
                         {
+                            return StatusCode(HttpResponseStatus.OK, "Aligned date: " + workday.Date);
                             if (workday.Date == alignedDateTime)
                             {
                                 shouldUsePost = false;
                                 break;
                             }
                         }
+
+                        return StatusCode(HttpResponseStatus.OK, "Should use post: " + shouldUsePost);
 
                         WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
                         staffWorkday.Date = alignedDateTime;
@@ -316,13 +314,13 @@ namespace AttendanceTrackerApplication.Controllers
                             string route_post = _deploymentapiurl + "add-workday-record";
                             var response_post = await _httpClient.PostAsync(route_post, workdayJson);
 
-                            if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
+                            if ((int)(response_post.StatusCode) == HttpResponseStatus.CREATED)
                             {
                                 return StatusCode(HttpResponseStatus.CREATED);
                             }
                             else
                             {
-                                string errorContent = await response.Content.ReadAsStringAsync();
+                                string errorContent = await response_post.Content.ReadAsStringAsync();
                                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
                             }
                         }
@@ -337,11 +335,10 @@ namespace AttendanceTrackerApplication.Controllers
                             }
                             else
                             {
-                                string errorContent = await response.Content.ReadAsStringAsync();
+                                string errorContent = await response_update.Content.ReadAsStringAsync();
                                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
                             }
                         }
-                        */
                     }
                 }
                 else
