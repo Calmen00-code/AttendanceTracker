@@ -606,14 +606,15 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 conn.Open();
 
                 // building sql query
-                string sqlScript = "INSERT INTO WorkdayRecords(StaffName, Date, CheckIn, CheckOut) " +
-                    " VALUES (@StaffName, @Date, @CheckIn, @CheckOut);";
+                string sqlScript = "INSERT INTO WorkdayRecords(StaffName, Date, CheckIn, CheckOut, TotalWorkingHours) " +
+                    " VALUES (@StaffName, @Date, @CheckIn, @CheckOut, @TotalWorkingHours);";
 
                 SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
                 sqlCommand.Parameters.AddWithValue("@StaffName", workdayRecordAPI.StaffName);
                 sqlCommand.Parameters.AddWithValue("@Date", workdayRecordAPI.Date);
                 sqlCommand.Parameters.AddWithValue("@CheckIn", workdayRecordAPI.CheckIn);
                 sqlCommand.Parameters.AddWithValue("@CheckOut", workdayRecordAPI.CheckOut);
+                sqlCommand.Parameters.AddWithValue("@TotalWorkingHours", workdayRecordAPI.TotalWorkingHours);
 
                 int rowsAffected = sqlCommand.ExecuteNonQuery();
 
