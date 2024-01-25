@@ -8,6 +8,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace AttendanceTrackerApplication.Controllers
 {
@@ -262,17 +263,23 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("checkin")]
         public async Task<IActionResult> TimesheetCheckIn([FromBody] TimesheetAPI timesheet)
         {
-            var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
+            // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
+            string route_staff_exist = _deploymentapiurl + "is-staff-exist/" + timesheet.Username;
+            var response_staff_exist = await _httpClient.GetAsync(route_staff_exist);
 
-            if ((int)response.StatusCode == HttpResponseStatus.OK)
+            if ((int)response_staff_exist.StatusCode == HttpResponseStatus.OK)
             {
                 // Constructing staff object for workday
-                var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
+                // var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
+                string route_staff = _deploymentapiurl + "get-staff/" + timesheet.Username;
+                var response_staff = await _httpClient.GetAsync(route_staff);
+
                 if ((int)response_staff.StatusCode == HttpResponseStatus.OK)
                 {
                     // Converting ObjectResult response_staff to StaffAPI because ObjectResult is upcast,
                     // we cannot downcast from ObjectResult so we have to deserialize as such
-                    StaffAPI staff = JsonConvert.DeserializeObject<StaffAPI>((string)response_staff.Value);
+                    // StaffAPI staff = JsonConvert.DeserializeObject<StaffAPI>((string)response_staff.Value);
+                    StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
 
                     if (staff == null)
                     {
@@ -299,8 +306,6 @@ namespace AttendanceTrackerApplication.Controllers
                                 break;
                             }
                         }
-
-                        return StatusCode(HttpResponseStatus.OK, "Should use post: " + shouldUsePost);
 
                         WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
                         staffWorkday.Date = alignedDateTime;
@@ -329,7 +334,7 @@ namespace AttendanceTrackerApplication.Controllers
                             string route_update = _deploymentapiurl + "update-workday";
                             var response_update = await _httpClient.PutAsync(route_update, workdayJson);
 
-                            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
+                            if ((int)(response_update.StatusCode) == HttpResponseStatus.ACCEPTED)
                             {
                                 return StatusCode(HttpResponseStatus.ACCEPTED);
                             }

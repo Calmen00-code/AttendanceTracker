@@ -33,23 +33,26 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
-                // connecting to db
-                conn = new SqlConnection(_configuration
-                    .GetConnectionString("AttendanceTracker")
-                    .ToString());
 
                 // building sql query
                 adapter = new SqlDataAdapter("SELECT * FROM Admins", conn);
 
                 dt = new DataTable();
                 adapter.Fill(dt);
-                conn.Close();
             }
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
             }
 
 
@@ -84,24 +87,26 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
-                // connecting to db
-                conn = new SqlConnection(_configuration
-                    .GetConnectionString("AttendanceTracker")
-                    .ToString());
-
                 // building sql query
                 string sqlQuery = "SELECT * FROM Staffs WHERE Name = \'" + name + "\';";
                 adapter = new SqlDataAdapter(sqlQuery, conn);
 
                 dt = new DataTable();
                 adapter.Fill(dt);
-                // conn.Close();
             }
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
             }
 
             // check if db has any data
@@ -125,13 +130,12 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
-                // connecting to db
-                conn = new SqlConnection(_configuration
-                    .GetConnectionString("AttendanceTracker")
-                    .ToString());
-
                 // building sql query
                 string sqlQuery = "SELECT * FROM Admins WHERE Name = \'" + adminName + "\';";
                 adapter = new SqlDataAdapter(sqlQuery, conn);
@@ -143,6 +147,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            { 
+                conn.Close(); 
             }
 
             // check if db has any data
@@ -165,13 +173,12 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
-                // connecting to db
-                conn = new SqlConnection(_configuration
-                    .GetConnectionString("AttendanceTracker")
-                    .ToString());
-
                 // building sql query
                 adapter = new SqlDataAdapter("SELECT * FROM Staffs", conn);
 
@@ -182,6 +189,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            { 
+                conn.Close(); 
             }
 
             List<StaffAPI> staffs = new List<StaffAPI>();
@@ -217,13 +228,12 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
-                // connecting to db
-                conn = new SqlConnection(_configuration
-                    .GetConnectionString("AttendanceTracker")
-                    .ToString());
-
                 // building sql query
                 adapter = new SqlDataAdapter("SELECT * FROM Staffs", conn);
 
@@ -234,6 +244,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close();
             }
 
             List<string> staffs = new List<string>();
@@ -266,6 +280,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
                 // connecting to db
@@ -283,6 +301,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            {
+                conn.Close ();
             }
 
 
@@ -316,6 +338,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
                 // connecting to db
@@ -334,6 +360,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception e) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database, " + e.Message);
+            }
+            finally 
+            { 
+                conn.Close(); 
             }
 
             // check if db has any data
@@ -355,6 +385,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             SqlConnection conn;
             SqlDataAdapter adapter;
             DataTable dt;
+
+            // connecting to db
+            conn = new SqlConnection(_configuration.GetConnectionString("AttendanceTracker").ToString());
+
             try
             {
                 // connecting to db
@@ -372,6 +406,10 @@ namespace AttendanceTrackerInfrastructure.Controllers
             catch (Exception) 
             {
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Failed to connect to database");
+            }
+            finally
+            { 
+                conn.Close(); 
             }
 
 
