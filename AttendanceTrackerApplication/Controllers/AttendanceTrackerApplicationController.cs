@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Newtonsoft.Json;
 using System;
+using System.Data.SqlTypes;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Json;
@@ -293,15 +294,6 @@ namespace AttendanceTrackerApplication.Controllers
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server return bad data on staff");
             }
 
-            DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
-
-            /**
-             * if alignedDateTime does not have today's date, it means the user just check in for the day. 
-             * Use POST to create new date
-             * 
-             * if alignedDateTime already has an existed date, this mean the user was checking out and 
-             * checking in back, use PUT to update the date instead
-             */
             string route_query_workdays = _deploymentapiurl + "get-workdays";
             var response_query_workdays = await _httpClient.GetAsync(route_query_workdays);
             if ((int)(response_query_workdays.StatusCode) != HttpResponseStatus.OK)
@@ -310,13 +302,21 @@ namespace AttendanceTrackerApplication.Controllers
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
             }
 
+            /**
+             * if alignedDateTime does not have today's date, it means the user just check in for the day. 
+             * Use POST to create new date
+             * 
+             * if alignedDateTime already has an existed date, this mean the user was checking out and 
+             * checking in back, use PUT to update the date instead
+             */
             List<WorkdayRecordAPI> workdays = await response_query_workdays.Content.ReadFromJsonAsync<List<WorkdayRecordAPI>>();
+            DateTime alignedCheckInTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
             bool shouldUsePost = true;
             foreach (WorkdayRecordAPI workday in workdays)
             {
                 // we only compare against the Date using ToShortDateString(), excluding the time, only date
                 if (workday.StaffName.Equals(timesheet.Username) &&
-                    workday.Date.ToShortDateString().Equals(alignedDateTime.ToShortDateString()))
+                    workday.Date.ToShortDateString().Equals(alignedCheckInTime.ToShortDateString()))
                 {
                     shouldUsePost = false;
                     break;
@@ -324,56 +324,29 @@ namespace AttendanceTrackerApplication.Controllers
             }
 
             WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
-            staffWorkday.Date = alignedDateTime;
-            staffWorkday.CheckIn = alignedDateTime;
-            staffWorkday.CheckOut = DateTime.MinValue;
+            staffWorkday.Date = alignedCheckInTime;
+            staffWorkday.CheckIn = alignedCheckInTime;
+            staffWorkday.CheckOut = (DateTime)SqlDateTime.MinValue;
             staffWorkday.StaffName = timesheet.Username;
             staffWorkday.TotalWorkingHours = 0;
-
-            // StaffAPI staffAPI = new StaffAPI();
-            // staffAPI.Name = timesheet.Username;
-            // staffAPI.Password = "Amber123";
-            // staffAPI.Department = "Marketing";
-            // staffAPI.Workdays = new List<WorkdayRecordAPI>();
-            // staffWorkday.Staff = staffAPI;
             staffWorkday.Staff = staff;
-            // return StatusCode(HttpResponseStatus.OK, "Checkout: " + staffWorkday.CheckOut);
 
             var workdayJson = JsonContent.Create(staffWorkday);
 
             if (shouldUsePost)
             {
                 string route_post = _deploymentapiurl + "add-workday-record";
-                // TODO: cannot do POST here, ALREADY try again with testing Infrastrucutre api. and passed
-                //       something wrong with the application site
-                //
-                //       also tried using http request instead of calling function directly
-                // 
-                //       suspecting that we have too many http requests. try only calling post --> also tried
+                var jsonString = await workdayJson.ReadAsStringAsync();
 
-                // var jsonString = await workdayJson.ReadAsStringAsync();
-
-                // var jsonWorkdays = JsonContent.Create(staff.Workdays);
-                // var workdaysString = await jsonWorkdays.ReadAsStringAsync();
-                // return StatusCode(HttpResponseStatus.OK, workdaysString);
-
-                // var response_post = await _httpClient.PostAsJsonAsync(route_post, staffWorkday);
                 var response_post = await _httpClient.PostAsync(route_post, workdayJson);
 
                 if ((int)(response_post.StatusCode) == HttpResponseStatus.CREATED)
                 {
                     return StatusCode(HttpResponseStatus.CREATED);
                 }
-                else if ((int)(response_post.StatusCode) == HttpResponseStatus.INTERNAL_SERVER_ERROR)
+                else 
                 {
                     return StatusCode(HttpResponseStatus.OK, "add workday record failed");
-                    string errorContent = await response_post.Content.ReadAsStringAsync();
-                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
-                }
-                else
-                {
-                    // TODO: remove me once bug fix
-                    return StatusCode(HttpResponseStatus.OK, "something else");
                 }
             }
             else
@@ -394,77 +367,96 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpPost]
-        [Route("checkout/{Username}/{CurrentTime}")]
-        public async Task<IActionResult> TimesheetCheckOut(string Username, string CurrentTime)
+        [Route("checkout")]
+        public async Task<IActionResult> TimesheetCheckOut([FromBody] TimesheetAPI timesheet)
         {
-            var response = (HttpResponseMessage)(await IsStaffExist(Username));
-            
-            // only proceed if staff is valid
-            if ((int) response.StatusCode == HttpResponseStatus.OK)
+            // Note: we are calling API function directly in this file, instead of through Http network
+            // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
+            string route_staff_exist = _deploymentapiurl + "is-staff-exist/" + timesheet.Username;
+            var response_staff_exist = await _httpClient.GetAsync(route_staff_exist);
+
+            if ((int)response_staff_exist.StatusCode != HttpResponseStatus.OK)
             {
-                // Constructing staff object for workday
-                var response_staff = (HttpResponseMessage)(await GetStaff(Username));
-                if ((int) response_staff.StatusCode == HttpResponseStatus.OK)
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "User does not exist!");
+            }
+
+            // Constructing staff object for workday
+            // var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
+            string route_staff = _deploymentapiurl + "get-staff/" + timesheet.Username;
+            var response_staff = await _httpClient.GetAsync(route_staff);
+            if ((int)response_staff.StatusCode != HttpResponseStatus.OK)
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Could not load user");
+            }
+
+            // Converting ObjectResult response_staff to StaffAPI because ObjectResult is upcast,
+            // we cannot downcast from ObjectResult so we have to deserialize as such
+            // StaffAPI staff = JsonConvert.DeserializeObject<StaffAPI>((string)response_staff.Value);
+            StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
+
+            // only proceed if staff is valid
+            if (staff == null)
+            {
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server return bad data on staff");
+            }
+
+            // Getting workdays information to determine whether checkout should proceed or abort
+            string route_query_workdays = _deploymentapiurl + "get-workdays";
+            var response_query_workdays = await _httpClient.GetAsync(route_query_workdays);
+            if ((int)(response_query_workdays.StatusCode) != HttpResponseStatus.OK)
+            {
+                string errorContent = await response_query_workdays.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
+            }
+
+            List<WorkdayRecordAPI> workdays = await response_query_workdays.Content.ReadFromJsonAsync<List<WorkdayRecordAPI>>();
+            DateTime alignedCheckOutTime = DateTime.Parse(AlignDateFormat(timesheet.CurrentTime));
+            WorkdayRecordAPI? userWorkday = null;
+            foreach (WorkdayRecordAPI workday in workdays)
+            {
+                // we only compare against the Date using ToShortDateString(), excluding the time, only date
+                if (workday.StaffName.Equals(timesheet.Username) &&
+                    workday.Date.ToShortDateString().Equals(alignedCheckOutTime.ToShortDateString()))
                 {
-                    StaffAPI staff = await response_staff.Content.ReadFromJsonAsync<StaffAPI>();
-
-                    if (staff == null)
-                    {
-                        return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server return bad data on staff");
-                    }
-                    else
-                    {
-                        DateTime alignedDateTime = DateTime.Parse(AlignDateFormat(CurrentTime));
-
-                        /**
-                         * if alignedDateTime does not have existing check in date, abort the operation
-                         */
-                        bool checkInExist = false;
-                        foreach (WorkdayRecordAPI workday in staff.Workdays)
-                        {
-                            if (workday.Date == alignedDateTime)
-                            {
-                                checkInExist = true;
-                                break;
-                            }
-                        }
-
-                        if (checkInExist)
-                        {
-                            WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
-                            staffWorkday.Date = alignedDateTime;
-                            staffWorkday.CheckOut = alignedDateTime;
-                            staffWorkday.StaffName = Username;
-                            staffWorkday.Staff = staff;
-
-                            var workdayJson = JsonContent.Create(staffWorkday);
-                            string route_update = _deploymentapiurl + "update-workday";
-                            var response_update = await _httpClient.PutAsync(route_update, workdayJson);
-
-                            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
-                            {
-                                return StatusCode(HttpResponseStatus.ACCEPTED);
-                            }
-                            else
-                            {
-                                string errorContent = await response.Content.ReadAsStringAsync();
-                                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
-                            }
-                        }
-                        else
-                        {
-                            return StatusCode(HttpResponseStatus.NOT_FOUND, "Check-Out aborted: Because no Check-In time has been found");
-                        }
-                    }
+                    userWorkday = workday;
+                    break;
                 }
-                else
-                {
-                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Could not load user");
-                }
+            }
+
+            // if userWorkday is null, this means that user has never checked in before, abort
+            if (userWorkday == null)
+            {
+                return StatusCode(HttpResponseStatus.NOT_FOUND, "Please check in first!");
+            }
+
+            WorkdayRecordAPI staffWorkday = new WorkdayRecordAPI();
+            staffWorkday.Date = alignedCheckOutTime;
+            staffWorkday.CheckIn = userWorkday.CheckIn;
+            staffWorkday.CheckOut = alignedCheckOutTime;
+            staffWorkday.StaffName = timesheet.Username;
+            staffWorkday.Staff = staff;
+
+            // Getting the elapsed time for TotalWorkingHours
+            TimeSpan elapsedTime = alignedCheckOutTime.Subtract(userWorkday.CheckIn);
+            staffWorkday.TotalWorkingHours = (decimal)(elapsedTime.TotalHours);
+
+            var workdayJson = JsonContent.Create(staffWorkday);
+
+            string route_update = _deploymentapiurl + "update-workday";
+
+            // string jsonString = await workdayJson.ReadAsStringAsync();
+            // return StatusCode(HttpResponseStatus.OK, jsonString);
+
+            var response_update = await _httpClient.PutAsJsonAsync(route_update, staffWorkday);
+
+            if ((int)(response_update.StatusCode) == HttpResponseStatus.ACCEPTED)
+            {
+                return StatusCode(HttpResponseStatus.ACCEPTED);
             }
             else
             {
-                return StatusCode(HttpResponseStatus.NOT_FOUND, "User does not exist!");
+                string errorContent = await response_update.Content.ReadAsStringAsync();
+                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
             }
         }
 

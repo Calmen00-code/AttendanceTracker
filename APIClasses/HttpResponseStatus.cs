@@ -23,5 +23,6 @@ namespace APIClasses
 
         // Server error responses
         public static readonly int INTERNAL_SERVER_ERROR = 500;
+        public static readonly int SERVICE_UNAVAILABLE = 503;
     }
 }

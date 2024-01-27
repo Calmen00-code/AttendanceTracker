@@ -412,35 +412,26 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 conn.Close(); 
             }
 
-
             List<WorkdayRecordAPI> workdayRecords = new List<WorkdayRecordAPI>();
 
             if (dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    // string content = (DateTime)((dt.Rows[i]["Date"]).ToString()) + " , " + dt.Rows[i]["StaffName"].ToString() + " , " + (DateTime)(dt.Rows[i]["CheckIn"]) + 
-                    //     " , " + (DateTime)(dt.Rows[i]["CheckOut"]) + " , " + (decimal)(dt.Rows[i]["TotalWorkingHours"]);
-                    // DateTime datetime = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
-                    // return StatusCode(HttpResponseStatus.OK, datetime);
                     WorkdayRecordAPI workdayRecord = new WorkdayRecordAPI();
-                    workdayRecord.Date = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                     workdayRecord.StaffName = dt.Rows[i]["StaffName"].ToString();
+                    workdayRecord.TotalWorkingHours = (decimal)(dt.Rows[i]["TotalWorkingHours"]);
+
+                    // The format of the date coming from SQL database is not aligned with DateTime type in ASP.NET. Need to do parsing here
+                    // Otherwise we will get exception error
+                    workdayRecord.Date = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                     workdayRecord.CheckIn = DateTime.ParseExact(dt.Rows[i]["CheckIn"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                     workdayRecord.CheckOut = DateTime.ParseExact(dt.Rows[i]["CheckOut"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
-                    workdayRecord.TotalWorkingHours = (decimal)(dt.Rows[i]["TotalWorkingHours"]);
                     workdayRecords.Add(workdayRecord);
                 }
             }
 
-            if (workdayRecords.Count > 0)
-            {
-                return Ok(workdayRecords);
-            }
-            else
-            {
-                return StatusCode(HttpResponseStatus.NOT_FOUND, "No data has been found");
-            }
+            return Ok(workdayRecords);
         }
 
         /***
@@ -483,30 +474,30 @@ namespace AttendanceTrackerInfrastructure.Controllers
         /***
          * TODO : using LINQ method to query INSTEAD OF (pure string)
          */
-         /* 
-        [HttpGet]
-        [Route("get-staffs")]
-        public IActionResult GetStaffs()
-        {
-            List<StaffAPI> staffs = new List<StaffAPI>();
-            try
-            {
-                _dbContext.Database.OpenConnection();
-                List<Staff> staffsDb = (from staff in _dbContext.staffs
-                                        select staff).ToList();
+        /* 
+       [HttpGet]
+       [Route("get-staffs")]
+       public IActionResult GetStaffs()
+       {
+           List<StaffAPI> staffs = new List<StaffAPI>();
+           try
+           {
+               _dbContext.Database.OpenConnection();
+               List<Staff> staffsDb = (from staff in _dbContext.staffs
+                                       select staff).ToList();
 
-                // we are returning List<StaffAPI> here
-                // that is why we need a static cast the List<Staff> staffsDb from the database
-                staffs = staffsDb.Cast<StaffAPI>().ToList();
+               // we are returning List<StaffAPI> here
+               // that is why we need a static cast the List<Staff> staffsDb from the database
+               staffs = staffsDb.Cast<StaffAPI>().ToList();
 
-                return Ok(staffs);
-            }
-            catch (Exception) 
-            {
-                return StatusCode(500, "Unable to connect to the database");
-            }
-        }
-        */
+               return Ok(staffs);
+           }
+           catch (Exception) 
+           {
+               return StatusCode(500, "Unable to connect to the database");
+           }
+       }
+       */
 
         [HttpPost]
         [Route("add-admin")]
@@ -693,10 +684,11 @@ namespace AttendanceTrackerInfrastructure.Controllers
             {
                 conn.Open();
 
+                string dateStr = workdayRecordAPI.Date.ToString("yyyy-MM-dd");
                 string sqlScript = "UPDATE WorkdayRecords" +
                     " SET CheckIn = \'" + workdayRecordAPI.CheckIn + "\', CheckOut = \'" + workdayRecordAPI.CheckOut + "\'," +
-                    " TotalWorkingHours = " + workdayRecordAPI.TotalWorkingHours + 
-                    " WHERE StaffName = \'" + workdayRecordAPI.StaffName + "\' AND Date = \'" + workdayRecordAPI.Date + "\';"; 
+                    " TotalWorkingHours = " + workdayRecordAPI.TotalWorkingHours +
+                    " WHERE StaffName = \'" + workdayRecordAPI.StaffName + "\' AND CAST(Date AS DATE) = \'" + dateStr + "\';"; 
 
                 SqlCommand sqlCommand = new SqlCommand(sqlScript, conn);
 
@@ -709,7 +701,7 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 }
                 else
                 {
-                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, 
+                    return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR,
                         "Internal server error, no rows affected");
                 }
             }

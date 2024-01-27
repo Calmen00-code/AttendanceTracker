@@ -1,0 +1,11 @@
+Web
+====
+https://attendancetrackerweb.azurewebsites.net/
+
+Application
+===========
+https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/
+
+Infrastructure
+==============
+https://attendancetrackerinfrastructure.azurewebsites.net/api/AttendanceTrackerInfrastructure/
