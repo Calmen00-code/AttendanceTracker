@@ -60,22 +60,30 @@
 
     public async void CheckInSubmit()
     {
-        string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin/" + Username + "/" + CurrentTime;
-        var content = new StringContent(string.Empty);
-        // ERROR: no response after clicking checkin or checkout
-        // FIXME: try posting a real object instead of string like this
-        var response = await HttpClient.PostAsync(route_timesheet_checkin, content);
+        string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin";
+        TimesheetAPI timesheet = new TimesheetAPI();
+        timesheet.Username = this.Username;
+        timesheet.CurrentTime = this.CurrentTime;
 
+        // var json = JsonContent.Create(timesheet);
+        // string str = await json.ReadAsStringAsync();
+        // ShowAlert(str);
+        var response = await HttpClient.PostAsJsonAsync(route_timesheet_checkin, timesheet);
+
+        // Either the timesheet is created (Status = CREATED) upon new check in for the day
+        // or it is being updated (Status = ACCEPTED) when user check in again after check out
+        bool requestSuccess = false;
         if ((int) response.StatusCode == HttpResponseStatus.CREATED || 
             (int) response.StatusCode == HttpResponseStatus.ACCEPTED)
         {
-            ShowAlert("Check in submitted");
+            requestSuccess = true;
+            string route_info = "timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime + "/" + requestSuccess;
+            Navigation.NavigateTo(route_info);
         }
         else
         {
-            var errorContent = response.Content.ReadAsStringAsync();
-            var errorMessage = $"Error: {errorContent}";
-            ShowAlert(errorMessage);
+            string route_info = "timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime + "/" + requestSuccess;
+            Navigation.NavigateTo(route_info);
         }
         return;
     }
@@ -100,6 +108,7 @@
         }
         return;
     }
+
 
         /*
     public async void CheckInSubmit()

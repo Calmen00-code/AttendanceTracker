@@ -1,0 +1,24 @@
+﻿@page "/timesheet-submitted-info/{Username}/{CurrentTime}/{RequestStatus}"
+
+<h3>Attendance Recorded for @Username</h3>
+<br />
+
+@if (RequestStatus)
+{
+    <div class="input-group">
+        <div class="col-sm-6">
+            <label class="mb-3">Time: @CurrentTime</label>
+        </div>
+    </div>
+}
+else
+{
+    <h4>Failed to submit your attendance, please try again</h4>
+}
+
+@code {
+    [Parameter]
+    public string? Username { get; set; }
+    public string? CurrentTime { get; set; }
+    public bool RequestStatus { get; set; }
+}

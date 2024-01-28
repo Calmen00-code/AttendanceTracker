@@ -52,6 +52,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3RhZmZRUi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/AttendanceTracker/AttendanceTrackerWeb/Pages/TimesheetSubmittedInfo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGltZXNoZWV0U3VibWl0dGVkSW5mby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/AttendanceTracker/AttendanceTrackerWeb/Shared/SurveyPrompt.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
