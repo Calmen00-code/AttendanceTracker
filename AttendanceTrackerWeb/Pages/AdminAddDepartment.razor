@@ -19,14 +19,15 @@
 </form>
 
 @code {
-    // private static readonly string DEVELOPMENT_API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
-    private static readonly string APPLICATION_DEPLOYMENT_API_URL = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string DEVELOPMENT_API_URL = APILinks.API_URL_APPLICATION_DEVELOPMENT;
+    private static readonly string APPLICATION_DEPLOYMENT_API_URL = APILinks.API_URL_APPLICATION_DEPLOYMENT;
 
     private string DepartmentName { get; set; }
 
     public async void Add()
     {
         string route = APPLICATION_DEPLOYMENT_API_URL + "add-department";
+        // string route = DEVELOPMENT_API_URL + "add-department";
         DepartmentAPI department = new DepartmentAPI();
         department.Name = DepartmentName;
 

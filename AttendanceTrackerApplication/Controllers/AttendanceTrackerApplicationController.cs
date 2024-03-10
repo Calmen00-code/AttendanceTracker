@@ -18,8 +18,9 @@ namespace AttendanceTrackerApplication.Controllers
     public class AttendanceTrackerApplicationController : ControllerBase
     {
         private readonly HttpClient _httpClient;
-        private static readonly string _apiurl = "https://localhost:7102/api/AttendanceTrackerInfrastructure/";
-        private static readonly string _deploymentapiurl = "https://attendancetrackerinfrastructure.azurewebsites.net/api/AttendanceTrackerInfrastructure/";
+        private static readonly string _apiurl = APILinks.API_URL_INFRASTRUCTURE_DEVELOPMENT;
+        // private static readonly string _apiurl = APILinks.API_URL_INFRASTRUCTURE_DEPLOYMENT;
+        // private static readonly string _deploymentapiurl = APILinks.API_URL_INFRASTRUCTURE_DEPLOYMENT;
 
         public AttendanceTrackerApplicationController(HttpClient httpClient)
         {
@@ -30,8 +31,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-admins")]
         public async Task<IActionResult> GetAdmins()
         {
-            // string route = _apiurl + "get-admins";
-            string route = _deploymentapiurl + "get-admins";
+            string route = _apiurl + "get-admins";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -50,8 +50,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-staffs")]
         public async Task<IActionResult> GetStaffs()
         {
-            // string route = _apiurl + "get-staffs";
-            string route = _deploymentapiurl + "get-staffs";
+            string route = _apiurl + "get-staffs";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -70,8 +69,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-staff/{name}")]
         public async Task<IActionResult> GetStaff(string name)
         {
-            // string route = _apiurl + "get-staffs";
-            string route = _deploymentapiurl + "get-staff/" + name;
+            string route = _apiurl + "get-staffs";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -90,7 +88,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("is-staff-exist/{name}")]
         public async Task<IActionResult> IsStaffExist(string name)
         {
-            string route = _deploymentapiurl + "is-staff-exist/" + name;
+            string route = _apiurl + "is-staff-exist/" + name;
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -109,8 +107,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-admin/{adminName}")]
         public async Task<IActionResult> GetAdmin(string adminName)
         {
-            // string route = _apiurl + "get-admin/" + adminName;
-            string route = _deploymentapiurl + "get-admin/" + adminName;
+            string route = _apiurl + "get-admin/" + adminName;
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK) 
@@ -129,8 +126,7 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("get-departments")]
         public async Task<IActionResult> GetDepartments()
         {
-            // string route = _apiurl + "get-departments";
-            string route = _deploymentapiurl + "get-departments";
+            string route = _apiurl + "get-departments";
             var response = await _httpClient.GetAsync(route);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.OK)
@@ -153,8 +149,7 @@ namespace AttendanceTrackerApplication.Controllers
             // a json object representation for it
             var adminJson = JsonContent.Create(admin);
 
-            // string route = _apiurl + "add-admin";
-            string route = _deploymentapiurl + "add-admin";
+            string route = _apiurl + "add-admin";
             var response = await _httpClient.PostAsync(route, adminJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -181,8 +176,7 @@ namespace AttendanceTrackerApplication.Controllers
             var staffJson = JsonContent.Create(staff);
             System.Diagnostics.Debug.WriteLine("Department in Applcaitioon:" + staff.Department);
 
-            // string route = _apiurl + "add-staff";
-            string route = _deploymentapiurl + "add-staff";
+            string route = _apiurl + "add-staff";
             var response = await _httpClient.PostAsync(route, staffJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -212,8 +206,7 @@ namespace AttendanceTrackerApplication.Controllers
 
             var workdayRecordJson = JsonContent.Create(workdayRecord);
 
-            // string route = _apiurl + "add-workday-record";
-            string route = _deploymentapiurl + "add-workday-record";
+            string route = _apiurl + "add-workday-record";
             var response = await _httpClient.PostAsync(route, workdayRecordJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -239,8 +232,7 @@ namespace AttendanceTrackerApplication.Controllers
         {
             var departmentJson = JsonContent.Create(departmentAPI);
 
-            // string route = _apiurl + "add-department";
-            string route = _deploymentapiurl + "add-department";
+            string route = _apiurl + "add-department";
             var response = await _httpClient.PostAsync(route, departmentJson);
 
             if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
@@ -266,7 +258,7 @@ namespace AttendanceTrackerApplication.Controllers
         {
             // Note: we are calling API function directly in this file, instead of through Http network
             // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
-            string route_staff_exist = _deploymentapiurl + "is-staff-exist/" + timesheet.Username;
+            string route_staff_exist = _apiurl + "is-staff-exist/" + timesheet.Username;
             var response_staff_exist = await _httpClient.GetAsync(route_staff_exist);
 
             if ((int)response_staff_exist.StatusCode != HttpResponseStatus.OK)
@@ -276,7 +268,7 @@ namespace AttendanceTrackerApplication.Controllers
 
             // Constructing staff object for workday
             // var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
-            string route_staff = _deploymentapiurl + "get-staff/" + timesheet.Username;
+            string route_staff = _apiurl + "get-staff/" + timesheet.Username;
             var response_staff = await _httpClient.GetAsync(route_staff);
             if ((int)response_staff.StatusCode != HttpResponseStatus.OK)
             {
@@ -294,7 +286,7 @@ namespace AttendanceTrackerApplication.Controllers
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, "Server return bad data on staff");
             }
 
-            string route_query_workdays = _deploymentapiurl + "get-workdays";
+            string route_query_workdays = _apiurl + "get-workdays";
             var response_query_workdays = await _httpClient.GetAsync(route_query_workdays);
             if ((int)(response_query_workdays.StatusCode) != HttpResponseStatus.OK)
             {
@@ -335,7 +327,7 @@ namespace AttendanceTrackerApplication.Controllers
 
             if (shouldUsePost)
             {
-                string route_post = _deploymentapiurl + "add-workday-record";
+                string route_post = _apiurl + "add-workday-record";
                 var jsonString = await workdayJson.ReadAsStringAsync();
 
                 var response_post = await _httpClient.PostAsync(route_post, workdayJson);
@@ -351,7 +343,7 @@ namespace AttendanceTrackerApplication.Controllers
             }
             else
             {
-                string route_update = _deploymentapiurl + "update-workday";
+                string route_update = _apiurl + "update-workday";
                 var response_update = await _httpClient.PutAsJsonAsync(route_update, staffWorkday);
 
                 if ((int)(response_update.StatusCode) == HttpResponseStatus.ACCEPTED)
@@ -372,7 +364,7 @@ namespace AttendanceTrackerApplication.Controllers
         {
             // Note: we are calling API function directly in this file, instead of through Http network
             // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
-            string route_staff_exist = _deploymentapiurl + "is-staff-exist/" + timesheet.Username;
+            string route_staff_exist = _apiurl + "is-staff-exist/" + timesheet.Username;
             var response_staff_exist = await _httpClient.GetAsync(route_staff_exist);
 
             if ((int)response_staff_exist.StatusCode != HttpResponseStatus.OK)
@@ -382,7 +374,7 @@ namespace AttendanceTrackerApplication.Controllers
 
             // Constructing staff object for workday
             // var response_staff = (ObjectResult)(await GetStaff(timesheet.Username));
-            string route_staff = _deploymentapiurl + "get-staff/" + timesheet.Username;
+            string route_staff = _apiurl + "get-staff/" + timesheet.Username;
             var response_staff = await _httpClient.GetAsync(route_staff);
             if ((int)response_staff.StatusCode != HttpResponseStatus.OK)
             {
@@ -401,7 +393,7 @@ namespace AttendanceTrackerApplication.Controllers
             }
 
             // Getting workdays information to determine whether checkout should proceed or abort
-            string route_query_workdays = _deploymentapiurl + "get-workdays";
+            string route_query_workdays = _apiurl + "get-workdays";
             var response_query_workdays = await _httpClient.GetAsync(route_query_workdays);
             if ((int)(response_query_workdays.StatusCode) != HttpResponseStatus.OK)
             {
@@ -424,6 +416,7 @@ namespace AttendanceTrackerApplication.Controllers
             }
 
             // if userWorkday is null, this means that user has never checked in before, abort
+            // as user cannot check out without checking in first
             if (userWorkday == null)
             {
                 return StatusCode(HttpResponseStatus.NOT_FOUND, "Please check in first!");
@@ -442,7 +435,7 @@ namespace AttendanceTrackerApplication.Controllers
 
             var workdayJson = JsonContent.Create(staffWorkday);
 
-            string route_update = _deploymentapiurl + "update-workday";
+            string route_update = _apiurl + "update-workday";
 
             // string jsonString = await workdayJson.ReadAsStringAsync();
             // return StatusCode(HttpResponseStatus.OK, jsonString);
@@ -459,34 +452,6 @@ namespace AttendanceTrackerApplication.Controllers
                 return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
             }
         }
-
-        /*
-        [HttpPut]
-        [Route("update-workday")]
-        public async Task<IActionResult> UpdateWorkday([FromBody] WorkdayRecordAPI workdayRecordAPI)
-        {
-
-            // string route = _apiurl + "add-department";
-            string route = _deploymentapiurl + "update-workday";
-
-            // System.Console.WriteLine("StaffName: " + workdayRecordAPI.StaffName);
-            // System.Console.WriteLine("CheckIn: " + workdayRecordAPI.CheckIn);
-            // System.Console.WriteLine("CheckOut: " + workdayRecordAPI.CheckOut);
-            // System.Console.WriteLine("Date: " + workdayRecordAPI.Date);
-
-            var response = await _httpClient.PutAsync(route, workdayJson);
-
-            if ((int)(response.StatusCode) == HttpResponseStatus.ACCEPTED)
-            {
-                return StatusCode(HttpResponseStatus.ACCEPTED);
-            }
-            else
-            {
-                string errorContent = await response.Content.ReadAsStringAsync();
-                return StatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR, errorContent);
-            }
-        }
-        */
 
         // PRIVATE FUNCTION
 

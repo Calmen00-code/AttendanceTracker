@@ -8,7 +8,6 @@
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
 
-
 <PageTitle>AttendanceTrackerWeb</PageTitle>
 
 <div class="container-fluid h-100">
@@ -34,10 +33,10 @@
                     <input class="form-control" type="text" placeholder="Username" @bind="Username" required />
                 </div>
                 <div class="form-group text-center">
-                    <button class="check-in" type="submit" value="Check In" @onclick="CheckInSubmit">Check In</button>
+                    <button class="check-in" type="submit" @onclick="CheckInSubmit">Check In</button>
                 </div>
                 <div class="form-group text-center">
-                    <button class="check-out" type="submit" value="Check Out" @onclick="CheckOutSubmit">Check Out</button>
+                    <button class="check-out" type="submit" @onclick="CheckOutSubmit">Check Out</button>
                 </div>
             </form>
         </div>
@@ -45,7 +44,8 @@
 </div>
 
 @code {
-    private static readonly string APPLICATION_API_URL_DEPLOYMENT = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string APPLICATION_API_URL_DEPLOYMENT = APILinks.API_URL_APPLICATION_DEPLOYMENT;
+    private static readonly string APPLICATION_API_URL_DEVELOPMENT = APILinks.API_URL_APPLICATION_DEVELOPMENT;
     private static readonly string IS_STAFF_EXIST = "is-staff-exist/";
     private static readonly string GET_STAFF = "get-staff/";
     private static readonly string ADD_WORKDAY_RECORD = "add-workday-record/";
@@ -60,37 +60,44 @@
 
     public async void CheckInSubmit()
     {
-        string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin";
+        // string route_timesheet_checkin = APPLICATION_API_URL_DEPLOYMENT + "checkin";
+        string route_timesheet_checkin = APPLICATION_API_URL_DEVELOPMENT + "checkin";
+
         TimesheetAPI timesheet = new TimesheetAPI();
         timesheet.Username = this.Username;
         timesheet.CurrentTime = this.CurrentTime;
 
         // var json = JsonContent.Create(timesheet);
-        // string str = await json.ReadAsStringAsync();
-        // ShowAlert(str);
         var response = await HttpClient.PostAsJsonAsync(route_timesheet_checkin, timesheet);
 
         // Either the timesheet is created (Status = CREATED) upon new check in for the day
         // or it is being updated (Status = ACCEPTED) when user check in again after check out
         bool requestSuccess = false;
+        string route = "/timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime.ToString() + "/" + requestSuccess;
+        ShowAlert("Passed: " + route);
         if ((int) response.StatusCode == HttpResponseStatus.CREATED || 
             (int) response.StatusCode == HttpResponseStatus.ACCEPTED)
         {
             requestSuccess = true;
-            string route_info = "timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime + "/" + requestSuccess;
-            Navigation.NavigateTo(route_info);
+            string route_info = "/timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime.ToString() + "/" + requestSuccess;
+            ShowAlert("Passed: " + route_info);
+            //Navigation.NavigateTo(route_info);
         }
         else
         {
-            string route_info = "timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime + "/" + requestSuccess;
-            Navigation.NavigateTo(route_info);
+            //ShowAlert("Timesheet submission failed!");
+            string route_info = "/timesheet-submitted-info/" + Username + "/" + timesheet.CurrentTime.ToString() + "/" + requestSuccess;
+            ShowAlert("Failed: " + route_info);
+            //Navigation.NavigateTo(route_info);
         }
         return;
     }
 
     public async void CheckOutSubmit()
     {
-        string route_timesheet_checkout = APPLICATION_API_URL_DEPLOYMENT + "checkout/" + Username + "/" + CurrentTime;
+        // string route_timesheet_checkout = APPLICATION_API_URL_DEPLOYMENT + "checkout/" + Username + "/" + CurrentTime;
+        string route_timesheet_checkout = APPLICATION_API_URL_DEVELOPMENT + "checkout/" + Username + "/" + CurrentTime;
+
         var content = new StringContent(string.Empty);
         // ERROR: no response after clicking checkin or checkout
         // FIXME: try posting a real object instead of string like this
@@ -218,7 +225,9 @@
 
     private async Task<StaffAPI> GetStaff()
     {
-        string route_staff_exist = APPLICATION_API_URL_DEPLOYMENT + IS_STAFF_EXIST + Username;        
+        // string route_staff_exist = APPLICATION_API_URL_DEPLOYMENT + IS_STAFF_EXIST + Username;        
+        string route_staff_exist = APPLICATION_API_URL_DEVELOPMENT + IS_STAFF_EXIST + Username;        
+
         var response = await HttpClient.GetAsync(route_staff_exist);
 
         if ((int)response.StatusCode == HttpResponseStatus.OK)
@@ -249,3 +258,4 @@
         jsRuntime.InvokeVoidAsync("alert", message);
     }
 }
+

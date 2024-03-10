@@ -6,6 +6,7 @@
 @using System.Drawing
 @using System.IO
 @using QRCoder
+@using APIClasses
 
 @layout AdminMenu // we use the same sidebar menu across all the admin menus page
 
@@ -21,8 +22,8 @@
 <img src="@String.Format("data:imag/png;base64,{0}", Convert.ToBase64String(qrCodeBytes))">
 
 @code {
-    private static string APPLICATION_API_URL = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
-    private static string WEB_URL = "https://attendancetrackerweb.azurewebsites.net/";
+    private static string APPLICATION_API_URL = APILinks.API_URL_APPLICATION_DEVELOPMENT;
+    private static string WEB_URL = APILinks.API_URL_APPLICATION_DEPLOYMENT;
 
     private Byte[] qrCodeBytes;
 
@@ -34,7 +35,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string attendanceRecordPageURL = WEB_URL + "staff-attendance-record";
+        // string attendanceRecordPageURL = WEB_URL + "staff-attendance-record";
+        string attendanceRecordPageURL = APPLICATION_API_URL + "staff-attendance-record";
 
         QRCodeGenerator qRCodeGenerator = new QRCodeGenerator();
         QRCodeData qrCodeData = qRCodeGenerator.CreateQrCode(attendanceRecordPageURL, QRCodeGenerator.ECCLevel.Q);

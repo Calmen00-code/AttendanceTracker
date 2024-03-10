@@ -36,8 +36,8 @@
 </div>
 
 @code {
-    // private static readonly string API_URL = "https://localhost:7178/api/AttendanceTrackerApplication/";
-    private static readonly string APPLICATION_DEPLOYMENT_API_URL = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string API_URL = APILinks.API_URL_APPLICATION_DEVELOPMENT;
+    private static readonly string APPLICATION_DEPLOYMENT_API_URL = APILinks.API_URL_APPLICATION_DEPLOYMENT;
 
     private List<DepartmentAPI> departments { get; set; } = new List<DepartmentAPI>();
     private string? Username { get; set; }
@@ -69,7 +69,8 @@
         staff.Password = Password;
         staff.Department = Department;
 
-        string route = APPLICATION_DEPLOYMENT_API_URL + "add-staff";
+        // string route = APPLICATION_DEPLOYMENT_API_URL + "add-staff";
+        string route = API_URL + "add-staff";
         var response = await HttpClient.PostAsJsonAsync(route, staff);
 
         if (response.IsSuccessStatusCode)

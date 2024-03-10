@@ -4,6 +4,7 @@
 @using System.Drawing
 @using System.IO
 @using QRCoder
+@using APIClasses
 
 @layout StaffMenu // we use the same sidebar menu across all the staff menus page
 
@@ -21,7 +22,9 @@
 <img src="@String.Format("data:imag/png;base64,{0}", Convert.ToBase64String(qrCodeBytes))">
 
 @code {
-    private static string APPLICATION_API = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
+    private static readonly string APPLICATION_API_DEVELOPMENT = APILinks.API_URL_APPLICATION_DEVELOPMENT;
+    private static readonly string APPLICATION_API_DEPLOYMENT = APILinks.API_URL_APPLICATION_DEPLOYMENT;
+    private static readonly string APPLICATION_API = "https://attendancetrackerapplication.azurewebsites.net/api/AttendanceTrackerApplication/";
     private Byte[] qrCodeBytes;
 
     [Parameter]
