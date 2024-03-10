@@ -69,6 +69,16 @@ main[b-wnzqvo83c2] {
         padding-right: 1.5rem !important;
     }
 }
+/* _content/AttendanceTrackerWeb/Pages/StaffAttendanceRecord.razor.rz.scp.css */
+.button-container[b-zbpsqohuj0] {
+    text-align: center;
+}
+
+.check-in[b-zbpsqohuj0],
+.check-out[b-zbpsqohuj0] {
+    display: inline-block;
+    margin: 0 10px;
+}
 /* _content/AttendanceTrackerWeb/Pages/StaffMenu.razor.rz.scp.css */
 .page[b-5pqauuflet] {
     position: relative;

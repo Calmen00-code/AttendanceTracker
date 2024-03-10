@@ -68,7 +68,9 @@
         timesheet.CurrentTime = this.CurrentTime;
 
         // var json = JsonContent.Create(timesheet);
+        ShowAlert("Submitting check in");
         var response = await HttpClient.PostAsJsonAsync(route_timesheet_checkin, timesheet);
+        ShowAlert("Done check in");
 
         // Either the timesheet is created (Status = CREATED) upon new check in for the day
         // or it is being updated (Status = ACCEPTED) when user check in again after check out
@@ -90,7 +92,6 @@
             ShowAlert("Failed: " + route_info);
             //Navigation.NavigateTo(route_info);
         }
-        return;
     }
 
     public async void CheckOutSubmit()
@@ -113,7 +114,6 @@
             var errorMessage = $"Error: {errorContent}";
             ShowAlert(errorMessage);
         }
-        return;
     }
 
 

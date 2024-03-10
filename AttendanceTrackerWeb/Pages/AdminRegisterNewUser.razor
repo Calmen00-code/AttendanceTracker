@@ -46,8 +46,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // string route = API_URL + "get-departments";
-        string route = APPLICATION_DEPLOYMENT_API_URL + "get-departments";
+        string route = API_URL + "get-departments";
+        // string route = APPLICATION_DEPLOYMENT_API_URL + "get-departments";
 
         var response = await HttpClient.GetAsync(route);
 

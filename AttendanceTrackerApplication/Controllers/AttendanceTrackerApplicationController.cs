@@ -20,7 +20,6 @@ namespace AttendanceTrackerApplication.Controllers
         private readonly HttpClient _httpClient;
         private static readonly string _apiurl = APILinks.API_URL_INFRASTRUCTURE_DEVELOPMENT;
         // private static readonly string _apiurl = APILinks.API_URL_INFRASTRUCTURE_DEPLOYMENT;
-        // private static readonly string _deploymentapiurl = APILinks.API_URL_INFRASTRUCTURE_DEPLOYMENT;
 
         public AttendanceTrackerApplicationController(HttpClient httpClient)
         {
@@ -253,9 +252,20 @@ namespace AttendanceTrackerApplication.Controllers
         }
 
         [HttpPost]
+        [Route("checkinn")]
+        public async Task<IActionResult> TimesheetCheckInn([FromBody] TimesheetAPI timesheet)
+        {
+            System.Diagnostics.Debug.WriteLine("Test");
+            return StatusCode(HttpResponseStatus.NOT_FOUND, "DEBUG");
+        }
+
+
+        [HttpPost]
         [Route("checkin")]
         public async Task<IActionResult> TimesheetCheckIn([FromBody] TimesheetAPI timesheet)
         {
+            System.Diagnostics.Debug.WriteLine("timesheet: " + timesheet.ToString());
+
             // Note: we are calling API function directly in this file, instead of through Http network
             // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
             string route_staff_exist = _apiurl + "is-staff-exist/" + timesheet.Username;
@@ -307,8 +317,7 @@ namespace AttendanceTrackerApplication.Controllers
             foreach (WorkdayRecordAPI workday in workdays)
             {
                 // we only compare against the Date using ToShortDateString(), excluding the time, only date
-                if (workday.StaffName.Equals(timesheet.Username) &&
-                    workday.Date.ToShortDateString().Equals(alignedCheckInTime.ToShortDateString()))
+                if (workday.StaffName.Equals(timesheet.Username) && IsDateSame(alignedCheckInTime, workday.Date))
                 {
                     shouldUsePost = false;
                     break;
@@ -459,6 +468,11 @@ namespace AttendanceTrackerApplication.Controllers
         private string AlignDateFormat(string dateTime)
         {
             return DateTime.Parse(dateTime).ToString("yyyy-MM-ddTHH:mm:ss");
+        }
+
+        private bool IsDateSame(DateTime date1, DateTime date2)
+        {
+            return (date1.Year == date2.Year && date1.Month == date2.Month && date1.Day == date2.Day);
         }
     }
 }

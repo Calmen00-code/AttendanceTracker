@@ -424,9 +424,9 @@ namespace AttendanceTrackerInfrastructure.Controllers
 
                     // The format of the date coming from SQL database is not aligned with DateTime type in ASP.NET. Need to do parsing here
                     // Otherwise we will get exception error
-                    workdayRecord.Date = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
-                    workdayRecord.CheckIn = DateTime.ParseExact(dt.Rows[i]["CheckIn"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
-                    workdayRecord.CheckOut = DateTime.ParseExact(dt.Rows[i]["CheckOut"].ToString(), "M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.Date = DateTime.ParseExact((dt.Rows[i]["Date"]).ToString(), "d/M/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.CheckIn = DateTime.ParseExact(dt.Rows[i]["CheckIn"].ToString(), "d/M/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    workdayRecord.CheckOut = DateTime.ParseExact(dt.Rows[i]["CheckOut"].ToString(), "d/M/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                     workdayRecords.Add(workdayRecord);
                 }
             }

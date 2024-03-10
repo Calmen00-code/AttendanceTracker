@@ -1,0 +1,9 @@
+.button-container[b-zbpsqohuj0] {
+    text-align: center;
+}
+
+.check-in[b-zbpsqohuj0],
+.check-out[b-zbpsqohuj0] {
+    display: inline-block;
+    margin: 0 10px;
+}
