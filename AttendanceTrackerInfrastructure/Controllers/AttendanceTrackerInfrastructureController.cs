@@ -686,7 +686,7 @@ namespace AttendanceTrackerInfrastructure.Controllers
 
                 string dateStr = workdayRecordAPI.Date.ToString("yyyy-MM-dd");
                 string sqlScript = "UPDATE WorkdayRecords" +
-                    " SET CheckIn = \'" + workdayRecordAPI.CheckIn + "\', CheckOut = \'" + workdayRecordAPI.CheckOut + "\'," +
+                    " SET CheckIn = \'" + AlignDateFormat(workdayRecordAPI.CheckIn.ToString()) + "\', CheckOut = \'" + AlignDateFormat(workdayRecordAPI.CheckOut.ToString()) + "\'," +
                     " TotalWorkingHours = " + workdayRecordAPI.TotalWorkingHours +
                     " WHERE StaffName = \'" + workdayRecordAPI.StaffName + "\' AND CAST(Date AS DATE) = \'" + dateStr + "\';"; 
 
@@ -715,5 +715,16 @@ namespace AttendanceTrackerInfrastructure.Controllers
                 conn.Close();
             }
         }
+
+        // PRIVATE FUNCTION
+
+        // function used to align the dateTime to compatible with Database format
+
+        private string AlignDateFormat(string dateTime)
+        {
+            return DateTime.Parse(dateTime).ToString("yyyy-MM-ddTHH:mm:ss");
+        }
+
     }
+
 }

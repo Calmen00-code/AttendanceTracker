@@ -97,12 +97,16 @@
     public async void CheckOutSubmit()
     {
         // string route_timesheet_checkout = APPLICATION_API_URL_DEPLOYMENT + "checkout/" + Username + "/" + CurrentTime;
-        string route_timesheet_checkout = APPLICATION_API_URL_DEVELOPMENT + "checkout/" + Username + "/" + CurrentTime;
+        string route_timesheet_checkout = APPLICATION_API_URL_DEVELOPMENT + "checkout";
 
-        var content = new StringContent(string.Empty);
+        TimesheetAPI timesheet = new TimesheetAPI();
+        timesheet.Username = Username;
+        timesheet.CurrentTime = CurrentTime;
+
+        var response = await HttpClient.PostAsJsonAsync(route_timesheet_checkout, timesheet);
+
         // ERROR: no response after clicking checkin or checkout
         // FIXME: try posting a real object instead of string like this
-        var response = await HttpClient.PostAsync(route_timesheet_checkout, content);
 
         if ((int) response.StatusCode == HttpResponseStatus.ACCEPTED)
         {
