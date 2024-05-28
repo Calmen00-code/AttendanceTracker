@@ -38,6 +38,9 @@
                 <div class="form-group text-center">
                     <button class="check-out" type="submit" @onclick="CheckOutSubmit">Check Out</button>
                 </div>
+                <div class="form-group text-center">
+                    <button class="check-out" type="submit" @onclick="Test">Test</button>
+                </div>
             </form>
         </div>
     </div>
@@ -56,6 +59,25 @@
     protected override async Task OnInitializedAsync()
     {
         CurrentTime = DateTime.Now.ToString();
+    }
+
+    public async void Test()
+    {
+        string route_test = APPLICATION_API_URL_DEPLOYMENT + "add-staff";
+        StaffAPI staff = new StaffAPI();
+        staff.Department = "Finance";
+        staff.Name = Username;
+        staff.Password = "Password123";
+
+        var response = await HttpClient.PostAsJsonAsync(route_test, staff);
+        if ((int)(response.StatusCode) == HttpResponseStatus.CREATED)
+        {
+            ShowAlert("Created");
+        }
+        else
+        {
+            ShowAlert("FAILED");
+        }
     }
 
     public async void CheckInSubmit()

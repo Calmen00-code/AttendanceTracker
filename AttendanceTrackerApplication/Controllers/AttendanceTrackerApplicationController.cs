@@ -264,8 +264,6 @@ namespace AttendanceTrackerApplication.Controllers
         [Route("checkin")]
         public async Task<IActionResult> TimesheetCheckIn([FromBody] TimesheetAPI timesheet)
         {
-            System.Diagnostics.Debug.WriteLine("timesheet: " + timesheet.ToString());
-
             // Note: we are calling API function directly in this file, instead of through Http network
             // var response = (ObjectResult)(await IsStaffExist(timesheet.Username));
             string route_staff_exist = _apiurl + "is-staff-exist/" + timesheet.Username;
