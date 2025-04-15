@@ -4,32 +4,106 @@
 
 <h2 class="text-center">Login</h2>
 <br />
-<!-- div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <button type="button" class="btn btn-primary">
-                <i class="bi bi-person-gear"></i> Admin
-            </button>
-        </div>
-        <div class="col-md-12">
-            <button type="button" class="btn btn-primary">
-                <i class="bi bi-people-fill"></i> Employee
-            </button>
-        </div>
-    </div>
-</!-->
 
-<!-- Button Section -->
+<!-- User type login selection button -->
 <div class="container button-container">
     <div class="row">
-        <button type="button" class="btn btn-primary btn-lg">
+        <button
+            type="button"
+            class="btn btn-primary btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#adminModal"
+        >
             <i class="bi bi-person-gear"></i> Admin
         </button>
     </div>
     <br />
     <div class="row">
-        <button type="button" class="btn btn-primary btn-lg">
-            <i class="bi bi-people"></i> User
+        <button
+            type="button"
+            class="btn btn-primary btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#employeeModal"
+        >
+            <i class="bi bi-people"></i> Employee
         </button>
+    </div>
+</div>
+
+<!-- Login menu for Admin -->
+<div
+    class="modal fade"
+    id="adminModal"
+    tabindex="-1"
+    data-bs-keyboard="false"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h5 class="modal-title">Admin Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <input type="text" class="form-control" placeholder="Username" required />
+                        </div>
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" placeholder="Password" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login menu for Employee -->
+<div
+    class="modal fade"
+    id="employeeModal"
+    tabindex="-1"
+    data-bs-keyboard="false"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-secondary">
+                <h5 class="modal-title">Employee Login</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-3">
+                            <input type="text" class="form-control" placeholder="Username" required />
+                        </div>
+                        <div class="col-md-12">
+                            <input type="password" class="form-control" placeholder="Password" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i>
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
