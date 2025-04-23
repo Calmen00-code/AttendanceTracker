@@ -8,22 +8,14 @@ using AttendanceTracker.Models;
 
 namespace AttendanceTracker.DataAccess.Repository.IRepository
 {
-    public class AttendanceTracker : Repository<Attendance>, IAttendanceRepository
+    public class AttendanceRepository : Repository<Attendance>, IAttendanceRepository
     {
         private readonly ApplicationDbContext _db;
-        public AttendanceTracker(ApplicationDbContext db) : base(db)
+        public AttendanceRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-        public void Update(Attendance attendance)
-        {
-            _db.Attendances.Update(attendance);
-        }
 
-        public void Save()
-        {
-            _db.SaveChanges();
-        }
     }
 }
