@@ -18,6 +18,7 @@ namespace AttendanceTracker.DataAccess.Data
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+    
+        public DbSet<ApplicationEmployee> ApplicationEmployees { get; set; }
     }
 }

@@ -1,20 +1,12 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AttendanceTracker.Models
 {
-    public class Employee
+    public class ApplicationEmployee : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
         [ValidateNever]
         public ICollection<Attendance> Attendances { get; set; }
 

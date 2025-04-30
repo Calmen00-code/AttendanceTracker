@@ -16,10 +16,10 @@ namespace AttendanceTracker.Models
         public double TotalWorkingHours { get; set; }
 
         [Required]
-        public int EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         [ForeignKey(nameof(EmployeeId))]
         [ValidateNever]
-        public Employee Employee { get; set; }
+        public ApplicationEmployee Employee { get; set; }
     }
 }
