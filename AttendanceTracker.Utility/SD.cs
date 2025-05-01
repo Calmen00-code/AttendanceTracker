@@ -1,9 +1,9 @@
 ﻿namespace AttendanceTracker.Utility
 {
-    // Shared data
+    // Static details
     public class SD
     {
-        public const string ADMIN = "Admin";
-        public const string EMPLOYEE = "Employee";
+        public const string ROLE_ADMIN = "Admin";
+        public const string ROLE_EMPLOYEE = "Employee";
     }
 }
