@@ -11,6 +11,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 );
 
 builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Home/Index";
+});
 
 var app = builder.Build();
 
