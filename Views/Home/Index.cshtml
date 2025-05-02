@@ -3,13 +3,17 @@
 }
 
 <h2 class="text-center">Welcome to Attendance Tracker, login to continue.</h2>
-<div class=""
 <div class="container button-container">
     <div class="row justify-content-center">
-        <button type="button" class="btn btn-primary btn-lg" style="width: 400px;">
+        <a
+            type="button"
+            class="btn btn-primary btn-lg"
+            style="width: 400px;"
+            id="login" asp-area="Identity" asp-page="/Account/Login"
+        >
             <i class="bi bi-box-arrow-in-right"></i>
             Go to Login Page
-        </button>
+        </a>
     </div>
 </div>
 <br />
