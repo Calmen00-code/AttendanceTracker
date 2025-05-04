@@ -17,7 +17,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Home/Index";
+    options.LoginPath = $"/Identity/Account/Login";
 });
 
 var app = builder.Build();
@@ -40,7 +40,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Employee}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

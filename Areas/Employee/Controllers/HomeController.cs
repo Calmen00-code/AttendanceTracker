@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace AttendanceTracker.Controllers
 {
+    [Area("Employee")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
