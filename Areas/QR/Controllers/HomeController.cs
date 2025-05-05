@@ -7,6 +7,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using AttendanceTracker.Models.ViewModels;
 
 namespace AttendanceTracker.Controllers
 {
@@ -20,11 +21,19 @@ namespace AttendanceTracker.Controllers
             _logger = logger;
         }
 
+        public IActionResult Authentication()
+        {
+            return View(new AuthenticationVM());
+        }
+
         public IActionResult Index()
         {
+            // Define the authentication page URL
+            string authenticationUrl = Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme);
+
             // QR Code Generation on Page Load
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeInfo = qrGenerator.CreateQrCode("www.youtube.com", QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeInfo = qrGenerator.CreateQrCode(authenticationUrl, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeInfo);
             byte[] qrCodeBytes = qrCode.GetGraphic(60);
             
