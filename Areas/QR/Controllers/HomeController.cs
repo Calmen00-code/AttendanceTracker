@@ -15,21 +15,36 @@ namespace AttendanceTracker.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private string guidToken = string.Empty;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Authentication()
+        public IActionResult Authentication(string token)
         {
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized();
+            }
             return View(new AuthenticationVM());
         }
 
         public IActionResult Index()
         {
+            // Generate a unique GUID token for the QR code which expires when the user check in or check out
+            if (string.IsNullOrEmpty(guidToken))
+            {
+                guidToken = Guid.NewGuid().ToString();
+            }
+
+            // Define and embed token into authentication page URL
+            string authenticationUrl = 
+                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={guidToken}";
+
             // Define the authentication page URL
-            string authenticationUrl = Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme);
+            //string authenticationUrl = Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme);
 
             // QR Code Generation on Page Load
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
