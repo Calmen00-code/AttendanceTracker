@@ -11,6 +11,7 @@ using AttendanceTracker.Models.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using NuGet.Common;
+using AttendanceTracker.Utility;
 
 namespace AttendanceTracker.Controllers
 {
@@ -19,8 +20,6 @@ namespace AttendanceTracker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
-
-        private string guidToken = string.Empty;
 
         public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager)
         {
@@ -43,6 +42,11 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        public IActionResult OnFailRecord()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Authentication(AuthenticationVM model)
         {
@@ -56,18 +60,21 @@ namespace AttendanceTracker.Controllers
                     // and perform the check-in/check-out operation
 
                     // Clear the token after successful authentication
-                    guidToken = string.Empty;
+                    HttpContext.Session.Clear();
 
                     return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    TempData["error"] = "Invalid username and password. Please try again.";
+                    // use TempData keep here to persist the error message across redirects
+                    // as TempData["error"] only lasts for one request. Redirection will clear the TempData.
+                    TempData.Keep("error");
                 }
             }
             
             // If we got this far, something failed, redisplay form
-            return View(guidToken);
+            return RedirectToAction("OnFailRecord", "Home", new { area = "QR", token=HttpContext.Session.GetString(SD.GUID_SESSION) });
         }
 
         // private bool IsTokenValid(string token)
@@ -81,14 +88,15 @@ namespace AttendanceTracker.Controllers
         public IActionResult Index()
         {
             // Generate a unique GUID token for the QR code which expires when the user check in or check out
-            if (string.IsNullOrEmpty(guidToken))
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SD.GUID_SESSION)))
             {
-                guidToken = Guid.NewGuid().ToString();
+                string guidToken = Guid.NewGuid().ToString();
+                HttpContext.Session.SetString(SD.GUID_SESSION, guidToken);
             }
 
             // Define and embed token into authentication page URL
             string authenticationUrl = 
-                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={guidToken}";
+                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={HttpContext.Session.GetString(SD.GUID_SESSION)}";
 
             // Define the authentication page URL
             //string authenticationUrl = Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme);
