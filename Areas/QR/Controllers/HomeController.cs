@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using NuGet.Common;
 using AttendanceTracker.Utility;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace AttendanceTracker.Controllers
 {
@@ -20,11 +21,13 @@ namespace AttendanceTracker.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IDistributedCache _cache;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, IDistributedCache cache)
         {
-            _signInManager = signInManager;
             _logger = logger;
+            _signInManager = signInManager;
+            _cache = cache;
         }
 
         public IActionResult Authentication(string token)
@@ -34,7 +37,13 @@ namespace AttendanceTracker.Controllers
             {
                 return Unauthorized();
             }
-            return View(new AuthenticationVM());
+
+            AuthenticationVM authenticationVM = new ()
+            {
+                Token = token
+            };
+
+            return View(authenticationVM);
         }
 
         public IActionResult OnSuccessRecord()
@@ -50,15 +59,18 @@ namespace AttendanceTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Authentication(AuthenticationVM model)
         {
+            // Check if token has expired
+            if (!IsTokenValid(model.Token))
+            {
+                TempData["error"] = "Token has expired. Please rescan the QR code.";
+                return Unauthorized();
+            }
+
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    // Check in or check out logic here
-                    // You can use the guidToken to identify the user session
-                    // and perform the check-in/check-out operation
-
                     // Clear the token after successful authentication
                     HttpContext.Session.Clear();
 
@@ -77,13 +89,11 @@ namespace AttendanceTracker.Controllers
             return RedirectToAction("OnFailRecord", "Home", new { area = "QR", token=HttpContext.Session.GetString(SD.GUID_SESSION) });
         }
 
-        // private bool IsTokenValid(string token)
-        // {
-        //     var cache = ConnectionMultiplexer.Connect("localhost").GetDatabase();
-        //     string storedToken = cache.StringGet($"token:{token}");
-
-        //     return !string.IsNullOrEmpty(storedToken); // Only allow valid tokens
-        // }
+        private bool IsTokenValid(string token)
+        {
+            string sessionToken = HttpContext.Session.GetString(SD.GUID_SESSION);
+            return (!string.IsNullOrEmpty(token)) && (HttpContext.Session.GetString(SD.GUID_SESSION) == token);
+        }
 
         public IActionResult Index()
         {

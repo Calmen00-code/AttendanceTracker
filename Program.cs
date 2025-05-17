@@ -3,6 +3,7 @@ using AttendanceTracker.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,16 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+// adding redis
+builder.Services.AddDistributedMemoryCache();
+
+// Uncomment the following lines to use Redis cache in production
+// builder.Services.AddStackExchangeRedisCache(options =>
+//  {
+//      options.Configuration = builder.Configuration.GetConnectionString("MyRedisConStr");
+//      options.InstanceName = "SampleInstance";
+//  });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,7 +58,16 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseSession();
+// app.UseSession();
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    var currentTimeUTC = DateTime.UtcNow.ToString();
+    byte[] encodedCurrentTimeUTC = System.Text.Encoding.UTF8.GetBytes(currentTimeUTC);
+    var options = new DistributedCacheEntryOptions()
+        .SetSlidingExpiration(TimeSpan.FromSeconds(60));
+    app.Services.GetService<IDistributedCache>()
+                              .Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
+});
 
 app.MapControllerRoute(
     name: "default",

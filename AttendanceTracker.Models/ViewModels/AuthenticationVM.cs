@@ -11,5 +11,7 @@ namespace AttendanceTracker.Models.ViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string Token { get; set; }
     }
 }
