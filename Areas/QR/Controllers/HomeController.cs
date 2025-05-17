@@ -32,8 +32,7 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult Authentication(string token)
         {
-            // if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
             {
                 return Unauthorized();
             }
@@ -72,7 +71,11 @@ namespace AttendanceTracker.Controllers
                 if (result.Succeeded)
                 {
                     // Clear the token after successful authentication
-                    HttpContext.Session.Clear();
+                    // TODO: might need to add a lock here to ensure thread safety
+
+                    _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
+                    GenerateQRCode();
+                    // TODO: force refresh on all clients
 
                     return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
                 }
@@ -86,30 +89,24 @@ namespace AttendanceTracker.Controllers
             }
             
             // If we got this far, something failed, redisplay form
-            return RedirectToAction("OnFailRecord", "Home", new { area = "QR", token=HttpContext.Session.GetString(SD.GUID_SESSION) });
+            return RedirectToAction("OnFailRecord", "Home", new { area = "QR", token=_cache.GetString(SD.GUID_SESSION) });
         }
 
         private bool IsTokenValid(string token)
         {
-            string sessionToken = HttpContext.Session.GetString(SD.GUID_SESSION);
-            return (!string.IsNullOrEmpty(token)) && (HttpContext.Session.GetString(SD.GUID_SESSION) == token);
+            return (!string.IsNullOrEmpty(token)) && (_cache.GetString(SD.GUID_SESSION) == token);
         }
 
-        public IActionResult Index()
+        private string GenerateNewToken()
         {
-            // Generate a unique GUID token for the QR code which expires when the user check in or check out
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(SD.GUID_SESSION)))
-            {
-                string guidToken = Guid.NewGuid().ToString();
-                HttpContext.Session.SetString(SD.GUID_SESSION, guidToken);
-            }
+            return Guid.NewGuid().ToString();
+        }
 
+        private void GenerateQRCode()
+        {
             // Define and embed token into authentication page URL
             string authenticationUrl = 
-                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={HttpContext.Session.GetString(SD.GUID_SESSION)}";
-
-            // Define the authentication page URL
-            //string authenticationUrl = Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme);
+                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={_cache.GetString(SD.GUID_SESSION)}";
 
             // QR Code Generation on Page Load
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -120,6 +117,21 @@ namespace AttendanceTracker.Controllers
             // Convert QR Code to Base64 URI
             string qrUri = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
             ViewBag.QrCodeUri = qrUri;
+        }
+
+        public IActionResult Index()
+        {
+            // Generate and initialize unique GUID token for the QR code which expires when the user check in or check out
+            // Used at the first time the app is loaded
+            if (string.IsNullOrEmpty(_cache.GetString(SD.GUID_SESSION)))
+            {
+                string guidToken = GenerateNewToken();
+
+                // TODO: might need to add a lock here to ensure thread safety
+                _cache.SetString(SD.GUID_SESSION, guidToken);
+            }
+
+            GenerateQRCode();
 
             return View();
         }
