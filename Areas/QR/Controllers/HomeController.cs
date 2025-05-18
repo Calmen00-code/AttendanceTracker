@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using NuGet.Common;
 using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AttendanceTracker.Controllers
 {
@@ -22,101 +23,18 @@ namespace AttendanceTracker.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IDistributedCache _cache;
+        private readonly IHubContext<RefreshHub> _hubContext;
 
-        public HomeController(ILogger<HomeController> logger, SignInManager<IdentityUser> signInManager, IDistributedCache cache)
+        public HomeController(
+            ILogger<HomeController> logger,
+            SignInManager<IdentityUser> signInManager,
+            IDistributedCache cache,
+            IHubContext<RefreshHub> hubContext)
         {
             _logger = logger;
             _signInManager = signInManager;
             _cache = cache;
-        }
-
-        public IActionResult Authentication(string token)
-        {
-            if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
-            {
-                return Unauthorized();
-            }
-
-            AuthenticationVM authenticationVM = new ()
-            {
-                Token = token
-            };
-
-            return View(authenticationVM);
-        }
-
-        public IActionResult OnSuccessRecord()
-        {
-            return View();
-        }
-
-        public IActionResult OnFailRecord()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Authentication(AuthenticationVM model)
-        {
-            // Check if token has expired
-            if (!IsTokenValid(model.Token))
-            {
-                TempData["error"] = "Token has expired. Please rescan the QR code.";
-                return Unauthorized();
-            }
-
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
-                    // Clear the token after successful authentication
-                    // TODO: might need to add a lock here to ensure thread safety
-
-                    _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
-                    GenerateQRCode();
-                    // TODO: force refresh on all clients
-
-                    return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
-                }
-                else
-                {
-                    TempData["error"] = "Invalid username and password. Please try again.";
-                    // use TempData keep here to persist the error message across redirects
-                    // as TempData["error"] only lasts for one request. Redirection will clear the TempData.
-                    TempData.Keep("error");
-                }
-            }
-            
-            // If we got this far, something failed, redisplay form
-            return RedirectToAction("OnFailRecord", "Home", new { area = "QR", token=_cache.GetString(SD.GUID_SESSION) });
-        }
-
-        private bool IsTokenValid(string token)
-        {
-            return (!string.IsNullOrEmpty(token)) && (_cache.GetString(SD.GUID_SESSION) == token);
-        }
-
-        private string GenerateNewToken()
-        {
-            return Guid.NewGuid().ToString();
-        }
-
-        private void GenerateQRCode()
-        {
-            // Define and embed token into authentication page URL
-            string authenticationUrl = 
-                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={_cache.GetString(SD.GUID_SESSION)}";
-
-            // QR Code Generation on Page Load
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeInfo = qrGenerator.CreateQrCode(authenticationUrl, QRCodeGenerator.ECCLevel.Q);
-            PngByteQRCode qrCode = new PngByteQRCode(qrCodeInfo);
-            byte[] qrCodeBytes = qrCode.GetGraphic(60);
-            
-            // Convert QR Code to Base64 URI
-            string qrUri = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
-            ViewBag.QrCodeUri = qrUri;
+            _hubContext = hubContext;
         }
 
         public IActionResult Index()
@@ -134,6 +52,94 @@ namespace AttendanceTracker.Controllers
             GenerateQRCode();
 
             return View();
+        }
+
+        public IActionResult Authentication(string token)
+        {
+            if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
+            {
+                return Unauthorized();
+            }
+
+            AuthenticationVM authenticationVM = new ()
+            {
+                Token = token
+            };
+
+            return View(authenticationVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Authentication(AuthenticationVM model)
+        {
+            // Check if token has expired
+            if (!IsTokenValid(model.Token))
+            {
+                TempData["error"] = "Token has expired. Please rescan the QR code.";
+                return Unauthorized();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    // Update a new token after each successful authentication for check in/out
+                    // TODO: might need to add a lock here to ensure thread safety
+
+                    _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
+
+                    GenerateQRCode();
+
+                    // force refresh the page on all clients
+                    await _hubContext.Clients.All.SendAsync("RefreshPage");
+
+                    return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
+                }
+            }
+            
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("OnFailRecord", "Home",
+                new { area = "QR", message = "Something went wrong, please rescan QR and try again..." });
+        }
+
+        public IActionResult OnSuccessRecord()
+        {
+            return View();
+        }
+
+        public IActionResult OnFailRecord()
+        {
+            return View();
+        }
+
+        // PRIVATE METHODS BELOW
+
+        private bool IsTokenValid(string token)
+        {
+            return (!string.IsNullOrEmpty(token)) && (_cache.GetString(SD.GUID_SESSION) == token);
+        }
+
+        private string GenerateNewToken()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private void GenerateQRCode()
+        {
+            // Define and embed token/session into authentication page URL
+            string authenticationUrl = 
+                $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={_cache.GetString(SD.GUID_SESSION)}";
+
+            // QR Code Generation on Page Load
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeInfo = qrGenerator.CreateQrCode(authenticationUrl, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeInfo);
+            byte[] qrCodeBytes = qrCode.GetGraphic(60);
+            
+            // Convert QR Code to Base64 URI
+            string qrUri = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
+            ViewBag.QrCodeUri = qrUri;
         }
     }
 }

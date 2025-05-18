@@ -40,6 +40,9 @@ builder.Services.AddDistributedMemoryCache();
 //      options.InstanceName = "SampleInstance";
 //  });
 
+// add SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -58,7 +61,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.UseSession();
+// register the session middleware (redis)
 app.Lifetime.ApplicationStarted.Register(() =>
 {
     var currentTimeUTC = DateTime.UtcNow.ToString();
@@ -68,6 +71,9 @@ app.Lifetime.ApplicationStarted.Register(() =>
     app.Services.GetService<IDistributedCache>()
                               .Set("cachedTimeUTC", encodedCurrentTimeUTC, options);
 });
+
+// Map SignalR RefreshHub to endpoint "/refreshHub"
+app.MapHub<RefreshHub>("/refreshHub");
 
 app.MapControllerRoute(
     name: "default",
