@@ -58,7 +58,7 @@ namespace AttendanceTracker.Controllers
         {
             if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
             {
-                return Unauthorized();
+                return UnauthorizedAction("Token has expired. Please rescan the QR code.");
             }
 
             AuthenticationVM authenticationVM = new ()
@@ -75,8 +75,7 @@ namespace AttendanceTracker.Controllers
             // Check if token has expired
             if (!IsTokenValid(model.Token))
             {
-                TempData["error"] = "Token has expired. Please rescan the QR code.";
-                return Unauthorized();
+                return UnauthorizedAction("Token has expired. Please rescan the QR code.");
             }
 
             if (ModelState.IsValid)
@@ -96,10 +95,15 @@ namespace AttendanceTracker.Controllers
 
                     return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
                 }
+                else
+                {
+                    return RedirectToAction("UnauthorizedAction", "Home",
+                        new { area = "QR", message = "Incorrect username and password! Please rescan the QR code" });
+                }
             }
             
             // If we got this far, something failed, redisplay form
-            return RedirectToAction("OnFailRecord", "Home",
+            return RedirectToAction("UnauthorizedAction", "Home",
                 new { area = "QR", message = "Something went wrong, please rescan QR and try again..." });
         }
 
@@ -108,9 +112,9 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
-        public IActionResult OnFailRecord()
+        public IActionResult UnauthorizedAction(string message)
         {
-            return View();
+            return View("OnFailRecord", message);
         }
 
         // PRIVATE METHODS BELOW
