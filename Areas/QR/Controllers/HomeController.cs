@@ -24,6 +24,7 @@ namespace AttendanceTracker.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
+        private static readonly object _sessionTokenLock = new object();
 
         public HomeController(
             ILogger<HomeController> logger,
@@ -39,18 +40,22 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult Index()
         {
-            // Generate and initialize unique GUID token for the QR code which expires when the user check in or check out
-            // Used at the first time the app is loaded
-            if (string.IsNullOrEmpty(_cache.GetString(SD.GUID_SESSION)))
+            // Ensures only one thread enters at a time.
+            // In case multiple users submitted request at the same time
+            lock (_sessionTokenLock)
             {
-                string guidToken = GenerateNewToken();
-
-                // TODO: might need to add a lock here to ensure thread safety
-                _cache.SetString(SD.GUID_SESSION, guidToken);
+                // Generate and initialize unique GUID token for the QR code which expires when the user check in or check out
+                // Used at the first time the app is loaded
+                if (string.IsNullOrEmpty(_cache.GetString(SD.GUID_SESSION)))
+                {
+                    // Double-check inside the lock
+                    if (string.IsNullOrEmpty(_cache.GetString(SD.GUID_SESSION)))
+                    {
+                        _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
+                    }
+                }
+                GenerateQRCode();
             }
-
-            GenerateQRCode();
-
             return View();
         }
 
@@ -84,11 +89,13 @@ namespace AttendanceTracker.Controllers
                 if (result.Succeeded)
                 {
                     // Update a new token after each successful authentication for check in/out
-                    // TODO: might need to add a lock here to ensure thread safety
-
-                    _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
-
-                    GenerateQRCode();
+                    // Ensures only one thread enters at a time.
+                    // In case multiple users submitted request at the same time
+                    lock (_sessionTokenLock)
+                    {
+                        _cache.SetString(SD.GUID_SESSION, GenerateNewToken());
+                        GenerateQRCode();
+                    }
 
                     // force refresh the page on all clients
                     await _hubContext.Clients.All.SendAsync("RefreshPage");
