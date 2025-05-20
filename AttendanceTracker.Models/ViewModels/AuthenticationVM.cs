@@ -13,5 +13,7 @@ namespace AttendanceTracker.Models.ViewModels
         public string Password { get; set; }
 
         public string Token { get; set; }
+
+        public bool IsCheckIn { get; set; }
     }
 }

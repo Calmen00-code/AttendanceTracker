@@ -11,11 +11,16 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
     public class AttendanceRepository : Repository<Attendance>, IAttendanceRepository
     {
         private readonly ApplicationDbContext _db;
+
         public AttendanceRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
 
-
+        public void Update(Attendance attendance)
+        {
+            _db.Attendances.Update(attendance);
+            _db.SaveChanges();
+        }
     }
 }

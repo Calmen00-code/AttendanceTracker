@@ -1,4 +1,5 @@
 using AttendanceTracker.DataAccess.Data;
+using AttendanceTracker.DataAccess.Repository.IRepository;
 using AttendanceTracker.Utility;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 );
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.ConfigureApplicationCookie(options =>
 {

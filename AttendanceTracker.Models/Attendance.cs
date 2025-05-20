@@ -7,7 +7,7 @@ namespace AttendanceTracker.Models
     public class Attendance
     {
         [Key]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime CheckIn { get; set; }
 

@@ -14,6 +14,7 @@ using NuGet.Common;
 using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.SignalR;
+using AttendanceTracker.DataAccess.Repository.IRepository;
 
 namespace AttendanceTracker.Controllers
 {
@@ -24,18 +25,22 @@ namespace AttendanceTracker.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
+        private readonly IUnitOfWork _unitOfWork;
+
         private static readonly object _sessionTokenLock = new object();
 
         public HomeController(
             ILogger<HomeController> logger,
             SignInManager<IdentityUser> signInManager,
             IDistributedCache cache,
-            IHubContext<RefreshHub> hubContext)
+            IHubContext<RefreshHub> hubContext,
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _signInManager = signInManager;
             _cache = cache;
             _hubContext = hubContext;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -61,12 +66,12 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult Authentication(string token)
         {
-            if (string.IsNullOrEmpty(token) || !IsTokenValid(token))
+            if (!IsTokenValid(token))
             {
                 return UnauthorizedAction("Token has expired. Please rescan the QR code.");
             }
 
-            AuthenticationVM authenticationVM = new ()
+            AuthenticationVM authenticationVM = new()
             {
                 Token = token
             };
@@ -88,6 +93,13 @@ namespace AttendanceTracker.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    string errorMessage = RecordUserAttendance(model);
+
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        return UnauthorizedAction(errorMessage);
+                    }
+
                     // Update a new token after each successful authentication for check in/out
                     // Ensures only one thread enters at a time.
                     // In case multiple users submitted request at the same time
@@ -105,10 +117,10 @@ namespace AttendanceTracker.Controllers
                 else
                 {
                     return RedirectToAction("UnauthorizedAction", "Home",
-                        new { area = "QR", message = "Incorrect username and password! Please rescan the QR code" });
+                        new { area = "QR", message = "Incorrect username and password!" });
                 }
             }
-            
+
             // If we got this far, something failed, redisplay form
             return RedirectToAction("UnauthorizedAction", "Home",
                 new { area = "QR", message = "Something went wrong, please rescan QR and try again..." });
@@ -139,7 +151,7 @@ namespace AttendanceTracker.Controllers
         private void GenerateQRCode()
         {
             // Define and embed token/session into authentication page URL
-            string authenticationUrl = 
+            string authenticationUrl =
                 $"{Url.Action("Authentication", "Home", new { area = "QR" }, Request.Scheme)}?token={_cache.GetString(SD.GUID_SESSION)}";
 
             // QR Code Generation on Page Load
@@ -147,10 +159,91 @@ namespace AttendanceTracker.Controllers
             QRCodeData qrCodeInfo = qrGenerator.CreateQrCode(authenticationUrl, QRCodeGenerator.ECCLevel.Q);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeInfo);
             byte[] qrCodeBytes = qrCode.GetGraphic(60);
-            
+
             // Convert QR Code to Base64 URI
             string qrUri = $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
             ViewBag.QrCodeUri = qrUri;
+        }
+
+        /**
+         * @brief Records user attendance by handling check-in and check-out logic.
+         * 
+         * This function verifies whether the user is attempting a check-in or a check-out,
+         * ensures proper attendance tracking, and prevents duplicate check-ins.
+         * 
+         * @param model AuthenticationVM model containing attendance details.
+         * @return A string message is EMPTY when success. Otherwise, error message will be returned
+         */
+        private string RecordUserAttendance(AuthenticationVM model)
+        {
+            // Check if user tries to check out without checking in for the day
+            if (!model.IsCheckIn && !UserAlreadyCheckedIn(DateTime.Today))
+            {
+                return "You have not checked in for the day yet. Please rescan QR and check in first.";
+            }
+
+            Attendance userAttendance = 
+                _unitOfWork.Attendance.Get(a => a.EmployeeId == _signInManager.UserManager.GetUserId(User));
+
+            if (model.IsCheckIn)
+            {
+                // Check in
+                if (UserAlreadyCheckedIn(DateTime.Today))
+                {
+                    // User has already checked in for the day,
+                    // so update the record instead of adding a new one
+                    // First check if user tries to check in again without checking out
+                    if (userAttendance.CheckOut == DateTime.MinValue)
+                    {
+                        return "You have already checked in for work today at " + userAttendance.CheckIn.ToString("HH:mm:ss");
+                    }
+
+                    // User has checked out, and now want to check in again. So update the record
+                    // userAttendance.CheckIn = DateTime.Now;
+                    // userAttendance.TotalWorkingHours = 0;
+
+                    // _unitOfWork.Attendance.Update(userAttendance);
+                    // _unitOfWork.Save();
+                }
+                else
+                {
+                    // First time check in for the day
+                    string userId = _signInManager.UserManager.GetUserId(User);
+                    string attendanceId = (DateTime.Now.ToString("yyyyMMdd")) + "_" + userId;
+
+                    // User has not checked in for the day yet, so add a new record
+                    _unitOfWork.Attendance.Add(new Attendance
+                    {
+                        Id = attendanceId,
+                        CheckIn = DateTime.Now,
+                        CheckOut = DateTime.MinValue,
+                        TotalWorkingHours = 0,
+                        EmployeeId = _signInManager.UserManager.GetUserId(User)
+                    });
+
+                    _unitOfWork.Save();
+                }
+            }
+            else
+            {
+                // Check out
+                userAttendance.CheckOut = DateTime.Now;
+                userAttendance.TotalWorkingHours = 
+                    (userAttendance.CheckOut - userAttendance.CheckIn).TotalHours;
+                _unitOfWork.Attendance.Update(userAttendance);
+            }
+
+            // successfully recorded
+            return String.Empty;
+        }
+
+        private bool UserAlreadyCheckedIn(DateTime date)
+        {
+            // Check if the user has already checked in for the day
+            var attendanceToday = _unitOfWork.Attendance.Get(
+                a => a.EmployeeId == _signInManager.UserManager.GetUserId(User) && a.CheckIn.Date == date);
+
+            return attendanceToday != null;
         }
     }
 }
