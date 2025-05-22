@@ -13,12 +13,12 @@ namespace AttendanceTracker.DataAccess.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
+
         }
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
-    
         public DbSet<ApplicationEmployee> ApplicationEmployees { get; set; }
+        public DbSet<DailyAttendanceRecord> DailyAttendanceRecords { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AttendanceTrackerWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialSetups : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,6 +63,19 @@ namespace AttendanceTrackerWeb.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DailyAttendanceRecords",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyAttendanceRecords", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,8 +189,6 @@ namespace AttendanceTrackerWeb.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CheckIn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOut = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalWorkingHours = table.Column<double>(type: "float", nullable: false),
                     EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -260,6 +271,9 @@ namespace AttendanceTrackerWeb.Migrations
 
             migrationBuilder.DropTable(
                 name: "Attendances");
+
+            migrationBuilder.DropTable(
+                name: "DailyAttendanceRecords");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

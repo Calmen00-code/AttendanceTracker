@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/27.0.2 Chrome/134.0.6998.205 Electron/35.3.0 Safari/537.36" version="27.0.2">
   <diagram name="Page-1" id="efa7a0a1-bf9b-a30e-e6df-94a7791c09e9">
-    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="none" math="0" shadow="0">
+    <mxGraphModel dx="586" dy="1681" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="826" pageHeight="1169" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -13,8 +13,8 @@
         <mxCell id="sh4muvCTSqLjw_fHLpVe-114" value="&lt;p style=&quot;forced-color-adjust: none; box-shadow: none !important; color: rgb(161, 205, 249); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(27, 29, 30); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px 0px 0px 8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="400" y="120" width="180" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="sh4muvCTSqLjw_fHLpVe-115" value="&lt;p style=&quot;margin: 0px; margin-top: 4px; text-align: center; text-decoration: underline;&quot;&gt;&lt;b&gt;Attendance&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;AttendanceID (CurrentDate)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;EmployeeID (ForeignKey)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;TotalWorkingHour&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;strokeColor=#003366;shadow=1;fillColor=#D4E1F5;fontColor=#003366" parent="1" vertex="1">
-          <mxGeometry x="440" y="215" width="160" height="90" as="geometry" />
+        <mxCell id="sh4muvCTSqLjw_fHLpVe-115" value="&lt;p style=&quot;margin: 0px; margin-top: 4px; text-align: center; text-decoration: underline;&quot;&gt;&lt;b&gt;Attendance&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;AttendanceID (CurrentDate + EmployeeID)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;EmployeeID (ForeignKey)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;TotalWorkingHour&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;strokeColor=#003366;shadow=1;fillColor=#D4E1F5;fontColor=#003366" parent="1" vertex="1">
+          <mxGeometry x="440" y="215" width="250" height="90" as="geometry" />
         </mxCell>
         <mxCell id="sh4muvCTSqLjw_fHLpVe-117" value="Relation" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=1.013;exitY=0.445;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.011;entryY=0.432;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="28" target="sh4muvCTSqLjw_fHLpVe-115" edge="1">
           <mxGeometry relative="1" as="geometry">
@@ -33,25 +33,24 @@
         <mxCell id="8FfgD5PXI_HMpDuiosEu-28" value="&lt;p style=&quot;forced-color-adjust: none; box-shadow: none !important; color: rgb(161, 205, 249); font-family: Helvetica; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(27, 29, 30); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; margin: 0px 0px 0px 8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="230" y="500" width="160" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="8FfgD5PXI_HMpDuiosEu-29" value="&lt;p style=&quot;margin: 0px; margin-top: 4px; text-align: center; text-decoration: underline;&quot;&gt;&lt;b&gt;DailyAttendanceRecords&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;AttendanceID (ForeignKey)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;CheckIn (DateTime)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;CheckOut (DateTime)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;strokeColor=#003366;shadow=1;fillColor=#D4E1F5;fontColor=#003366" parent="1" vertex="1">
-          <mxGeometry x="440" y="400" width="160" height="90" as="geometry" />
+        <mxCell id="8FfgD5PXI_HMpDuiosEu-29" value="&lt;p style=&quot;margin: 0px; margin-top: 4px; text-align: center; text-decoration: underline;&quot;&gt;&lt;b&gt;DailyAttendanceRecords&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;DailyAttendanceID (AttendanceID + CheckIn)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;AttendanceID (ForeignKey)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;CheckIn (DateTime)&lt;/p&gt;&lt;p style=&quot;margin: 0px; margin-left: 8px;&quot;&gt;CheckOut (DateTime)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;strokeColor=#003366;shadow=1;fillColor=#D4E1F5;fontColor=#003366" parent="1" vertex="1">
+          <mxGeometry x="435" y="410" width="260" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="8FfgD5PXI_HMpDuiosEu-31" value="Relation" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.444;exitY=0.978;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="sh4muvCTSqLjw_fHLpVe-115" target="8FfgD5PXI_HMpDuiosEu-29" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="610" y="311" as="sourcePoint" />
-            <mxPoint x="779" y="310" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="511" y="310" />
-              <mxPoint x="511" y="310" />
-            </Array>
+        <mxCell id="qdm3nW7ifOsiuP5CLcDe-28" value="Relation" style="endArrow=open;html=1;endSize=12;startArrow=diamondThin;startSize=14;startFill=0;edgeStyle=orthogonalEdgeStyle;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="sh4muvCTSqLjw_fHLpVe-115" target="8FfgD5PXI_HMpDuiosEu-29">
+          <mxGeometry x="0.0476" y="15" relative="1" as="geometry">
+            <mxPoint x="300" y="411" as="sourcePoint" />
+            <mxPoint x="470" y="410" as="targetPoint" />
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="8FfgD5PXI_HMpDuiosEu-32" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;" parent="8FfgD5PXI_HMpDuiosEu-31" connectable="0" vertex="1">
-          <mxGeometry x="-1" relative="1" as="geometry" />
+        <mxCell id="qdm3nW7ifOsiuP5CLcDe-29" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;" connectable="0" vertex="1" parent="qdm3nW7ifOsiuP5CLcDe-28">
+          <mxGeometry x="-1" relative="1" as="geometry">
+            <mxPoint x="5" as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="8FfgD5PXI_HMpDuiosEu-33" value="0..n" style="edgeLabel;resizable=0;html=1;align=right;verticalAlign=top;" parent="8FfgD5PXI_HMpDuiosEu-31" connectable="0" vertex="1">
+        <mxCell id="qdm3nW7ifOsiuP5CLcDe-30" value="0..2" style="edgeLabel;resizable=0;html=1;align=right;verticalAlign=top;" connectable="0" vertex="1" parent="qdm3nW7ifOsiuP5CLcDe-28">
           <mxGeometry x="1" relative="1" as="geometry">
-            <mxPoint x="29" y="-20" as="offset" />
+            <mxPoint x="30" y="-20" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>

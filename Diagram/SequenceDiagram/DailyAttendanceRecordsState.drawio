@@ -4,56 +4,59 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-3" target="6CZ2VVbGzIV4RRF8MSmz-4">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-3" target="6CZ2VVbGzIV4RRF8MSmz-4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-3" value="First day check in&amp;nbsp;&lt;br&gt;State" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-3" value="First day check in&amp;nbsp;&lt;br&gt;State" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="268" y="212" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-4" target="6CZ2VVbGzIV4RRF8MSmz-10">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-4" target="6CZ2VVbGzIV4RRF8MSmz-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-4" value="Check Out for break State" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-4" value="Check Out for break State" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
           <mxGeometry x="548" y="212" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-6" value="Action: Check Out" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-6" value="Action: Check Out" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="398" y="210" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-10" target="6CZ2VVbGzIV4RRF8MSmz-12">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-10" target="6CZ2VVbGzIV4RRF8MSmz-12" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-10" value="Check In After break State" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-10" value="Check In After break State" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
           <mxGeometry x="548" y="352" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-12" value="Check Out for work State" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-12" value="Check Out for work State" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
           <mxGeometry x="268" y="352" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-14" value="Action: Check In" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-14" value="Action: Check In" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="608" y="302" width="110" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-15" value="* Check out button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-15" value="* Check out button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="15" y="172" width="170" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-16" value="Action: Check Out" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
-          <mxGeometry x="398" y="350" width="120" height="30" as="geometry" />
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-16" value="Action: Check Out" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="408" y="352" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-17" value="* Check in button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-17" value="* Check in button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="248" y="172" width="160" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-18" target="6CZ2VVbGzIV4RRF8MSmz-3">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6CZ2VVbGzIV4RRF8MSmz-18" target="6CZ2VVbGzIV4RRF8MSmz-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-18" value="" style="ellipse;shape=doubleEllipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-18" value="" style="ellipse;shape=doubleEllipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="70" y="212" width="60" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-20" value="Action: Check In" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-20" value="Action: Check In" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="140" y="210" width="110" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-21" value="* Check out button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-21" value="* Check out button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="523" y="172" width="170" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-22" value="* Check in button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+        <mxCell id="6CZ2VVbGzIV4RRF8MSmz-22" value="* Check in button disabled" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="528" y="428" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="8Bvu_m_3yXLIv5smg7tr-5" value="Action: Calculate total working &lt;br&gt;hours and save to DB" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="80" y="362" width="180" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

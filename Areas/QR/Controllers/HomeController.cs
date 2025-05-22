@@ -193,17 +193,14 @@ namespace AttendanceTracker.Controllers
                     // User has already checked in for the day,
                     // so update the record instead of adding a new one
                     // First check if user tries to check in again without checking out
+
+                    // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
+                    /*
                     if (userAttendance.CheckOut == DateTime.MinValue)
                     {
                         return "You have already checked in for work today at " + userAttendance.CheckIn.ToString("HH:mm:ss");
                     }
-
-                    // User has checked out, and now want to check in again. So update the record
-                    // userAttendance.CheckIn = DateTime.Now;
-                    // userAttendance.TotalWorkingHours = 0;
-
-                    // _unitOfWork.Attendance.Update(userAttendance);
-                    // _unitOfWork.Save();
+                    */
                 }
                 else
                 {
@@ -212,6 +209,8 @@ namespace AttendanceTracker.Controllers
                     string attendanceId = (DateTime.Now.ToString("yyyyMMdd")) + "_" + userId;
 
                     // User has not checked in for the day yet, so add a new record
+                    // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
+                    /*
                     _unitOfWork.Attendance.Add(new Attendance
                     {
                         Id = attendanceId,
@@ -222,15 +221,19 @@ namespace AttendanceTracker.Controllers
                     });
 
                     _unitOfWork.Save();
+                    */
                 }
             }
             else
             {
                 // Check out
+                // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
+                /*
                 userAttendance.CheckOut = DateTime.Now;
                 userAttendance.TotalWorkingHours = 
                     (userAttendance.CheckOut - userAttendance.CheckIn).TotalHours;
                 _unitOfWork.Attendance.Update(userAttendance);
+                */
             }
 
             // successfully recorded
@@ -240,10 +243,14 @@ namespace AttendanceTracker.Controllers
         private bool UserAlreadyCheckedIn(DateTime date)
         {
             // Check if the user has already checked in for the day
+            // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
+            /*
             var attendanceToday = _unitOfWork.Attendance.Get(
                 a => a.EmployeeId == _signInManager.UserManager.GetUserId(User) && a.CheckIn.Date == date);
 
             return attendanceToday != null;
+            */
+            return false;
         }
     }
 }

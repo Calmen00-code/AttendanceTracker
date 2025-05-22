@@ -9,10 +9,6 @@ namespace AttendanceTracker.Models
         [Key]
         public string Id { get; set; }
 
-        public DateTime CheckIn { get; set; }
-
-        public DateTime CheckOut { get; set; }
-
         public double TotalWorkingHours { get; set; }
 
         [Required]
