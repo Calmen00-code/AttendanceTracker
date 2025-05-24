@@ -1,3 +1,4 @@
+using AttendanceTracker.Controllers;
 using AttendanceTracker.DataAccess.Data;
 using AttendanceTracker.DataAccess.Repository.IRepository;
 using AttendanceTracker.Utility;
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IAttendanceTrackerState, AttendanceTrackerCheckInState>(); // Initial state for attendance tracker
+builder.Services.AddScoped<AttendanceTrackerStateContext>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
