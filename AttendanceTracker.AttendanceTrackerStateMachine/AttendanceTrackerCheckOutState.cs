@@ -1,10 +1,6 @@
 // Concrete class definition to check out of the day
 
-using AttendanceTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckOutState : IAttendanceTrackerState
     {

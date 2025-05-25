@@ -15,6 +15,7 @@ using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.SignalR;
 using AttendanceTracker.DataAccess.Repository.IRepository;
+using AttendanceTracker.AttendanceTrackerStateMachine;
 
 namespace AttendanceTracker.Controllers
 {
@@ -76,7 +77,8 @@ namespace AttendanceTracker.Controllers
 
             AuthenticationVM authenticationVM = new()
             {
-                Token = token
+                Token = token,
+                AttendanceTrackerState = _attendanceTracker.GetCurrentState()
             };
 
             return View(authenticationVM);

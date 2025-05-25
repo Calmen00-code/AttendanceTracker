@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using AttendanceTracker.Controllers;
+using AttendanceTracker.AttendanceTrackerStateMachine;
 
 namespace AttendanceTracker.Models.ViewModels
 {

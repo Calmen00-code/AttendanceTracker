@@ -12,11 +12,7 @@
  *
  */
 
-using AttendanceTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public interface IAttendanceTrackerState
     {

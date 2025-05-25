@@ -1,10 +1,6 @@
 // Concrete class definition for the first check in of the day
 
-using AttendanceTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckInState : IAttendanceTrackerState
     {

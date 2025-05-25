@@ -1,10 +1,6 @@
 // Concrete class definition for check in after a break
 
-using AttendanceTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckInBreakState : IAttendanceTrackerState
     {

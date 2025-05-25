@@ -12,22 +12,17 @@
  *
  */
 
-using AttendanceTracker.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace AttendanceTracker.Controllers
+namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
-    [Area("Employee")]
     public class AttendanceTrackerStateContext
     {
         // A reference to the current state of the attendance tracker
         private IAttendanceTrackerState _state;
 
-        public AttendanceTrackerStateContext(IAttendanceTrackerState initialState)
+        public AttendanceTrackerStateContext()
         {
             // Always start with AttendanceTrackerCheckInState
-            _state = initialState;
+            _state = new AttendanceTrackerCheckInState();
         }
 
         public void TransitionTo(IAttendanceTrackerState newState)
@@ -43,6 +38,11 @@ namespace AttendanceTracker.Controllers
         public void RequestCheckOut()
         {
             _state.CheckOut(this);
+        }
+
+        public IAttendanceTrackerState GetCurrentState()
+        {
+            return _state;
         }
     }
 }
