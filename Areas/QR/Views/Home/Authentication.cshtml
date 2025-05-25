@@ -9,6 +9,7 @@
     <div class="col-md-4">
             <form method="post" onsubmit="return setCheckIn(event)">
                 <input asp-for="@Model.Token" hidden />
+                <input asp-for="@Model.AttendanceTrackerState" hidden />
                 <input type="hidden" id="IsCheckIn" name="IsCheckIn" />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
@@ -21,9 +22,10 @@
                     <label asp-for="Password" class="form-label">Password</label>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
 
-                <button type="submit" onclick="setCheckIn(true)" class="w-100 btn btn-lg btn-primary mb-3">Check in</button>
-                <button type="submit" onclick="setCheckIn(false)" class="w-100 btn btn-lg btn-primary">Check out</button>
+                @* <button type="submit" onclick="setCheckIn(true)" class="w-100 btn btn-lg btn-primary mb-3">Check in</button>
+                <button type="submit" onclick="setCheckIn(false)" class="w-100 btn btn-lg btn-primary">Check out</button> *@
             </form>
     </div>
 </div>

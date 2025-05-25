@@ -26,6 +26,7 @@ namespace AttendanceTracker.Controllers
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly AttendanceTrackerStateContext _attendanceTracker;
 
         private static readonly object _sessionTokenLock = new object();
 
@@ -34,13 +35,15 @@ namespace AttendanceTracker.Controllers
             SignInManager<IdentityUser> signInManager,
             IDistributedCache cache,
             IHubContext<RefreshHub> hubContext,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            AttendanceTrackerStateContext attendanceTracker)
         {
             _logger = logger;
             _signInManager = signInManager;
             _cache = cache;
             _hubContext = hubContext;
             _unitOfWork = unitOfWork;
+            _attendanceTracker = attendanceTracker;
         }
 
         public IActionResult Index()
@@ -93,12 +96,14 @@ namespace AttendanceTracker.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    string errorMessage = RecordUserAttendance(model);
+                    // FIXME: remove this when state machine is implemented
+                    // string errorMessage = RecordUserAttendance(model);
 
-                    if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        return UnauthorizedAction(errorMessage);
-                    }
+                    // if (!string.IsNullOrEmpty(errorMessage))
+                    // {
+                    //     return UnauthorizedAction(errorMessage);
+                    // }
+                    // FIXME:
 
                     // Update a new token after each successful authentication for check in/out
                     // Ensures only one thread enters at a time.
@@ -112,7 +117,7 @@ namespace AttendanceTracker.Controllers
                     // force refresh the page on all clients
                     await _hubContext.Clients.All.SendAsync("RefreshPage");
 
-                    return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
+                    return RedirectToAction("RecordAttendance", "Home", new { area = "QR" });
                 }
                 else
                 {
@@ -124,6 +129,11 @@ namespace AttendanceTracker.Controllers
             // If we got this far, something failed, redisplay form
             return RedirectToAction("UnauthorizedAction", "Home",
                 new { area = "QR", message = "Something went wrong, please rescan QR and try again..." });
+        }
+
+        public IActionResult RecordAttendance()
+        {
+            return View();
         }
 
         public IActionResult OnSuccessRecord()

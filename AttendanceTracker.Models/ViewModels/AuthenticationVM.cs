@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AttendanceTracker.Controllers;
 
 namespace AttendanceTracker.Models.ViewModels
 {
@@ -15,5 +16,7 @@ namespace AttendanceTracker.Models.ViewModels
         public string Token { get; set; }
 
         public bool IsCheckIn { get; set; }
+
+        public IAttendanceTrackerState AttendanceTrackerState { get; set; }
     }
 }
