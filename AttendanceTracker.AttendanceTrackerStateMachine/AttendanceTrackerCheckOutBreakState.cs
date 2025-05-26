@@ -1,5 +1,7 @@
 // Concrete class definition for check out during a break
 
+using AttendanceTracker.Utility;
+
 namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckOutBreakState : IAttendanceTrackerState
@@ -22,9 +24,9 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             throw new NotImplementedException("User already checked in.");
         }
 
-        public string GetStateIdentifier()
+        public SD.AttendanceState GetStateIdentifier()
         {
-            return StateIdentifier;
+            return SD.AttendanceState.CheckOutBreak;
         }
     }
 }

@@ -1,5 +1,7 @@
 // Concrete class definition for the first check in of the day
 
+using AttendanceTracker.Utility;
+
 namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckInState : IAttendanceTrackerState
@@ -21,9 +23,9 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             context.TransitionTo(new AttendanceTrackerCheckOutBreakState());
         }
 
-        public string GetStateIdentifier()
+        public SD.AttendanceState GetStateIdentifier()
         {
-            return StateIdentifier;
+            return SD.AttendanceState.CheckIn;
         }
     }
 }

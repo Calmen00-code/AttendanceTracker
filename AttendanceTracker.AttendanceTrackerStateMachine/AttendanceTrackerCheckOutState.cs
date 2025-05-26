@@ -1,5 +1,7 @@
 // Concrete class definition to check out of the day
 
+using AttendanceTracker.Utility;
+
 namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckOutState : IAttendanceTrackerState
@@ -20,9 +22,9 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             Console.WriteLine("User checkout for the day successfully.");
         }
 
-        public string GetStateIdentifier()
+        public SD.AttendanceState GetStateIdentifier()
         { 
-            return StateIdentifier; 
+            return SD.AttendanceState.CheckOut; 
         }
     }
 }

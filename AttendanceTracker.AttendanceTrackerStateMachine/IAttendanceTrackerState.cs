@@ -1,3 +1,7 @@
+
+
+using AttendanceTracker.Utility;
+
 /**
  * @brief Interface for defining state behavior in an attendance tracking system.
  *
@@ -11,7 +15,6 @@
  * 4. AttendanceTrackerCheckOutState.cs: Handles user check-out for the day.
  *
  */
-
 namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public interface IAttendanceTrackerState
@@ -22,6 +25,6 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
         // this will be used by the view models to identify which state
         // the attendance tracker is currently in the Controller. As model
         // binding cannot work with interface or class type when doing POST
-        public string GetStateIdentifier();
+        public SD.AttendanceState GetStateIdentifier();
     }
 }

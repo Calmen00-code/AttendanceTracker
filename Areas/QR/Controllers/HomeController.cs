@@ -119,6 +119,11 @@ namespace AttendanceTracker.Controllers
                     // force refresh the page on all clients
                     await _hubContext.Clients.All.SendAsync("RefreshPage");
 
+                    // Unfortunately, RedirectToAction does not support passing complex object
+                    // so we have to make use of TempData[] here and collect the data on the next
+                    // RecordAttendance() method
+                    TempData["Token"] = model.Token;
+                    TempData["State"] = model.AttendanceTrackerState.ToString();
                     return RedirectToAction("RecordAttendance", "Home", new { area = "QR" });
                 }
                 else
@@ -135,7 +140,12 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult RecordAttendance()
         {
-            return View();
+            AuthenticationVM model = new AuthenticationVM
+            {
+                Token = TempData["Token"] as string,
+                AttendanceTrackerState = Enum.Parse<SD.AttendanceState>(TempData["State"] as string)
+            };
+            return View(model);
         }
 
         public IActionResult OnSuccessRecord()

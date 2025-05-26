@@ -6,8 +6,7 @@
 
 <h1>Record attendance</h1>
 
-@if (typeof(AttendanceTracker.AttendanceTrackerStateMachine.AttendanceTrackerCheckInState).IsAssignableFrom(@Model.AttendanceTrackerState.GetType()) ||
-     typeof(AttendanceTracker.AttendanceTrackerStateMachine.AttendanceTrackerCheckInBreakState).IsAssignableFrom(@Model.AttendanceTrackerState.GetType()))
+@if ((Model.AttendanceTrackerState == SD.AttendanceState.CheckIn) || (Model.AttendanceTrackerState == SD.AttendanceState.CheckInBreak))
 {
     <button type="submit" class="w-100 btn btn-lg btn-primary">Check In</button>
 }
