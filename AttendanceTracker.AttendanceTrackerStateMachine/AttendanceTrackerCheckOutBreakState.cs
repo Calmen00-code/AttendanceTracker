@@ -4,6 +4,8 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckOutBreakState : IAttendanceTrackerState
     {
+        private const string StateIdentifier = "AttendanceTrackerCheckOutBreakState";
+
         public AttendanceTrackerCheckOutBreakState()
         {
             Console.WriteLine("Only enable check in break button");
@@ -18,6 +20,11 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
         public void CheckOut(AttendanceTrackerStateContext context)
         {
             throw new NotImplementedException("User already checked in.");
+        }
+
+        public string GetStateIdentifier()
+        {
+            return StateIdentifier;
         }
     }
 }

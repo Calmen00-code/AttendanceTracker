@@ -17,6 +17,6 @@ namespace AttendanceTracker.Models.ViewModels
 
         public bool IsCheckIn { get; set; }
 
-        public IAttendanceTrackerState AttendanceTrackerState { get; set; }
+        public string AttendanceTrackerState { get; set; }
     }
 }

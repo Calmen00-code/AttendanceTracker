@@ -78,7 +78,7 @@ namespace AttendanceTracker.Controllers
             AuthenticationVM authenticationVM = new()
             {
                 Token = token,
-                AttendanceTrackerState = _attendanceTracker.GetCurrentState()
+                AttendanceTrackerState = _attendanceTracker.GetCurrentState().GetStateIdentifier()
             };
 
             return View(authenticationVM);

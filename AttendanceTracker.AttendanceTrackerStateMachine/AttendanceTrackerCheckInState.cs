@@ -4,6 +4,8 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckInState : IAttendanceTrackerState
     {
+        public const string StateIdentifier = "AttendanceTrackerCheckInState";
+
         public void CheckIn(AttendanceTrackerStateContext context)
         {
             throw new NotImplementedException("User already checked in.");
@@ -17,6 +19,11 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             // code end here
             Console.WriteLine("User checked out for lunch break successfully.");
             context.TransitionTo(new AttendanceTrackerCheckOutBreakState());
+        }
+
+        public string GetStateIdentifier()
+        {
+            return StateIdentifier;
         }
     }
 }
