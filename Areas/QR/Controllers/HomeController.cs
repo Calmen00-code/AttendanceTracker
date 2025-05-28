@@ -14,7 +14,6 @@ using NuGet.Common;
 using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.SignalR;
-using AttendanceTracker.DataAccess.Repository.IRepository;
 using AttendanceTracker.AttendanceTrackerStateMachine;
 
 namespace AttendanceTracker.Controllers
@@ -26,7 +25,6 @@ namespace AttendanceTracker.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly AttendanceTrackerStateContext _attendanceTracker;
 
         private static readonly object _sessionTokenLock = new object();
@@ -36,14 +34,12 @@ namespace AttendanceTracker.Controllers
             SignInManager<IdentityUser> signInManager,
             IDistributedCache cache,
             IHubContext<RefreshHub> hubContext,
-            IUnitOfWork unitOfWork,
             AttendanceTrackerStateContext attendanceTracker)
         {
             _logger = logger;
             _signInManager = signInManager;
             _cache = cache;
             _hubContext = hubContext;
-            _unitOfWork = unitOfWork;
             _attendanceTracker = attendanceTracker;
         }
 
@@ -210,13 +206,13 @@ namespace AttendanceTracker.Controllers
                 return "You have not checked in for the day yet. Please rescan QR and check in first.";
             }
 
-            Attendance userAttendance = 
-                _unitOfWork.Attendance.Get(a => a.EmployeeId == _signInManager.UserManager.GetUserId(User));
-
             // State machine will handle whether the user is checking in or checking out
             _attendanceTracker.RequestAttendanceRecordAction();
 
             /*
+            Attendance userAttendance = 
+                _unitOfWork.Attendance.Get(a => a.EmployeeId == _signInManager.UserManager.GetUserId(User));
+
             if (model.IsCheckIn)
             {
                 // Check in

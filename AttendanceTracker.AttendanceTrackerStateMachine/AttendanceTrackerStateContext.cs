@@ -1,3 +1,7 @@
+
+
+using System.Security.Claims;
+
 /**
  * @brief Manages state transitions for the attendance tracker system.
  *
@@ -11,7 +15,6 @@
  * 4. AttendanceTrackerCheckOutState (User checks out for the day)
  *
  */
-
 namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerStateContext
@@ -30,9 +33,10 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             _state = newState;
         }
 
-        public void RequestAttendanceRecordAction()
+        public bool RequestAttendanceRecordAction(ClaimsPrincipal user)
         {
-            _state.RecordAttendance(this);
+            bool status = _state.RecordAttendance(this, user);
+            return status;
         }
 
         public IAttendanceTrackerState GetCurrentState()

@@ -1,5 +1,6 @@
 
 
+using System.Security.Claims;
 using AttendanceTracker.Utility;
 
 /**
@@ -19,7 +20,7 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public interface IAttendanceTrackerState
     {
-        public void RecordAttendance(AttendanceTrackerStateContext context);
+        public bool RecordAttendance(AttendanceTrackerStateContext context, ClaimsPrincipal user);
 
         // this will be used by the view models to identify which state
         // the attendance tracker is currently in the Controller. As model
