@@ -30,14 +30,9 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
             _state = newState;
         }
 
-        public void RequestCheckIn()
+        public void RequestAttendanceRecordAction()
         {
-            _state.CheckIn(this);
-        }
-
-        public void RequestCheckOut()
-        {
-            _state.CheckOut(this);
+            _state.RecordAttendance(this);
         }
 
         public IAttendanceTrackerState GetCurrentState()

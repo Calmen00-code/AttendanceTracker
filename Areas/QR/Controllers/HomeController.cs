@@ -148,6 +148,12 @@ namespace AttendanceTracker.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public IActionResult RecordAttendance(AuthenticationVM model)
+        {
+            return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR"});
+        }
+
         public IActionResult OnSuccessRecord()
         {
             return View();
@@ -207,9 +213,14 @@ namespace AttendanceTracker.Controllers
             Attendance userAttendance = 
                 _unitOfWork.Attendance.Get(a => a.EmployeeId == _signInManager.UserManager.GetUserId(User));
 
+            // State machine will handle whether the user is checking in or checking out
+            _attendanceTracker.RequestAttendanceRecordAction();
+
+            /*
             if (model.IsCheckIn)
             {
                 // Check in
+
                 if (UserAlreadyCheckedIn(DateTime.Today))
                 {
                     // User has already checked in for the day,
@@ -217,12 +228,10 @@ namespace AttendanceTracker.Controllers
                     // First check if user tries to check in again without checking out
 
                     // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-                    /*
                     if (userAttendance.CheckOut == DateTime.MinValue)
                     {
                         return "You have already checked in for work today at " + userAttendance.CheckIn.ToString("HH:mm:ss");
                     }
-                    */
                 }
                 else
                 {
@@ -243,7 +252,6 @@ namespace AttendanceTracker.Controllers
                     });
 
                     _unitOfWork.Save();
-                    */
                 }
             }
             else
@@ -255,8 +263,8 @@ namespace AttendanceTracker.Controllers
                 userAttendance.TotalWorkingHours = 
                     (userAttendance.CheckOut - userAttendance.CheckIn).TotalHours;
                 _unitOfWork.Attendance.Update(userAttendance);
-                */
             }
+            */
 
             // successfully recorded
             return String.Empty;
@@ -272,7 +280,9 @@ namespace AttendanceTracker.Controllers
 
             return attendanceToday != null;
             */
-            return false;
+
+            // User has not checked in for the day yet if the current state is AttendanceTrackerCheckInState
+            return _attendanceTracker.GetCurrentState() is not AttendanceTrackerCheckInState;
         }
     }
 }

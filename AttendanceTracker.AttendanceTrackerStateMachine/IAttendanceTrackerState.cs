@@ -19,8 +19,7 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public interface IAttendanceTrackerState
     {
-        public void CheckIn(AttendanceTrackerStateContext context);
-        public void CheckOut(AttendanceTrackerStateContext context);
+        public void RecordAttendance(AttendanceTrackerStateContext context);
 
         // this will be used by the view models to identify which state
         // the attendance tracker is currently in the Controller. As model

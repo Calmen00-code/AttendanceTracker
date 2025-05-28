@@ -6,14 +6,7 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 {
     public class AttendanceTrackerCheckInState : IAttendanceTrackerState
     {
-        public const string StateIdentifier = "AttendanceTrackerCheckInState";
-
-        public void CheckIn(AttendanceTrackerStateContext context)
-        {
-            throw new NotImplementedException("User already checked in.");
-        }
-
-        public void CheckOut(AttendanceTrackerStateContext context)
+        public void RecordAttendance(AttendanceTrackerStateContext context)
         {
             // TODO: API to check out
             // code start here
