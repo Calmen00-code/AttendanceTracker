@@ -27,13 +27,11 @@ namespace AttendanceTracker.AttendanceTrackerStateMachine
 
             // User has not checked in for the day yet, so add a new record
             // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-            _unitOfWork.DailyAttendanceRecords.Add(new DailyAttendanceRecord
+            _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
             {
-                Id = attendanceId,
+                Id = userId + "_" + Guid.NewGuid().ToString(),
                 CheckIn = DateTime.Now,
                 CheckOut = DateTime.MinValue,
-                TotalWorkingHours = 0,
-                EmployeeId = _signInManager.UserManager.GetUserId(User)
             });
 
             _unitOfWork.Save();
