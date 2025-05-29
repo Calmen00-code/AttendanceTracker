@@ -137,6 +137,8 @@ namespace AttendanceTracker.Controllers
             AuthenticationVM model = new AuthenticationVM
             {
                 Token = TempData["Token"] as string,
+                IsCheckIn = UserShouldCheckIn(),
+                EmployeeId = _signInManager.UserManager.GetUserId(User)
             };
             return View(model);
         }
@@ -144,14 +146,19 @@ namespace AttendanceTracker.Controllers
         [HttpPost]
         public IActionResult RecordAttendance(AuthenticationVM model)
         {
-            string errorMessage = RecordUserAttendance(model);
+            string errorMessage = string.Empty;
+            if (!RecordUserAttendance(model))
+            {
+                errorMessage = "An error occurred while recording your attendance. Please try again later.";
+            }
+
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 TempData["ErrorMessage"] = errorMessage;
-                return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR"});
+                return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
             }
 
-            return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR"});
+            return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
         }
 
         public IActionResult OnSuccessRecord()
@@ -198,83 +205,46 @@ namespace AttendanceTracker.Controllers
          * @brief Records user attendance by handling check-in and check-out logic.
          * 
          * This function verifies whether the user is attempting a check-in or a check-out,
-         * ensures proper attendance tracking, and prevents duplicate check-ins.
          * 
          * @param model AuthenticationVM model containing attendance details.
-         * @return A string message is EMPTY when success. Otherwise, error message will be returned
+         * @return A `true` if success, `false` otherwise.
          */
-        private string RecordUserAttendance(AuthenticationVM model)
+        private bool RecordUserAttendance(AuthenticationVM model)
         {
+            // FIXME: remove this when done with new checkin logic
             // Check if user tries to check out without checking in for the day
-            if (!model.IsCheckIn && !UserAlreadyCheckedIn(DateTime.Today))
-            {
-                return "You have not checked in for the day yet. Please rescan QR and check in first.";
-            }
-
-            string currentUserId = _signInManager.UserManager.GetUserId(User);
-            var attendance = _unitOfWork.DailyAttendanceRecord.Get(
-                a => a.EmployeeId == currentUserId && a.CheckIn.Date == DateTime.Today);
-            
-            // If attendance record does not exist, this means the first check in of the day
-            if (attendance == null)
-            {
-                DateTime currDateTime = DateTime.Now;
-                _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
-                {
-                    Id = currDateTime.ToString("yyyy-MM-dd") + "_" + currDateTime.ToString("HH:mm") + "_" + currentUserId,
-                    CheckIn = DateTime.Now,
-                    CheckOut = DateTime.MinValue,
-                    EmployeeId = currentUserId
-                });
-
-                _unitOfWork.Save();
-            }
-
-            /*
-            Attendance userAttendance = 
-                _unitOfWork.Attendance.Get(a => a.EmployeeId == _signInManager.UserManager.GetUserId(User));
-
+            // if (!model.IsCheckIn && !UserAlreadyCheckedIn(DateTime.Today))
+            // {
+            //     return "You have not checked in for the day yet. Please rescan QR and check in first.";
+            // }
             if (model.IsCheckIn)
             {
-                // Check in
-
-                if (UserAlreadyCheckedIn(DateTime.Today))
+                DateTime currDateTime = DateTime.Now;
+                try
                 {
-                    // User has already checked in for the day,
-                    // so update the record instead of adding a new one
-                    // First check if user tries to check in again without checking out
-
-                    // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-                    if (userAttendance.CheckOut == DateTime.MinValue)
+                    _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
                     {
-                        return "You have already checked in for work today at " + userAttendance.CheckIn.ToString("HH:mm:ss");
-                    }
-                }
-                else
-                {
-                    // First time check in for the day
-                    string userId = _signInManager.UserManager.GetUserId(User);
-                    string attendanceId = (DateTime.Now.ToString("yyyyMMdd")) + "_" + userId;
+                        Id = currDateTime.ToString("yyyy-MM-dd") + "_" + currDateTime.ToString("HH:mm") + "_" + model.EmployeeId,
+                        CheckIn = DateTime.Now,
+                        CheckOut = DateTime.MinValue,
+                        EmployeeId = model.EmployeeId
+                    });
 
-                    // User has not checked in for the day yet, so add a new record
-                    // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-                    /*
+                    _unitOfWork.Save();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error while recording attendance for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    return false;
                 }
             }
             else
             {
                 // Check out
-                // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-                /*
-                userAttendance.CheckOut = DateTime.Now;
-                userAttendance.TotalWorkingHours = 
-                    (userAttendance.CheckOut - userAttendance.CheckIn).TotalHours;
-                _unitOfWork.Attendance.Update(userAttendance);
             }
-            */
 
             // successfully recorded
-            return String.Empty;
+            return true;
         }
 
         private bool UserAlreadyCheckedIn(DateTime date)
@@ -290,6 +260,46 @@ namespace AttendanceTracker.Controllers
 
             // User has not checked in for the day yet if the current state is AttendanceTrackerCheckInState
             return true;
+        }
+
+        /**
+         * @brief Determines if the current user should check in based on attendance records.
+         * 
+         * @details This method retrieves attendance records for the logged-in user on the current date.
+         *          It checks if there are any existing records with an unset check-out time.
+         *          If such a record exists, the user is considered already checked in and should not check in again.
+         *
+         * @note The method assumes that `CheckOut == DateTime.MinValue` indicates an unchecked-out record.
+         *
+         * @return Returns `true` if the user should check in, otherwise `false`.
+         */
+        private bool UserShouldCheckIn()
+        {
+            string currentUserId = _signInManager.UserManager.GetUserId(User);
+            var userAttendanceRecords = _unitOfWork.DailyAttendanceRecord.GetAll(
+                a => a.EmployeeId == currentUserId && a.CheckIn.Date == DateTime.Today, includeProperties: "Employee");
+
+            bool userShouldCheckIn = true;
+
+            if (userAttendanceRecords == null)
+            {
+                // No check-in records found for today, so this is user's first check-in of the day
+                return userShouldCheckIn;
+            }
+
+            // When enter here, it means the user has already checked in today
+            // Search if there are any records pending for check out. Otherwise, this is a new check-in request
+            foreach (var record in userAttendanceRecords)
+            {
+                if (record.CheckOut == DateTime.MinValue)
+                {
+                    // Invalid check out record indicating that there is a pending check out
+                    // So abort the check-in process
+                    userShouldCheckIn = false;
+                    break;
+                }
+            }
+            return userShouldCheckIn;
         }
     }
 }

@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AttendanceTracker.AttendanceTrackerStateMachine\AttendanceTracker.AttendanceTrackerStateMachine.csproj" />
     <ProjectReference Include="..\AttendanceTracker.Utility\AttendanceTracker.Utility.csproj" />
   </ItemGroup>
 </Project>

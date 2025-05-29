@@ -23,7 +23,7 @@
                 </div>
                 <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
 
-                @* <button type="submit" onclick="setCheckIn(true)" class="w-100 btn btn-lg btn-primary mb-3">Check in</button>
+                @* FIXME: <button type="submit" onclick="setCheckIn(true)" class="w-100 btn btn-lg btn-primary mb-3">Check in</button>
                 <button type="submit" onclick="setCheckIn(false)" class="w-100 btn btn-lg btn-primary">Check out</button> *@
             </form>
     </div>
@@ -34,6 +34,7 @@
     @{
         <partial name="_ValidationScriptsPartial" />
 
+        // FIXME:
         <script>
             function setCheckIn(event) {
                 // Check which button triggered the submit event
