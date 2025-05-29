@@ -9,7 +9,6 @@
     <div class="col-md-4">
             <form method="post" onsubmit="return setCheckIn(event)">
                 <input asp-for="@Model.Token" hidden />
-                <input asp-for="@Model.AttendanceTrackerState" hidden />
                 <input type="hidden" id="IsCheckIn" name="IsCheckIn" />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">

@@ -14,7 +14,7 @@ using NuGet.Common;
 using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.SignalR;
-using AttendanceTracker.AttendanceTrackerStateMachine;
+using AttendanceTracker.DataAccess.Repository.IRepository;
 
 namespace AttendanceTracker.Controllers
 {
@@ -25,7 +25,7 @@ namespace AttendanceTracker.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
-        private readonly AttendanceTrackerStateContext _attendanceTracker;
+        private readonly IUnitOfWork _unitOfWork;
 
         private static readonly object _sessionTokenLock = new object();
 
@@ -34,13 +34,13 @@ namespace AttendanceTracker.Controllers
             SignInManager<IdentityUser> signInManager,
             IDistributedCache cache,
             IHubContext<RefreshHub> hubContext,
-            AttendanceTrackerStateContext attendanceTracker)
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _signInManager = signInManager;
             _cache = cache;
             _hubContext = hubContext;
-            _attendanceTracker = attendanceTracker;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
@@ -74,7 +74,6 @@ namespace AttendanceTracker.Controllers
             AuthenticationVM authenticationVM = new()
             {
                 Token = token,
-                AttendanceTrackerState = _attendanceTracker.GetCurrentState().GetStateIdentifier()
             };
 
             return View(authenticationVM);
@@ -119,7 +118,6 @@ namespace AttendanceTracker.Controllers
                     // so we have to make use of TempData[] here and collect the data on the next
                     // RecordAttendance() method
                     TempData["Token"] = model.Token;
-                    TempData["State"] = model.AttendanceTrackerState.ToString();
                     return RedirectToAction("RecordAttendance", "Home", new { area = "QR" });
                 }
                 else
@@ -139,7 +137,6 @@ namespace AttendanceTracker.Controllers
             AuthenticationVM model = new AuthenticationVM
             {
                 Token = TempData["Token"] as string,
-                AttendanceTrackerState = Enum.Parse<SD.AttendanceState>(TempData["State"] as string)
             };
             return View(model);
         }
@@ -206,8 +203,7 @@ namespace AttendanceTracker.Controllers
                 return "You have not checked in for the day yet. Please rescan QR and check in first.";
             }
 
-            // State machine will handle whether the user is checking in or checking out
-            _attendanceTracker.RequestAttendanceRecordAction();
+            _unitOfWork.DailyAttendanceRecord.Get(a => a.Id == _signInManager.UserManager.GetUserId(User));
 
             /*
             Attendance userAttendance = 
@@ -278,7 +274,7 @@ namespace AttendanceTracker.Controllers
             */
 
             // User has not checked in for the day yet if the current state is AttendanceTrackerCheckInState
-            return _attendanceTracker.GetCurrentState() is not AttendanceTrackerCheckInState;
+            return true;
         }
     }
 }

@@ -12,6 +12,7 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
     public class UnitOfWork : IUnitOfWork
     {
         public IAttendanceRepository Attendance { get; private set; }
+        public IDailyAttendanceRecordRepository DailyAttendanceRecord { get; private set; }
         private ApplicationDbContext _db;
 
         public UnitOfWork(ApplicationDbContext db)

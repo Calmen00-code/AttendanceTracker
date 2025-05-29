@@ -12,5 +12,12 @@ namespace AttendanceTracker.Models
         public DateTime CheckIn { get; set; }
 
         public DateTime CheckOut { get; set; }
+
+        [Required]
+        public string EmployeeId { get; set; }
+
+        [ForeignKey(nameof(EmployeeId))]
+        [ValidateNever]
+        public ApplicationEmployee Employee { get; set; }
     }
 }
