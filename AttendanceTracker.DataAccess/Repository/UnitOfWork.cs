@@ -19,6 +19,7 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
         {
             _db = db;
             Attendance = new AttendanceRepository(_db);
+            DailyAttendanceRecord = new DailyAttendanceRecordRepository(_db);
         }
 
         public void Save()

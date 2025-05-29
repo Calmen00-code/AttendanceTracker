@@ -144,6 +144,13 @@ namespace AttendanceTracker.Controllers
         [HttpPost]
         public IActionResult RecordAttendance(AuthenticationVM model)
         {
+            string errorMessage = RecordUserAttendance(model);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                TempData["ErrorMessage"] = errorMessage;
+                return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR"});
+            }
+
             return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR"});
         }
 
@@ -154,6 +161,7 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult UnauthorizedAction(string message)
         {
+            TempData["ErrorMessage"] = message;
             return View("OnFailRecord", message);
         }
 
@@ -203,7 +211,24 @@ namespace AttendanceTracker.Controllers
                 return "You have not checked in for the day yet. Please rescan QR and check in first.";
             }
 
-            _unitOfWork.DailyAttendanceRecord.Get(a => a.Id == _signInManager.UserManager.GetUserId(User));
+            string currentUserId = _signInManager.UserManager.GetUserId(User);
+            var attendance = _unitOfWork.DailyAttendanceRecord.Get(
+                a => a.EmployeeId == currentUserId && a.CheckIn.Date == DateTime.Today);
+            
+            // If attendance record does not exist, this means the first check in of the day
+            if (attendance == null)
+            {
+                DateTime currDateTime = DateTime.Now;
+                _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
+                {
+                    Id = currDateTime.ToString("yyyy-MM-dd") + "_" + currDateTime.ToString("HH:mm") + "_" + currentUserId,
+                    CheckIn = DateTime.Now,
+                    CheckOut = DateTime.MinValue,
+                    EmployeeId = currentUserId
+                });
+
+                _unitOfWork.Save();
+            }
 
             /*
             Attendance userAttendance = 
@@ -234,16 +259,6 @@ namespace AttendanceTracker.Controllers
                     // User has not checked in for the day yet, so add a new record
                     // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
                     /*
-                    _unitOfWork.Attendance.Add(new Attendance
-                    {
-                        Id = attendanceId,
-                        CheckIn = DateTime.Now,
-                        CheckOut = DateTime.MinValue,
-                        TotalWorkingHours = 0,
-                        EmployeeId = _signInManager.UserManager.GetUserId(User)
-                    });
-
-                    _unitOfWork.Save();
                 }
             }
             else
