@@ -155,7 +155,7 @@ namespace AttendanceTracker.Controllers
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 TempData["ErrorMessage"] = errorMessage;
-                return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
+                return RedirectToAction("UnauthorizedAction", "Home", new { area = "QR" });
             }
 
             return RedirectToAction("OnSuccessRecord", "Home", new { area = "QR" });
@@ -207,7 +207,7 @@ namespace AttendanceTracker.Controllers
          * This function verifies whether the user is attempting a check-in or a check-out,
          * 
          * @param model AuthenticationVM model containing attendance details.
-         * @return A `true` if success, `false` otherwise.
+         * @return `true` if success, `false` otherwise.
          */
         private bool RecordUserAttendance(AuthenticationVM model)
         {
@@ -217,15 +217,16 @@ namespace AttendanceTracker.Controllers
             // {
             //     return "You have not checked in for the day yet. Please rescan QR and check in first.";
             // }
+            DateTime currDateTime = DateTime.Now;
             if (model.IsCheckIn)
             {
-                DateTime currDateTime = DateTime.Now;
+                // Check in
                 try
                 {
                     _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
                     {
                         Id = currDateTime.ToString("yyyy-MM-dd") + "_" + currDateTime.ToString("HH:mm") + "_" + model.EmployeeId,
-                        CheckIn = DateTime.Now,
+                        CheckIn = currDateTime,
                         CheckOut = DateTime.MinValue,
                         EmployeeId = model.EmployeeId
                     });
@@ -234,32 +235,47 @@ namespace AttendanceTracker.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while recording attendance for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    _logger.LogError(ex, "Error while checking in for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
                     return false;
                 }
             }
             else
             {
                 // Check out
+                DailyAttendanceRecord recordToCheckout = FindCheckoutRecord(model.EmployeeId, currDateTime.Date);
+
+                // No pending check-out record found, something went wrong
+                if (recordToCheckout == null)
+                {
+                    _logger.LogWarning("No pending check-out record found for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    throw new InvalidOperationException("No pending check-out record found. But user already check-in.");
+                }
+
+                try
+                {
+                    recordToCheckout.CheckOut = currDateTime;
+
+                    _unitOfWork.DailyAttendanceRecord.Update(recordToCheckout);
+                    _unitOfWork.Save();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error while checking out for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    return false;
+                }
             }
 
             // successfully recorded
             return true;
         }
 
-        private bool UserAlreadyCheckedIn(DateTime date)
+        private DailyAttendanceRecord FindCheckoutRecord(string employeeId, DateTime currDateTime)
         {
-            // Check if the user has already checked in for the day
-            // FIXME: We have updated a new DB schema, this has to be updated as it is no longer valid
-            /*
-            var attendanceToday = _unitOfWork.Attendance.Get(
-                a => a.EmployeeId == _signInManager.UserManager.GetUserId(User) && a.CheckIn.Date == date);
+            var userAttendanceRecord = _unitOfWork.DailyAttendanceRecord.Get(
+                a => (a.EmployeeId == employeeId) && (a.CheckIn.Date == currDateTime.Date) && (a.CheckOut == DateTime.MinValue),
+                includeProperties: "Employee");
 
-            return attendanceToday != null;
-            */
-
-            // User has not checked in for the day yet if the current state is AttendanceTrackerCheckInState
-            return true;
+            return userAttendanceRecord;
         }
 
         /**
