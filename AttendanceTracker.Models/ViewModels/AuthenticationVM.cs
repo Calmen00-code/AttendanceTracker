@@ -17,8 +17,9 @@ namespace AttendanceTracker.Models.ViewModels
         [ValidateNever]
         public string EmployeeId { get; set; }
 
-        public string Token { get; set; }
-
+        [ValidateNever]
         public bool IsCheckIn { get; set; }
+
+        public string Token { get; set; }
     }
 }

@@ -93,15 +93,6 @@ namespace AttendanceTracker.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    // FIXME: remove this when state machine is implemented
-                    // string errorMessage = RecordUserAttendance(model);
-
-                    // if (!string.IsNullOrEmpty(errorMessage))
-                    // {
-                    //     return UnauthorizedAction(errorMessage);
-                    // }
-                    // FIXME:
-
                     // Update a new token after each successful authentication for check in/out
                     // Ensures only one thread enters at a time.
                     // In case multiple users submitted request at the same time
@@ -211,13 +202,8 @@ namespace AttendanceTracker.Controllers
          */
         private bool RecordUserAttendance(AuthenticationVM model)
         {
-            // FIXME: remove this when done with new checkin logic
-            // Check if user tries to check out without checking in for the day
-            // if (!model.IsCheckIn && !UserAlreadyCheckedIn(DateTime.Today))
-            // {
-            //     return "You have not checked in for the day yet. Please rescan QR and check in first.";
-            // }
             DateTime currDateTime = DateTime.Now;
+
             if (model.IsCheckIn)
             {
                 // Check in
@@ -269,6 +255,18 @@ namespace AttendanceTracker.Controllers
             return true;
         }
 
+        /**
+         * @brief Finds the record should be checked out for a specific employee on current date.
+         * 
+         * This method retrieves the daily attendance record of an employee that should be updated
+         * for check-out process. The record will have user who has checked in 
+         * but has not checked out yet on the current date.
+         * 
+         * @param employeeId The unique identifier of the employee.
+         * @param currDateTime The current date-time used to filter records.
+         *
+         * @return DailyAttendanceRecord The attendance record of the employee if found, otherwise null.
+         */
         private DailyAttendanceRecord FindCheckoutRecord(string employeeId, DateTime currDateTime)
         {
             var userAttendanceRecord = _unitOfWork.DailyAttendanceRecord.Get(
@@ -315,6 +313,7 @@ namespace AttendanceTracker.Controllers
                     break;
                 }
             }
+
             return userShouldCheckIn;
         }
     }
