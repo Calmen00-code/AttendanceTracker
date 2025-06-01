@@ -8,6 +8,7 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
+        IApplicationEmployeeRepository ApplicationEmployees { get; }
         IAttendanceRepository Attendance { get; }
         IDailyAttendanceRecordRepository DailyAttendanceRecord { get; }
 

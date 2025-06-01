@@ -11,6 +11,7 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
 {
     public class UnitOfWork : IUnitOfWork
     {
+        public IApplicationEmployeeRepository ApplicationEmployees { get; private set; }
         public IAttendanceRepository Attendance { get; private set; }
         public IDailyAttendanceRecordRepository DailyAttendanceRecord { get; private set; }
         private ApplicationDbContext _db;
@@ -20,6 +21,7 @@ namespace AttendanceTracker.DataAccess.Repository.IRepository
             _db = db;
             Attendance = new AttendanceRepository(_db);
             DailyAttendanceRecord = new DailyAttendanceRecordRepository(_db);
+            ApplicationEmployees = new ApplicationEmployeeRepository(_db);
         }
 
         public void Save()

@@ -12,6 +12,9 @@ namespace AttendanceTracker.Models
         public double TotalWorkingHours { get; set; }
 
         [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
         public string EmployeeId { get; set; }
 
         [ForeignKey(nameof(EmployeeId))]
