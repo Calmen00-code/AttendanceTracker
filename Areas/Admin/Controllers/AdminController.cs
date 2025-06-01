@@ -1,5 +1,6 @@
 using AttendanceTracker.DataAccess.Repository.IRepository;
 using AttendanceTracker.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -9,10 +10,12 @@ namespace AttendanceTracker.Controllers
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AdminController(IUnitOfWork unitOfWork)
+        public AdminController(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager)
         {
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -96,5 +99,22 @@ namespace AttendanceTracker.Controllers
 
             return DateTime.MinValue;
         }
+
+        // This allow API to be called from external applications
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetAllEmployees()
+        {
+            List<ApplicationEmployee> employees = _unitOfWork.ApplicationEmployees.GetAll().ToList();
+            // Filter out Admin users
+            employees = employees.Where(a => !_userManager.IsInRoleAsync(a, "Admin").GetAwaiter().GetResult()).ToList();
+
+            var employeeData = employees.Select(a => new { a.UserName });
+
+            return Json(new { data = employeeData });
+        }
+
+        #endregion
     }
 }

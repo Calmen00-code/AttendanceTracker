@@ -9,7 +9,5 @@ namespace AttendanceTracker.Models
     {
         [ValidateNever]
         public ICollection<Attendance> Attendances { get; set; }
-
-        // study if we need to save QR into DB or not or we can just store it in static file
     }
 }
