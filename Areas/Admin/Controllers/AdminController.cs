@@ -53,7 +53,7 @@ namespace AttendanceTracker.Controllers
             {
                 DateTime lastWorkingDate = FindEmployeeLastWorkingDate(employee.Id);
 
-                if (ShouldUpdateAttendance(employee.Id, lastWorkingDate))
+                if (lastWorkingDate != DateTime.MinValue && ShouldUpdateAttendance(employee.Id, lastWorkingDate))
                 {
                     // There is multiple check-in and check-out records for the same employee on the same date.
                     // Used the check-out date to find the last working date of the employee instead of the check-in
@@ -77,7 +77,7 @@ namespace AttendanceTracker.Controllers
                     {
                         Id = Guid.NewGuid().ToString(),
                         TotalWorkingHours = totalWorkingHours,
-                        Date = lastWorkingDate,
+                        RecordDate = lastWorkingDate,
                         EmployeeId = employee.Id
                     });
 
@@ -86,39 +86,76 @@ namespace AttendanceTracker.Controllers
             }
         }
 
-
+        /**
+         * @brief Determines whether attendance should be updated for a given employee.
+         *
+         * This method checks if an attendance record already exists for the given employee
+         * on the last working date. If an existing record is found, prevents it from redundant updates.
+         *
+         * @param employeeId The unique identifier of the employee.
+         * @param lastWorkingDate The last recorded working date to check against attendance records.
+         *
+         * @return true if attendance should be updated; false if an existing record is found for the date.
+         */
         private bool ShouldUpdateAttendance(string employeeId, DateTime lastWorkingDate)
         {
             var attendances = _unitOfWork.Attendance.GetAll(a => a.EmployeeId == employeeId);
+
+            // If we found attendance has been recorded for this employee,
+            // check if the last working date is already recorded, if so, avoid updating again.
             foreach (var attendance in attendances)
             {
-                if (attendance.Date.Date == lastWorkingDate.Date)
+                if (attendance.RecordDate.Date == lastWorkingDate.Date)
                 {
                     return false; // Attendance record already exists for this date
                 }
             }
+
             return true;
         }
 
+        /**
+         * @brief Determines the last working date of an employee based on check-in and check-out records.
+         * 
+         * This method retrieves all daily attendance records for a given employee, 
+         * sorts them in descending order by check-in time, and returns the most recent check-in date.
+         *
+         * Following conditions will return `DateTime.MinValue`:
+         *  - No valid check-in found
+         *  - Valid check-in found but no check-out recorded (user in pending check-out state)
+         *
+         * @param employeeId The unique identifier of the employee.
+         * @return The last recorded working date of the employee,
+         *         or `DateTime.MinValue` if no records exist or pending check-out exist.
+         *
+         * @note The method filters records by EmployeeId and includes Employee details.
+         * @warning If the employee has a pending check-out or has never checked in, the function will return `DateTime.MinValue`.
+         *          This prevents updating the Attendance table prematurely.
+         */
         private DateTime FindEmployeeLastWorkingDate(string employeeId)
         {
             var currentEmployeeDailyRecords = _unitOfWork.DailyAttendanceRecord.GetAll(
                 filter: a => a.EmployeeId == employeeId,
                 includeProperties: "Employee");
 
-            if (currentEmployeeDailyRecords.Any())
+            if (currentEmployeeDailyRecords != null && currentEmployeeDailyRecords.Any())
             {
                 DailyAttendanceRecord record =
                     currentEmployeeDailyRecords.OrderByDescending(a => a.CheckIn).FirstOrDefault();
 
-                if (record == null)
+                if (record == null || record.CheckOut == DateTime.MinValue)
                 {
+                    // If the employee has no check-in or check-out records, return invalid date
+                    // to avoid updating the Attendance table.
+                    // Also, check if there is any pending check-out record. If there is, abort the update as well.
                     return DateTime.MinValue;
                 }
 
                 return record.CheckIn.Date;
             }
 
+            // This employee is new, return invalid date so we do not update it
+            // in the Attendance table. Employee will need to check in first.
             return DateTime.MinValue;
         }
 
@@ -153,7 +190,7 @@ namespace AttendanceTracker.Controllers
                 currEmployeeRecords.Select(a => new AttendanceVM
                 {
                     Email = a.Employee.UserName,
-                    Date = a.Date.ToString("yyyy-MM-dd"),
+                    Date = a.RecordDate.ToString("yyyy-MM-dd"),
                     TotalWorkingHours = a.TotalWorkingHours
                 }).ToList();
 
