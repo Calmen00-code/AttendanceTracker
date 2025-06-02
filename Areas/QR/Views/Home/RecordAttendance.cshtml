@@ -10,6 +10,16 @@
     <input asp-for="@Model.Token" hidden />
     <input asp-for="@Model.IsCheckIn" hidden />
     <input asp-for="@Model.EmployeeId" hidden />
+    <input type="hidden" id="employeeId" value="@Model.EmployeeId" />
+
+    <table id="dailyRecordTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Check In</th>
+                <th>Check Out</th>
+            </tr>
+        </thead>
+    </table>
 
     @if (Model.IsCheckIn)
     {
@@ -20,3 +30,7 @@
         <button type="submit" class="w-100 btn btn-lg btn-primary">Check Out</button>
     }
 </form>
+
+@section Scripts {
+    <script src="~/js/dailyRecord.js"></script>
+}

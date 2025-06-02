@@ -26,7 +26,6 @@ namespace AttendanceTracker.Controllers
         private readonly IDistributedCache _cache;
         private readonly IHubContext<RefreshHub> _hubContext;
         private readonly IUnitOfWork _unitOfWork;
-
         private static readonly object _sessionTokenLock = new object();
 
         public HomeController(
@@ -316,5 +315,25 @@ namespace AttendanceTracker.Controllers
 
             return userShouldCheckIn;
         }
+
+        #region API CALLS
+
+        [HttpGet]
+        public IActionResult GetUserDailyRecord(string employeeId)
+        {
+            var userDailyAttendanceRecords =
+                _unitOfWork.DailyAttendanceRecord.GetAll(filter: a => a.EmployeeId == employeeId && a.CheckIn.Date == DateTime.Today);
+
+            var dailyRecords = userDailyAttendanceRecords.Select(a => new DailyAttendanceVM
+                {
+                    CheckIn = a.CheckIn.ToString("HH:mm tt"),
+                    CheckOut = a.CheckOut.ToString("HH:mm tt"),
+                    EmployeeId = a.EmployeeId,
+                });
+
+            return Json(new { data = dailyRecords });
+        }
+
+        #endregion
     }
 }
