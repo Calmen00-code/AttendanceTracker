@@ -1,5 +1,6 @@
 using AttendanceTracker.DataAccess.Repository.IRepository;
 using AttendanceTracker.Models;
+using AttendanceTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -37,6 +38,11 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        public IActionResult ViewAttendanceRecordsOfEmployee(string employeeId)
+        {
+            ViewBag.EmployeeId = employeeId;
+            return View();
+        }
 
         // PRIVATE METHODS
         private void UpdateDatabase()
@@ -47,35 +53,51 @@ namespace AttendanceTracker.Controllers
             {
                 DateTime lastWorkingDate = FindEmployeeLastWorkingDate(employee.Id);
 
-                // There is multiple check-in and check-out records for the same employee on the same date.
-                // Used the check-out date to find the last working date of the employee instead of the check-in
-                // to rule out the possibility of an employee not checking out after checking in.
-                IEnumerable<DailyAttendanceRecord>? lastWorkingRecordsOfCurrentEmployee =
-                    _unitOfWork.DailyAttendanceRecord.GetAll(
-                        a => (a.EmployeeId == employee.Id) && (a.CheckOut.Date == lastWorkingDate));
-
-
-                // After we retrieve all check-in and check-out records for the same date
-                // Calculate the total working hours for each check-in and check-out record
-                double totalWorkingHours = 0;
-                foreach (var record in lastWorkingRecordsOfCurrentEmployee)
+                if (ShouldUpdateAttendance(employee.Id, lastWorkingDate))
                 {
-                    TimeSpan duration = record.CheckOut - record.CheckIn;
-                    totalWorkingHours += duration.TotalHours;
+                    // There is multiple check-in and check-out records for the same employee on the same date.
+                    // Used the check-out date to find the last working date of the employee instead of the check-in
+                    // to rule out the possibility of an employee not checking out after checking in.
+                    IEnumerable<DailyAttendanceRecord>? lastWorkingRecordsOfCurrentEmployee =
+                        _unitOfWork.DailyAttendanceRecord.GetAll(
+                            a => (a.EmployeeId == employee.Id) && (a.CheckOut.Date == lastWorkingDate.Date));
+
+                    // After we retrieve all check-in and check-out records for the same date
+                    // Calculate the total working hours for each check-in and check-out record
+                    double totalWorkingHours = 0;
+                    foreach (var record in lastWorkingRecordsOfCurrentEmployee)
+                    {
+                        TimeSpan duration = record.CheckOut - record.CheckIn;
+                        totalWorkingHours += duration.TotalHours;
+                    }
+
+                    // Now we got the total working hours for current employee on the day
+                    // time to update it in the Attendance table
+                    _unitOfWork.Attendance.Add(new Attendance
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        TotalWorkingHours = totalWorkingHours,
+                        Date = lastWorkingDate,
+                        EmployeeId = employee.Id
+                    });
+
+                    _unitOfWork.Save();
                 }
-
-                // Now we got the total working hours for current employee on the day
-                // time to update it in the Attendance table
-                _unitOfWork.Attendance.Add(new Attendance
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    TotalWorkingHours = totalWorkingHours,
-                    Date = lastWorkingDate,
-                    EmployeeId = employee.Id
-                });
-
-                _unitOfWork.Save();
             }
+        }
+
+
+        private bool ShouldUpdateAttendance(string employeeId, DateTime lastWorkingDate)
+        {
+            var attendances = _unitOfWork.Attendance.GetAll(a => a.EmployeeId == employeeId);
+            foreach (var attendance in attendances)
+            {
+                if (attendance.Date.Date == lastWorkingDate.Date)
+                {
+                    return false; // Attendance record already exists for this date
+                }
+            }
+            return true;
         }
 
         private DateTime FindEmployeeLastWorkingDate(string employeeId)
@@ -107,12 +129,35 @@ namespace AttendanceTracker.Controllers
         public IActionResult GetAllEmployees()
         {
             List<ApplicationEmployee> employees = _unitOfWork.ApplicationEmployees.GetAll().ToList();
+
             // Filter out Admin users
-            employees = employees.Where(a => !_userManager.IsInRoleAsync(a, "Admin").GetAwaiter().GetResult()).ToList();
+            List<ApplicationEmployee> nonAdminEmployees =
+                employees.Where(a => !_userManager.IsInRoleAsync(a, "Admin").GetAwaiter().GetResult()).ToList();
 
-            var employeeData = employees.Select(a => new { a.UserName });
+            var employeesData = nonAdminEmployees.Select(a => new AttendanceVM
+                {
+                    EmployeeId = a.Id,
+                    Email = a.UserName
+                });
 
-            return Json(new { data = employeeData });
+            return Json(new { data = employeesData });
+        }
+        
+        [HttpGet]
+        public IActionResult GetAllAttendanceRecordsOfEmployee(string employeeId)
+        {
+            List<Attendance> currEmployeeRecords = _unitOfWork.Attendance.GetAll(
+                a => a.EmployeeId == employeeId, includeProperties: "Employee").ToList();
+
+            List<AttendanceVM> attendancesData =
+                currEmployeeRecords.Select(a => new AttendanceVM
+                {
+                    Email = a.Employee.UserName,
+                    Date = a.Date.ToString("yyyy-MM-dd"),
+                    TotalWorkingHours = a.TotalWorkingHours
+                }).ToList();
+
+            return Json(new {data = attendancesData});
         }
 
         #endregion

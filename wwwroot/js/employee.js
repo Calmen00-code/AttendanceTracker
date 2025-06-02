@@ -9,11 +9,12 @@ function loadDataTable() {
             "type": "GET"
         },
         "columns": [
-            { data: 'userName', width: '50%' },
+            { data: 'employeeId', visible: false },
+            { data: 'email', width: '50%' },
             { 
                 data: null, 
                 render: function(data, type, row) {
-                    return `<button class="btn btn-primary" onclick="viewEmployeeRecord('${row.id}')">View</button>`;
+                    return `<button class="btn btn-primary" onclick="viewEmployeeRecord('${row.employeeId}')">View</button>`;
                 }, 
                 orderable: true, 
                 searchable: true,
@@ -21,4 +22,8 @@ function loadDataTable() {
             }
         ]
     });
+}
+
+function viewEmployeeRecord(employeeId) {
+    window.location.href = `/Admin/Admin/ViewAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
 }
