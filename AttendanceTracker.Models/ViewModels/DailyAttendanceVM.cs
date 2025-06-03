@@ -6,7 +6,9 @@ namespace AttendanceTracker.Models.ViewModels
 {
     public class DailyAttendanceVM
     {
+        public string Id { get; set; }
         public string EmployeeId { get; set; }
+        public string EmployeeName { get; set; }
         public string CheckIn { get; set; }
         public string CheckOut { get; set; }
     }

@@ -14,7 +14,16 @@ function loadDataTable() {
             { 
                 data: null, 
                 render: function(data, type, row) {
-                    return `<button class="btn btn-primary" onclick="viewEmployeeRecord('${row.employeeId}')">View</button>`;
+                    return `
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" onclick="viewEmployeeRecord('${row.employeeId}')">View</button>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary" onclick="editEmployeeRecord('${row.employeeId}')">Edit</button>
+                            </div>
+                        </div>
+                        `;
                 }, 
                 orderable: true, 
                 searchable: true,
@@ -26,4 +35,9 @@ function loadDataTable() {
 
 function viewEmployeeRecord(employeeId) {
     window.location.href = `/Admin/Admin/ViewAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
+}
+
+function editEmployeeRecord(employeeId)
+{
+    window.location.href = `/Admin/Admin/EditAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
 }

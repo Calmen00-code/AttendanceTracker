@@ -42,6 +42,7 @@ namespace AttendanceTracker.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        // FIXME: for simplicity, keeping this here in default controller. This should be moved to AdminController after development is done.
         public IActionResult Index()
         {
             // Ensures only one thread enters at a time.
