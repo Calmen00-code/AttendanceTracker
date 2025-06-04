@@ -1,9 +1,10 @@
 @model DailyAttendanceVM
 
 <form method="post">
-    <input type="hidden" id="employeeId" value="@Model.EmployeeId" />
-    <input type="hidden" id="Id" value="@Model.Id" />
-    
+    <input type="hidden" asp-for="@Model.Id" />
+    <input type="hidden" asp-for="@Model.EmployeeId" />
+    <input type="hidden" asp-for="@Model.Date" />
+
     <div class="row">
         <div class="col-md-12 mb-3">
             <label asp-for="@Model.EmployeeName" class="form-label">User</label>
@@ -14,9 +15,13 @@
             <input type="time" asp-for="@Model.CheckIn" class="form-control"/>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12 mb-3">
             <label asp-for="@Model.CheckOut" class="form-label">Check Out</label>
             <input type="time" asp-for="@Model.CheckOut" class="form-control"/>
+        </div>
+
+        <div class="col-md-12">
+            <button class="btn btn-primary" type="submit">Edit</button>
         </div>
     </div>
 </form>

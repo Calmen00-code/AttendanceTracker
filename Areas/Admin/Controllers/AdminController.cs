@@ -51,13 +51,18 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
-        public IActionResult EditAttendanceRecord(string employeeId)
+        public IActionResult EditAttendanceRecord(string employeeId, string date)
         {
+            DateTime dateTime = DateTime.Parse(date);
             DailyAttendanceRecord record =
-                _unitOfWork.DailyAttendanceRecord.Get(filter: a => a.EmployeeId == employeeId, includeProperties: "Employee");
+                _unitOfWork.DailyAttendanceRecord.Get(
+                    filter: a => a.EmployeeId == employeeId && a.CheckIn.Date == dateTime.Date,
+                    includeProperties: "Employee");
 
             DailyAttendanceVM dailyAttendanceVM = new()
             {
+                Id = record.Id,
+                Date = dateTime,
                 EmployeeId = record.EmployeeId,
                 CheckIn = record.CheckIn.ToString("HH:mm tt"),
                 CheckOut = record.CheckOut.ToString("HH:mm tt"),
@@ -70,7 +75,7 @@ namespace AttendanceTracker.Controllers
         [HttpPost]
         public IActionResult EditAttendanceRecord(DailyAttendanceVM model)
         {
-            var record = _unitOfWork.DailyAttendanceRecord.Get(filter: a => a.Id == model.Id);
+            var record = _unitOfWork.DailyAttendanceRecord.Get(filter: a => a.Id == model.Id && a.CheckIn.Date == model.Date);
 
             if (record == null)
             {
@@ -79,7 +84,7 @@ namespace AttendanceTracker.Controllers
 
             // Parse the check-in time from DailyAttendanceVM which is in string format
             // and construct a DB compatible DateTime object to update the DB
-            DateTime parsedCheckIn = DateTime.ParseExact(model.CheckIn, "hh:mm tt", CultureInfo.InvariantCulture);
+            DateTime parsedCheckIn = DateTime.ParseExact(model.CheckIn, "HH:mm", CultureInfo.InvariantCulture);
             DateTime updateCheckIn = new DateTime(
                 record.CheckIn.Year,
                 record.CheckIn.Month,
@@ -91,7 +96,7 @@ namespace AttendanceTracker.Controllers
 
             // Parse the check-out time from DailyAttendanceVM which is in string format
             // and construct a DB compatible DateTime object to update the DB
-            DateTime parsedCheckOut = DateTime.ParseExact(model.CheckOut, "hh:mm tt", CultureInfo.InvariantCulture);
+            DateTime parsedCheckOut = DateTime.ParseExact(model.CheckOut, "HH:mm", CultureInfo.InvariantCulture);
             DateTime updateCheckOut = new DateTime(
                 record.CheckOut.Year,
                 record.CheckOut.Month,
@@ -108,8 +113,11 @@ namespace AttendanceTracker.Controllers
             _unitOfWork.DailyAttendanceRecord.Update(record);
             _unitOfWork.Save();
 
-            return View();
+            UpdateAttendanceDatabase(model);
+
+            return RedirectToAction("Index", "Home", new { area = "QR" });
         }
+
 
         // PRIVATE METHODS
         private void UpdateDatabase()
@@ -151,6 +159,21 @@ namespace AttendanceTracker.Controllers
                     _unitOfWork.Save();
                 }
             }
+        }
+
+        private void UpdateAttendanceDatabase(DailyAttendanceVM model)
+        {
+            Attendance record = 
+                _unitOfWork.Attendance.Get(filter: a => a.EmployeeId == model.EmployeeId && a.RecordDate == model.Date);
+
+            DateTime checkIn = DateTime.Parse(model.CheckIn);
+            DateTime checkOut = DateTime.Parse(model.CheckOut);
+            TimeSpan duration = checkOut - checkIn;
+
+            record.TotalWorkingHours = duration.TotalHours;
+
+            _unitOfWork.Attendance.Update(record);
+            _unitOfWork.Save();
         }
 
         /**

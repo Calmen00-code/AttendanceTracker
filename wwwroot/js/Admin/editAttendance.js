@@ -17,11 +17,11 @@ function loadDataTable() {
                 { data: 'totalWorkingHours', width: '30%' },
                 { 
                     data: null, 
-                    render: function(data, type, row) {
+                    render: function (data, type, row) {
                         return `
                             <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary" onclick="editEmployeeRecord('${employeeId}')">Edit</button>
+                                    <button class="btn btn-primary" onclick="editEmployeeRecord('${employeeId}', '${row.date}')">Edit</button>
                                 </div>
                             </div>
                             `;
@@ -39,7 +39,7 @@ function loadDataTable() {
     }
 }
 
-function editEmployeeRecord(employeeId)
+function editEmployeeRecord(employeeId, date)
 {
-    window.location.href = `/Admin/Admin/EditAttendanceRecord?employeeId=${employeeId}`;
+    window.location.href = `/Admin/Admin/EditAttendanceRecord?employeeId=${employeeId}&date=${date}`;
 }
