@@ -15,6 +15,21 @@ function loadDataTable() {
                 { data: 'date', width: '30%' },
                 { data: 'email', width: '40%' },
                 { data: 'totalWorkingHours', width: '30%' },
+                { 
+                    data: null, 
+                    render: function (data, type, row) {
+                        return `
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary" onclick="editEmployeeRecord('${employeeId}', '${row.date}')">Edit</button>
+                                </div>
+                            </div>
+                            `;
+                    }, 
+                    orderable: true, 
+                    searchable: true,
+                    width: '50%'
+                }
             ]
         });
     }
@@ -22,4 +37,9 @@ function loadDataTable() {
     {
         alert("Employee ID is not provided.");
     }
+}
+
+function editEmployeeRecord(employeeId, date)
+{
+    window.location.href = `/Admin/Admin/EditAttendanceRecord?employeeId=${employeeId}&date=${date}`;
 }

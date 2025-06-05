@@ -30,6 +30,9 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        /**
+        * @brief View all employees working hours with the latest data
+        */
         public IActionResult WorkingRecord()
         {
             // FIXME: This is a performance overhead.
@@ -39,18 +42,18 @@ namespace AttendanceTracker.Controllers
             return View();
         }
 
+        /**
+        * @brief View the given employee Attendance records
+        */
         public IActionResult ViewAttendanceRecordsOfEmployee(string employeeId)
         {
             ViewBag.EmployeeId = employeeId;
             return View();
         }
 
-        public IActionResult EditAttendanceRecordsOfEmployee(string employeeId)
-        {
-            ViewBag.EmployeeId = employeeId;
-            return View();
-        }
-
+        /**
+        * @brief Display a list of records to be selected to edit
+        */
         public IActionResult EditAttendanceRecord(string employeeId, string date)
         {
             DateTime dateTime = DateTime.Parse(date);

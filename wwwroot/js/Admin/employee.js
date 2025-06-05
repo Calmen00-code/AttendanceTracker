@@ -19,9 +19,6 @@ function loadDataTable() {
                             <div class="col-md-12">
                                 <button class="btn btn-primary" onclick="viewEmployeeRecord('${row.employeeId}')">View</button>
                             </div>
-                            <div class="col-md-12">
-                                <button class="btn btn-primary" onclick="editEmployeeRecord('${row.employeeId}')">Edit</button>
-                            </div>
                         </div>
                         `;
                 }, 
@@ -35,9 +32,4 @@ function loadDataTable() {
 
 function viewEmployeeRecord(employeeId) {
     window.location.href = `/Admin/Admin/ViewAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
-}
-
-function editEmployeeRecord(employeeId)
-{
-    window.location.href = `/Admin/Admin/EditAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
 }
