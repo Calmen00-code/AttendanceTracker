@@ -3,6 +3,7 @@ using AttendanceTracker.Models;
 using AttendanceTracker.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -118,6 +119,7 @@ namespace AttendanceTracker.Controllers
 
             UpdateAttendanceDatabase(model);
 
+            TempData["success"] = "Updated record successfully!";
             return RedirectToAction("Index", "Home", new { area = "QR" });
         }
 
