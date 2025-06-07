@@ -110,6 +110,16 @@ namespace AttendanceTracker.Controllers
                 0
             );
 
+            TimeSpan duration = updateCheckOut - updateCheckIn;
+            double totalWorkingHours = duration.TotalHours;
+
+            if (totalWorkingHours < 0)
+            {
+                TempData["error"] = "Check in cannot be later than check out!";
+                return RedirectToAction("EditAttendanceRecord", "Admin",
+                    new { area = "Admin", employeeId = model.EmployeeId, date = model.Date.ToString("yyyy-MM-dd") });
+            }
+
             // After setting up the updateCheckIn and updateCheckout, update the record
             record.CheckIn = updateCheckIn;
             record.CheckOut = updateCheckOut;
