@@ -16,8 +16,11 @@ function loadDataTable() {
                 render: function(data, type, row) {
                     return `
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <button class="btn btn-primary" onclick="viewEmployeeRecord('${row.employeeId}')">View</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-danger" onclick="deleteEmployeeRecord('${row.employeeId}')">Delete</button>
                             </div>
                         </div>
                         `;
@@ -32,4 +35,8 @@ function loadDataTable() {
 
 function viewEmployeeRecord(employeeId) {
     window.location.href = `/Admin/Admin/ViewAttendanceRecordsOfEmployee?employeeId=${employeeId}`;
+}
+
+function deleteEmployeeRecord(employeeId) {
+    window.location.href = `/Admin/Admin/DeleteEmployee?employeeId=${employeeId}`;
 }

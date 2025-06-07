@@ -133,6 +133,32 @@ namespace AttendanceTracker.Controllers
             return RedirectToAction("Index", "Home", new { area = "QR" });
         }
 
+        public IActionResult DeleteEmployee(string employeeId)
+        {
+            ApplicationEmployee employee = _unitOfWork.ApplicationEmployees.Get(filter: a => a.Id == employeeId);
+            EmployeeVM employeeVM = new()
+            {
+                Id = employee.Id,
+                EmployeeName = employee.UserName,
+                Email = employee.Email
+            };
+
+            return View(employeeVM);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteEmployee(EmployeeVM employee)
+        {
+            string employeeIdToDelete = employee.Id;
+            ApplicationEmployee employeeToDelete =
+                _unitOfWork.ApplicationEmployees.Get(filter: a => a.Id == employeeIdToDelete);
+
+            _unitOfWork.ApplicationEmployees.Remove(employeeToDelete);
+            _unitOfWork.Save();
+
+            TempData["success"] = "Employee successfully removed!";
+            return RedirectToAction("Index", "Home", new { area = "QR" });
+        }
 
         // PRIVATE METHODS
         private void UpdateDatabase()

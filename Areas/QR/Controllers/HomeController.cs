@@ -1,7 +1,6 @@
 using AttendanceTracker.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using GeneratingQRCode.Models;
 using QRCoder;
 using System;
 using System.Drawing;

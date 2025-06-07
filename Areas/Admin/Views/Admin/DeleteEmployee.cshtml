@@ -1,0 +1,19 @@
+@model EmployeeVM
+
+<form method="post">
+    <input type="hidden" asp-for="@Model.Id" />
+
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <label asp-for="@Model.EmployeeName" class="form-label">User</label>
+            <input type="text" class="form-control" value="@Model.EmployeeName" disabled />
+        </div>
+        <div class="col-md-12 mb-3">
+            <label asp-for="@Model.Email" class="form-label">Email</label>
+            <input type="text" class="form-control" value="@Model.Email" disabled />
+        </div>
+        <div class="col-md-12 mb-3">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>
