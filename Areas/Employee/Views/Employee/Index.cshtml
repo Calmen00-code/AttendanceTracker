@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<input type="hidden" id="employeeId" value="@ViewBag.EmployeeId" />
+<input type="hidden" id="employeeId" value="@ViewBag.EmployeeName" />
+
+<h2>Hello @ViewBag.EmployeeName</h2>
+
+<table id="employeeAttendanceTable" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date (yyyy-MM-dd)</th>
+            <th>Working Hours</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script src="~/js/Employee/employeeAttendance.js"></script>
+}
