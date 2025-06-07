@@ -203,6 +203,8 @@ namespace AttendanceTracker.Controllers
         private bool RecordUserAttendance(AuthenticationVM model)
         {
             DateTime currDateTime = DateTime.Now;
+            DateTime adjustedDateTime = new DateTime(currDateTime.Year, currDateTime.Month, currDateTime.Day,
+                                                     currDateTime.Hour, currDateTime.Minute, 0);
 
             if (model.IsCheckIn)
             {
@@ -211,8 +213,8 @@ namespace AttendanceTracker.Controllers
                 {
                     _unitOfWork.DailyAttendanceRecord.Add(new DailyAttendanceRecord
                     {
-                        Id = currDateTime.ToString("yyyy-MM-dd") + "_" + currDateTime.ToString("HH:mm") + "_" + model.EmployeeId,
-                        CheckIn = currDateTime,
+                        Id = adjustedDateTime.ToString("yyyy-MM-dd") + "_" + adjustedDateTime.ToString("HH:mm") + "_" + model.EmployeeId,
+                        CheckIn = adjustedDateTime,
                         CheckOut = DateTime.MinValue,
                         EmployeeId = model.EmployeeId
                     });
@@ -221,32 +223,32 @@ namespace AttendanceTracker.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while checking in for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    _logger.LogError(ex, "Error while checking in for user {UserId} at {DateTime}", model.EmployeeId, adjustedDateTime);
                     return false;
                 }
             }
             else
             {
                 // Check out
-                DailyAttendanceRecord recordToCheckout = FindCheckoutRecord(model.EmployeeId, currDateTime.Date);
+                DailyAttendanceRecord recordToCheckout = FindCheckoutRecord(model.EmployeeId, adjustedDateTime.Date);
 
                 // No pending check-out record found, something went wrong
                 if (recordToCheckout == null)
                 {
-                    _logger.LogWarning("No pending check-out record found for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    _logger.LogWarning("No pending check-out record found for user {UserId} at {DateTime}", model.EmployeeId, adjustedDateTime);
                     throw new InvalidOperationException("No pending check-out record found. But user already check-in.");
                 }
 
                 try
                 {
-                    recordToCheckout.CheckOut = currDateTime;
+                    recordToCheckout.CheckOut = adjustedDateTime;
 
                     _unitOfWork.DailyAttendanceRecord.Update(recordToCheckout);
                     _unitOfWork.Save();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error while checking out for user {UserId} at {DateTime}", model.EmployeeId, currDateTime);
+                    _logger.LogError(ex, "Error while checking out for user {UserId} at {DateTime}", model.EmployeeId, adjustedDateTime);
                     return false;
                 }
             }
@@ -270,7 +272,7 @@ namespace AttendanceTracker.Controllers
         private DailyAttendanceRecord FindCheckoutRecord(string employeeId, DateTime currDateTime)
         {
             var userAttendanceRecord = _unitOfWork.DailyAttendanceRecord.Get(
-                a => (a.EmployeeId == employeeId) && (a.CheckIn.Date == currDateTime.Date) && (a.CheckOut == DateTime.MinValue),
+                filter: a => (a.EmployeeId == employeeId) && (a.CheckIn.Date == currDateTime.Date) && (a.CheckOut == DateTime.MinValue),
                 includeProperties: "Employee");
 
             return userAttendanceRecord;

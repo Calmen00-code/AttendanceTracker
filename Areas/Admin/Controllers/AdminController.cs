@@ -133,6 +133,8 @@ namespace AttendanceTracker.Controllers
             {
                 DateTime lastWorkingDate = FindEmployeeLastWorkingDate(employee.Id);
 
+                // lastWorkingDate will be DateTime.MinValue if there is a pending check out
+                // and if the record already exist, abort the update as well.
                 if (lastWorkingDate != DateTime.MinValue && ShouldUpdateAttendance(employee.Id, lastWorkingDate))
                 {
                     // There is multiple check-in and check-out records for the same employee on the same date.
@@ -249,8 +251,9 @@ namespace AttendanceTracker.Controllers
                 return record.CheckIn.Date;
             }
 
-            // This employee is new, return invalid date so we do not update it
-            // in the Attendance table. Employee will need to check in first.
+            // This employee is new to the company, since there are no working attendance records at all.
+            // return invalid date so we do not update it in the Attendance table.
+            // Employee will need to check in first.
             return DateTime.MinValue;
         }
 
