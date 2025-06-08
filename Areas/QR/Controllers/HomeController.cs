@@ -14,10 +14,12 @@ using AttendanceTracker.Utility;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.SignalR;
 using AttendanceTracker.DataAccess.Repository.IRepository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AttendanceTracker.Controllers
 {
     [Area("QR")]
+    [Authorize(Roles = SD.ROLE_ADMIN)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -41,8 +43,13 @@ namespace AttendanceTracker.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        // FIXME: for simplicity, keeping this here in default controller. This should be moved to AdminController after development is done.
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        // FIXME: for simplicity, keeping this here in default controller. This should be moved to AdminController after development is done.
+        public IActionResult DisplayQRCode()
         {
             // Ensures only one thread enters at a time.
             // In case multiple users submitted request at the same time

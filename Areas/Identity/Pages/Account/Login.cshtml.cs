@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using AttendanceTracker.Utility;
 
 namespace AttendanceTrackerWeb.Areas.Identity.Pages.Account
 {
@@ -115,6 +116,16 @@ namespace AttendanceTrackerWeb.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    if (User.IsInRole(SD.ROLE_ADMIN))
+                    {
+                        return RedirectToAction("Index", "Admin", new { area = "Admin" });
+                    }
+
+                    if (User.IsInRole(SD.ROLE_EMPLOYEE))
+                    {
+                        return RedirectToAction("Index", "Employee", new { area = "Employee" });
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

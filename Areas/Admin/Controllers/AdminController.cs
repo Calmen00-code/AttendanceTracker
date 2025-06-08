@@ -23,7 +23,7 @@ namespace AttendanceTracker.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("DisplayQRCode", "Home", new { area = "QR" });
         }
 
         public IActionResult RegisterNewEmployee()
@@ -130,7 +130,7 @@ namespace AttendanceTracker.Controllers
             UpdateAttendanceDatabase(model);
 
             TempData["success"] = "Updated record successfully!";
-            return RedirectToAction("Index", "Home", new { area = "QR" });
+            return RedirectToAction("DisplayQRCode", "Home", new { area = "QR" });
         }
 
         public IActionResult DeleteEmployee(string employeeId)
@@ -157,7 +157,7 @@ namespace AttendanceTracker.Controllers
             _unitOfWork.Save();
 
             TempData["success"] = "Employee successfully removed!";
-            return RedirectToAction("Index", "Home", new { area = "QR" });
+            return RedirectToAction("DisplayQRCode", "Home", new { area = "QR" });
         }
 
         // PRIVATE METHODS
